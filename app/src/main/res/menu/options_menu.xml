@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/main_item"
+        android:title="@string/principal" />
+    <item
+        android:id="@+id/agenda_item"
+        android:title="@string/agenda" />
+    <item
+        android:id="@+id/destacadas_item"
+        android:title="@string/difusiones_destacadas"></item>
+    <item
+        android:id="@+id/perfil_item"
+        android:title="@string/perfil" />
+    <item
+        android:id="@+id/logout_item"
+        android:title="@string/cerrar_sesion" />
+</menu>
