@@ -23,7 +23,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class API_Access {
 
-    private final String url_base = "https://communityapp-api.herokuapp.com/";
+    private final String url_base = "https://communityapp-api.herokuapp.com/api/";
     private final String[] methods = {"users/login"};
 
     int estadoRequest = -1;
