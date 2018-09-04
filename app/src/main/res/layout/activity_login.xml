@@ -18,7 +18,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="89dp"
             android:background="@color/colorPrimary"
-            android:onClick="click_btnLogin"
+            android:onClick="loginClicked"
             android:text="Iniciar sesión"
             android:textColor="@android:color/background_light"
             android:textStyle="bold" />

@@ -16,8 +16,9 @@ public class User {
     private String url_photo_rounded;
     private Bitmap photo;
     private Bitmap photo_rounded;
+    private boolean privateProfile;
 
-    public User(String id, String name, String email, String tel, String cel, String address, String url_photo, String url_photo_rounded, Bitmap photo, Bitmap photo_rounded) {
+    public User(String id, String name, String email, String tel, String cel, String address, String url_photo, String url_photo_rounded, Bitmap photo, Bitmap photo_rounded, boolean privateProfile) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -28,6 +29,7 @@ public class User {
         this.url_photo_rounded = url_photo_rounded;
         this.photo = photo;
         this.photo_rounded = photo_rounded;
+        this.privateProfile = privateProfile;
     }
 
     public String getId() {
@@ -108,5 +110,13 @@ public class User {
 
     public void setPhoto_rounded(Bitmap photo_rounded) {
         this.photo_rounded = photo_rounded;
+    }
+
+    public boolean isPrivateProfile() {
+        return privateProfile;
+    }
+
+    public void setPrivateProfile(boolean privateProfile) {
+        this.privateProfile = privateProfile;
     }
 }
