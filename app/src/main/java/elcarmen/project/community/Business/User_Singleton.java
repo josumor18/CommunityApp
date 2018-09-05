@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class User_Singleton {
     private static final User_Singleton ourInstance = new User_Singleton();
 
-    private String id;
+    private int id;
     private String name;
     private String email;
     private String tel;
@@ -19,8 +19,8 @@ public class User_Singleton {
     private Bitmap photo_rounded;
     private boolean privateProfile;
     private String auth_token;
-    private ArrayList<String> communities_admin = new ArrayList<String>();
-    private ArrayList<String> communities_member = new ArrayList<String>();
+    private ArrayList<Integer> communities_admin = new ArrayList<Integer>();
+    private ArrayList<Integer> communities_member = new ArrayList<Integer>();
     //private ArrayList<Notification> notifications = new ArrayList<Notification>();
     private ArrayList<News> news = new ArrayList<News>();
 
@@ -31,11 +31,11 @@ public class User_Singleton {
     private User_Singleton() {
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -119,20 +119,29 @@ public class User_Singleton {
         this.auth_token = auth_token;
     }
 
-    public ArrayList<String> getCommunities_admin() {
+    public ArrayList<Integer> getCommunities_admin() {
         return communities_admin;
     }
 
-    public void setCommunities_admin(ArrayList<String> communities_admin) {
+    public void setCommunities_admin(ArrayList<Integer> communities_admin) {
         this.communities_admin = communities_admin;
     }
 
-    public ArrayList<String> getCommunities_member() {
+    public ArrayList<Integer> getCommunities_member() {
         return communities_member;
     }
 
-    public void setCommunities_member(ArrayList<String> communities_member) {
+    public void setCommunities_member(ArrayList<Integer> communities_member) {
         this.communities_member = communities_member;
+    }
+
+    public boolean isAdmin(int idCommunity){
+        for(Integer idComm : communities_admin){
+            if(idComm.intValue() == idCommunity){
+                return true;
+            }
+        }
+        return false;
     }
 
     public ArrayList<News> getNews() {

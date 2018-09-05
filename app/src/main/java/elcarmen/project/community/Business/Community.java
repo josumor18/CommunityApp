@@ -6,10 +6,11 @@ import java.util.ArrayList;
 
 public class Community {
 
-    private String id;
+    private int id;
     private String name;
     private String description;
     private ArrayList<String> rules;
+    private boolean subcommunity;
     private String url_photo;
     private String url_photo_rounded;
     private Bitmap photo;
@@ -20,11 +21,12 @@ public class Community {
     private ArrayList<User> members;
     private ArrayList<User> admins;
 
-    public Community(String id, String name, String description, ArrayList<String> rules, String url_photo, String url_photo_rounded, Bitmap photo, Bitmap photo_rounded, ArrayList<Integer> id_subcommunities, ArrayList<User> members, ArrayList<User> admins) {
+    public Community(int id, String name, String description, ArrayList<String> rules, boolean subcommunity, String url_photo, String url_photo_rounded, Bitmap photo, Bitmap photo_rounded, ArrayList<Integer> id_subcommunities, ArrayList<User> members, ArrayList<User> admins) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.rules = rules;
+        this.subcommunity = subcommunity;
         this.url_photo = url_photo;
         this.url_photo_rounded = url_photo_rounded;
         this.photo = photo;
@@ -34,11 +36,11 @@ public class Community {
         this.admins = admins;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -64,6 +66,14 @@ public class Community {
 
     public void setRules(ArrayList<String> rules) {
         this.rules = rules;
+    }
+
+    public boolean isSubcommunity() {
+        return subcommunity;
+    }
+
+    public void setSubcommunity(boolean subcommunity) {
+        this.subcommunity = subcommunity;
     }
 
     public String getUrl_photo() {

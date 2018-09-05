@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class News {
 
-    private String id;
+    private int id;
     private String title;
     private String description;
     private Date date;
@@ -14,7 +14,7 @@ public class News {
     private Bitmap photo;
     private boolean approved;
 
-    public News(String id, String title, String description, Date date, String url_photo, Bitmap photo, boolean approved) {
+    public News(int id, String title, String description, Date date, String url_photo, Bitmap photo, boolean approved) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -24,11 +24,11 @@ public class News {
         this.approved = approved;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
