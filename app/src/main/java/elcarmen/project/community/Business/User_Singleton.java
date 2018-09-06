@@ -2,6 +2,9 @@ package elcarmen.project.community.Business;
 
 import android.graphics.Bitmap;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 
 public class User_Singleton {
@@ -123,8 +126,14 @@ public class User_Singleton {
         return communities_admin;
     }
 
-    public void setCommunities_admin(ArrayList<Integer> communities_admin) {
-        this.communities_admin = communities_admin;
+    public void setCommunities_admin(JSONArray communities_admin) {
+        for(int i = 0; i < communities_admin.length(); i++){
+            try {
+                this.communities_admin.add(communities_admin.getInt(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public ArrayList<Integer> getCommunities_member() {

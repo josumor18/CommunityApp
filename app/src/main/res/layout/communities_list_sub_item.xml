@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -21,12 +20,21 @@
             android:layout_height="65dp">
 
             <ImageView
+                android:id="@+id/imageView"
+                app:srcCompat="@drawable/ic_subdirectory_arrow_right_black_24dp"
+                android:layout_width="38dp"
+                android:layout_height="39dp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="-50dp"
+                android:layout_toStartOf="@+id/img_CommListItem" />
+
+            <ImageView
                 android:id="@+id/img_CommListItem"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="11dp"
+                android:layout_marginStart="50dp"
                 app:srcCompat="@mipmap/ic_launcher" />
 
             <ImageView
@@ -35,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="64dp"
+                android:layout_marginStart="102dp"
                 app:srcCompat="@drawable/ic_settings_black_24dp" />
 
             <LinearLayout
