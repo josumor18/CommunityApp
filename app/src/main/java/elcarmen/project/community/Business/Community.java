@@ -21,7 +21,7 @@ public class Community {
     private ArrayList<User> members;
     private ArrayList<User> admins;
 
-    public Community(int id, String name, String description, ArrayList<String> rules, boolean subcommunity, String url_photo, String url_photo_rounded, Bitmap photo, Bitmap photo_rounded, ArrayList<Integer> id_subcommunities, ArrayList<User> members, ArrayList<User> admins) {
+    public Community(int id, String name, String description, ArrayList<String> rules, boolean subcommunity, String url_photo, String url_photo_rounded, ArrayList<Integer> id_subcommunities) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -29,11 +29,7 @@ public class Community {
         this.subcommunity = subcommunity;
         this.url_photo = url_photo;
         this.url_photo_rounded = url_photo_rounded;
-        this.photo = photo;
-        this.photo_rounded = photo_rounded;
         this.id_subcommunities = id_subcommunities;
-        this.members = members;
-        this.admins = admins;
     }
 
     public int getId() {

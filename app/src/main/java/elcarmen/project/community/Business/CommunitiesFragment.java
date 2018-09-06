@@ -3,6 +3,7 @@ package elcarmen.project.community.Business;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,11 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import elcarmen.project.community.Data.API_Access;
 import elcarmen.project.community.Data.HttpGetBitmap;
 import elcarmen.project.community.R;
 
@@ -22,6 +30,8 @@ import elcarmen.project.community.R;
  * A simple {@link Fragment} subclass.
  */
 public class CommunitiesFragment extends Fragment {
+
+    ListView lvCommunities;
 
     private ArrayList<Community> communities = new ArrayList<Community>();
 
@@ -34,7 +44,52 @@ public class CommunitiesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_communities, container, false);
+        View v = inflater.inflate(R.layout.fragment_communities, container, false);
+        lvCommunities = v.findViewById(R.id.lvCommunities);
+
+        ExecuteGetCommunities executeGetCommunities = new ExecuteGetCommunities();
+        executeGetCommunities.execute();
+
+        return v;
+    }
+
+
+    private void cargarCommunities(JSONObject jsonResult) {
+
+        try {
+            communities.clear();
+            String token = jsonResult.getString("auth_token");
+            User_Singleton.getInstance().setAuth_token(token);
+            //LoginActivity.actualizarAuth_Token(token, getActivity());
+            //JSONArray jsonListUserPosts = jsonResult.getJSONArray("posts");
+            JSONArray jsonCommunitiesList = jsonResult.getJSONArray("communities");
+            for (int i = 0; i < jsonCommunitiesList.length(); i++) {
+                JSONObject jsonCommunity = (JSONObject) jsonCommunitiesList.get(i);
+
+                JSONArray jsonRules = jsonCommunity.getJSONArray("rules");
+                ArrayList<String> rules = new ArrayList<String>();
+                for(int ind = 0; ind < jsonRules.length(); ind++){
+                    rules.add(jsonRules.getString(ind));
+                }
+
+                JSONArray jsonSubs = jsonCommunity.getJSONArray("sub_communities");
+                ArrayList<Integer> subs = new ArrayList<Integer>();
+                for(int ind = 0; ind < jsonSubs.length(); ind++){
+                    subs.add(jsonSubs.getInt(ind));
+                }
+
+                Community community = new Community(jsonCommunity.getInt("id"), jsonCommunity.getString("name"), jsonCommunity.getString("description"), rules, jsonCommunity.getBoolean("isSubcommunity"), jsonCommunity.getString("photo"), jsonCommunity.getString("photo_thumbnail"), subs);
+
+                communities.add(community);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        lvCommunities.setAdapter(new CommunitiesAdapter());
+
+        //rlStart.setVisibility(View.VISIBLE);
+        //rlLoader.setVisibility(View.INVISIBLE);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +118,12 @@ public class CommunitiesFragment extends Fragment {
         public View getView(int i, View view, ViewGroup viewGroup) {
             LayoutInflater inflater = getLayoutInflater();
             if (view == null) {
-                view = inflater.inflate(R.layout.communities_list_item, null);
+                if(!communities.get(i).isSubcommunity()){
+                    view = inflater.inflate(R.layout.communities_list_item, null);
+                }else{
+                    view = inflater.inflate(R.layout.communities_list_sub_item, null);
+                }
+
             }
 
             ImageView imgCommunity = view.findViewById(R.id.img_CommListItem);
@@ -86,16 +146,47 @@ public class CommunitiesFragment extends Fragment {
 
             txtCommName.setText(communities.get(i).getName());
 
-            if(User_Singleton.getInstance().isAdmin(communities.get(i).getId())){
-                view.setBackgroundColor(getResources().getColor(R.color.colorAccentTransparent));
-            }
-
-            if(!communities.get(i).isSubcommunity()){
-                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-                params.setMarginStart(11);
+            if(!User_Singleton.getInstance().isAdmin(communities.get(i).getId())){
+                ImageView imgAdminIcon = view.findViewById(R.id.imgAdminIcon);
+                imgAdminIcon.setVisibility(View.INVISIBLE);
             }
 
             return view;
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    public class ExecuteGetCommunities extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //rlLoaderEmisoras.setVisibility(View.VISIBLE);
+            //rlLogin.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            API_Access api = API_Access.getInstance();
+            User_Singleton user = User_Singleton.getInstance();
+            isOk = api.get_base(Integer.toString(user.getId()), user.getAuth_token(), 2);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                cargarCommunities(API_Access.getInstance().getJsonObjectResponse());
+            }else{
+                String mensaje = "Error al obtener las comunidades";
+
+                Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

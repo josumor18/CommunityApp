@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,8 +43,9 @@ public class LoginAcivity extends AppCompatActivity {
         User_Singleton user = User_Singleton.getInstance();
 
         try {
+            JSONArray coms_admins = response.getJSONArray("list_com_admin");
             response = response.getJSONObject("data");
-            user.setId(response.getString("id"));
+            user.setId(response.getInt("id"));
             user.setName(response.getString("name"));
             user.setEmail(response.getString("email"));
             user.setCel(response.getString("cel"));
@@ -53,6 +55,7 @@ public class LoginAcivity extends AppCompatActivity {
             user.setUrl_photo_rounded(response.getString("photo_thumbnail"));
             user.setPrivateProfile(response.getBoolean("isPrivate"));
             user.setAuth_token(response.getString("auth_token"));
+            user.setCommunities_admin(coms_admins);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -127,7 +130,7 @@ public class LoginAcivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             API_Access api = API_Access.getInstance();
 
-            isLogged = api.post_put_base(keys, values, 0, "POST");
+            isLogged = api.post_put_base(keys, values, 1, "POST");
 
             return null;
         }
