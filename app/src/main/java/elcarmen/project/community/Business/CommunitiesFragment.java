@@ -171,7 +171,9 @@ public class CommunitiesFragment extends Fragment {
         protected String doInBackground(String... strings) {
             API_Access api = API_Access.getInstance();
             User_Singleton user = User_Singleton.getInstance();
-            isOk = api.get_base(Integer.toString(user.getId()), user.getAuth_token(), 2);
+            String[] keys = {"id", "auth_token"};
+            String[] values = {Integer.toString(user.getId()), user.getAuth_token()};
+            isOk = api.get_base(keys, values, 2, 1);
 
             return null;
         }

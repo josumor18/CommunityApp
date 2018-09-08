@@ -130,7 +130,7 @@ public class LoginAcivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             API_Access api = API_Access.getInstance();
 
-            isLogged = api.post_put_base(keys, values, 1, "POST");
+            isLogged = api.post_put_base(keys, values, 1, "POST", 1);
 
             return null;
         }

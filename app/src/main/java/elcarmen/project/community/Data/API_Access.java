@@ -24,7 +24,8 @@ import javax.net.ssl.HttpsURLConnection;
 public class API_Access {
 
     private final String url_base = "https://communityapp-api.herokuapp.com/api/";
-    private final String[] methods = {"users/register", "users/login", "communities/get_communities"};
+    private final String[] methods = {"users/register", "users/login", "communities/get_communities", "communities/search_community"};
+    private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
 
     int estadoRequest = -1;
     private JSONObject jsonObjectResponse = new JSONObject();
@@ -44,7 +45,7 @@ public class API_Access {
 
     //----------------------------------- Método POST/PUT base ----------------------------------//
     // methodType: "POST" or "PUT"
-    public boolean post_put_base(String[] keys, String[] values, int method, String methodType){
+    public boolean post_put_base(String[] keys, String[] values, int method, String methodType, int expectedResponse){
         jsonObjectResponse = new JSONObject();
 
         HashMap<String, String> Parameters = new HashMap<String, String>();
@@ -54,14 +55,24 @@ public class API_Access {
             Parameters.put(keys[i], values[i]);
         }
 
-        return makePOSTRequest(methods[method], methodType, true, true, Parameters, HttpsURLConnection.HTTP_OK);
+        return makePOSTRequest(methods[method], methodType, true, true, Parameters, responses[expectedResponse]);
     }
 
     //----------------------------------- Método GET base -----------------------------------//
-    public boolean get_base(String idUser, String auth_token, int method){
+    public boolean get_base(String[] keys, String[] values, int method, int expectedResponse){
         jsonArrayResponse = new JSONArray();
-        String urlEsp = methods[method] + "?id=" + idUser + "&auth_token=" + auth_token;
-        return makeGETRequest(urlEsp, "GET", HttpsURLConnection.HTTP_OK, 0);
+
+        String urlComp = "";
+        int size = keys.length;
+        for(int i = 0; i < size; i++){
+            if(i > 0){
+                urlComp += "&";
+            }
+            urlComp += keys[i] + "=" + values[i];
+        }
+
+        String urlEsp = methods[method] + "?" + urlComp;
+        return makeGETRequest(urlEsp, "GET", responses[expectedResponse], 0);
     }
 
     /////////////////////// GET Respuesta del servidor: JSONObject ////////////////////////////////
