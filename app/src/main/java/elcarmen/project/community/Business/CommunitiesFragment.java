@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ import elcarmen.project.community.R;
 public class CommunitiesFragment extends Fragment {
 
     ListView lvCommunities;
+    RelativeLayout rlCommunities, rlCommunitiesPB;
 
     private ArrayList<Community> communities = new ArrayList<Community>();
 
@@ -45,7 +47,13 @@ public class CommunitiesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_communities, container, false);
+
+        rlCommunities = v.findViewById(R.id.rlCommunities);
+        rlCommunitiesPB = v.findViewById(R.id.rlCommunitiesPB);
         lvCommunities = v.findViewById(R.id.lvCommunities);
+
+        rlCommunities.setVisibility(View.INVISIBLE);
+        rlCommunitiesPB.setVisibility(View.VISIBLE);
 
         ExecuteGetCommunities executeGetCommunities = new ExecuteGetCommunities();
         executeGetCommunities.execute();
@@ -88,8 +96,8 @@ public class CommunitiesFragment extends Fragment {
 
         lvCommunities.setAdapter(new CommunitiesAdapter());
 
-        //rlStart.setVisibility(View.VISIBLE);
-        //rlLoader.setVisibility(View.INVISIBLE);
+        rlCommunities.setVisibility(View.VISIBLE);
+        rlCommunitiesPB.setVisibility(View.INVISIBLE);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

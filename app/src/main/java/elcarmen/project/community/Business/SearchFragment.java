@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ public class SearchFragment extends Fragment {
     EditText edtxtSearch;
     Button btnSearch;
     ListView lvCommunitiesSearch;
+    ProgressBar pbSearch;
 
     ArrayList<Community> communities = new ArrayList<Community>();
     ArrayList<Boolean> requests = new ArrayList<Boolean>();
@@ -51,11 +53,14 @@ public class SearchFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_search, container, false);
 
         lvCommunitiesSearch = v.findViewById(R.id.lvCommunitiesSearch);
+        pbSearch = v.findViewById(R.id.pbSearch);
+
         edtxtSearch = v.findViewById(R.id.edtxtSearch);
         btnSearch = v.findViewById(R.id.btnSearchCommunity);
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pbSearch.setVisibility(View.VISIBLE);
                 String busqueda = edtxtSearch.getText().toString();
                 ExecuteSearchCommunities executeSearch = new ExecuteSearchCommunities();
                 executeSearch.execute(busqueda);
@@ -205,6 +210,8 @@ public class SearchFragment extends Fragment {
 
                 Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();
             }
+
+            pbSearch.setVisibility(View.INVISIBLE);
         }
     }
 

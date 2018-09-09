@@ -7,6 +7,7 @@
     tools:context=".Business.LoginAcivity">
 
     <RelativeLayout
+        android:id="@+id/rlLogin"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -23,4 +24,19 @@
             android:textColor="@android:color/background_light"
             android:textStyle="bold" />
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlLoginPB"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>
