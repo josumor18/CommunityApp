@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -26,10 +27,15 @@ public class LoginAcivity extends AppCompatActivity {
 
     Button btnLogin;
 
+    RelativeLayout rlLogin, rlLoginPB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        rlLogin = findViewById(R.id.rlLogin);
+        rlLoginPB = findViewById(R.id.rlLoginPB);
 
         btnLogin = findViewById(R.id.btn_Login);
     }
@@ -37,6 +43,9 @@ public class LoginAcivity extends AppCompatActivity {
     public void loginClicked(View view){
         ExecuteLogin executeLogin = new ExecuteLogin("prueba@email.com", "1234", 0);
         executeLogin.execute();
+
+        rlLogin.setVisibility(View.INVISIBLE);
+        rlLoginPB.setVisibility(View.VISIBLE);
     }
 
     public void iniciarSesion(JSONObject response){
@@ -99,6 +108,9 @@ public class LoginAcivity extends AppCompatActivity {
         Intent login = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(login);
         finish();
+
+        //rlLogin.setVisibility(View.VISIBLE);
+        //rlLoginPB.setVisibility(View.INVISIBLE);
     }
 
 
@@ -130,7 +142,7 @@ public class LoginAcivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             API_Access api = API_Access.getInstance();
 
-            isLogged = api.post_put_base(keys, values, 1, "POST");
+            isLogged = api.post_put_base(keys, values, 1, "POST", 1);
 
             return null;
         }
@@ -140,8 +152,12 @@ public class LoginAcivity extends AppCompatActivity {
             super.onPostExecute(s);
             if (isLogged) {
                 iniciarSesion(API_Access.getInstance().getJsonObjectResponse());
-            } else
+            } else{
                 Toast.makeText(LoginAcivity.this, "Error al iniciar sesión", Toast.LENGTH_SHORT).show();
+
+                rlLogin.setVisibility(View.VISIBLE);
+                rlLoginPB.setVisibility(View.INVISIBLE);
+            }
 
         }
     }
