@@ -181,7 +181,7 @@ public class CommunitiesFragment extends Fragment {
             User_Singleton user = User_Singleton.getInstance();
             String[] keys = {"id", "auth_token"};
             String[] values = {Integer.toString(user.getId()), user.getAuth_token()};
-            isOk = api.get_base(keys, values, 2, 1);
+            isOk = api.get_delete_base(keys, values, 2, "GET",1);
 
             return null;
         }

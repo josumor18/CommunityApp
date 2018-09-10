@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -24,7 +25,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class API_Access {
 
     private final String url_base = "https://communityapp-api.herokuapp.com/api/";
-    private final String[] methods = {"users/register", "users/login", "communities/get_communities", "communities/search_community"};
+    private final String[] methods = {"users/register", "users/login", "communities/get_communities", "communities/search_community", "requests/get", "requests/create", "requests/delete"};
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
 
     int estadoRequest = -1;
@@ -58,8 +59,8 @@ public class API_Access {
         return makePOSTRequest(methods[method], methodType, true, true, Parameters, responses[expectedResponse]);
     }
 
-    //----------------------------------- Método GET base -----------------------------------//
-    public boolean get_base(String[] keys, String[] values, int method, int expectedResponse){
+    //------------------------------- Método GET/DELETE base --------------------------------//
+    public boolean get_delete_base(String[] keys, String[] values, int method, String methodType, int expectedResponse){
         jsonArrayResponse = new JSONArray();
 
         String urlComp = "";
@@ -72,7 +73,22 @@ public class API_Access {
         }
 
         String urlEsp = methods[method] + "?" + urlComp;
-        return makeGETRequest(urlEsp, "GET", responses[expectedResponse], 0);
+
+        boolean result = false;
+
+        if(methodType.equals("GET")){
+            result = makeGETRequest(urlEsp, methodType, responses[expectedResponse], 0);
+        }else if(methodType.equals("DELETE")){
+            result = makeDELETERequest(urlEsp, methodType, responses[expectedResponse]);
+        }
+
+        return result;
+    }
+
+    public boolean delete_request(String id ,String id_user2,String authToken){
+        //jsonObjectResponse = new JSONObject();
+        String urlEsp = "solicituds/delete?id=" + id + "&id_user2=" + id_user2 + "&auth_token=" + authToken;
+        return makeDELETERequest(urlEsp, "DELETE", HttpsURLConnection.HTTP_OK);
     }
 
     /////////////////////// GET Respuesta del servidor: JSONObject ////////////////////////////////
@@ -263,14 +279,20 @@ public class API_Access {
         try {
             url = new URL(url_base + urlEsp);
             httpsURLConnection = (HttpsURLConnection) url.openConnection();
+            httpsURLConnection.setReadTimeout(15000);
+            httpsURLConnection.setConnectTimeout(15000);
             httpsURLConnection.setRequestMethod("DELETE");
             httpsURLConnection.setDoOutput(false);
             httpsURLConnection.setDoInput(true);
             httpsURLConnection.connect();
+
             int r = httpsURLConnection.getResponseCode();
+            String rm = httpsURLConnection.getContent().toString();
             String rC = Integer.toString(httpsURLConnection.getResponseCode());
             if(r==200){
                 return true;
+            } else{
+                Log.e("httpsURLConnection", rm);
             }
         } catch (IOException exception) {
             exception.printStackTrace();

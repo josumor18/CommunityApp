@@ -154,20 +154,44 @@ public class SearchFragment extends Fragment {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            if(userImage == null){
-                userImage = BitmapFactory.decodeResource( getActivity().getApplicationContext().getResources(),
+            if (userImage == null) {
+                userImage = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(),
                         R.drawable.img_comm_default);
             }
             imgCommunity.setImageBitmap(userImage);
 
             txtCommName.setText(communities.get(i).getName());
 
-            if(requests.get(i)){
+            if (requests.get(i)) {
                 btnUnirseCancelarSolicitud.setBackground(getResources().getDrawable(R.drawable.rounded_borders_cancel_button));
                 btnUnirseCancelarSolicitud.setTextColor(getResources().getColor(R.color.colorGrayButtonText));
                 btnUnirseCancelarSolicitud.setText("Cancelar");
             }
 
+            final int position = i;
+
+            btnUnirseCancelarSolicitud.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Button b = (Button) v;
+
+                    if(requests.get(position)){
+                        b.setBackground(getResources().getDrawable(R.drawable.rounded_borders_button));
+                        b.setTextColor(getResources().getColor(R.color.white));
+                        b.setText("  Unirse  ");
+
+                        ExecuteRequestCommunities executeRequestCommunities = new ExecuteRequestCommunities(false, communities.get(position).getId(), b, position);
+                        executeRequestCommunities.execute();
+                    }else{
+                        b.setBackground(getResources().getDrawable(R.drawable.rounded_borders_cancel_button));
+                        b.setTextColor(getResources().getColor(R.color.colorGrayButtonText));
+                        b.setText("Cancelar");
+
+                        ExecuteRequestCommunities executeRequestCommunities = new ExecuteRequestCommunities(true, communities.get(position).getId(), b, position);
+                        executeRequestCommunities.execute();
+                    }
+                }
+            });
             return view;
         }
     }
@@ -194,7 +218,7 @@ public class SearchFragment extends Fragment {
 
             String[] keys = {"id", "auth_token", "busqueda"};
             String[] values = {Integer.toString(user.getId()), user.getAuth_token(), strings[0]};
-            isOk = api.get_base(keys, values, 3, 1);
+            isOk = api.get_delete_base(keys, values, 3, "GET", 1);
 
             return null;
         }
@@ -212,6 +236,85 @@ public class SearchFragment extends Fragment {
             }
 
             pbSearch.setVisibility(View.INVISIBLE);
+        }
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    public class ExecuteRequestCommunities extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        boolean tipo;//true: create; false: delete
+        int id_community;
+        Button button;
+        int position;
+
+        public ExecuteRequestCommunities(boolean tipo, int id_community, Button button, int position) {
+            this.tipo = tipo;
+            this.id_community = id_community;
+            this.button = button;
+            this.position = position;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            API_Access api = API_Access.getInstance();
+            User_Singleton user = User_Singleton.getInstance();
+
+
+            if(tipo){//create
+                String[] keys = {"id", "auth_token", "id_community"};
+                String[] values = {Integer.toString(user.getId()), user.getAuth_token(), Integer.toString(id_community)};
+                isOk = api.post_put_base(keys, values, 5, "POST", 0);
+            }else{//delete
+                String[] keys = {"id", "auth_token", "id_community", "id_user"};
+                String[] values = {Integer.toString(user.getId()), user.getAuth_token(), Integer.toString(id_community), Integer.toString(user.getId())};
+                isOk = api.get_delete_base(keys, values, 6, "DELETE", 1);
+            }
+
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            String mensaje = "";
+            if(isOk){
+                if(tipo){
+                    mensaje = "Solicitud enviada";
+                    requests.set(position, true);
+
+                    try {
+                        User_Singleton.getInstance().setAuth_token(API_Access.getInstance().getJsonObjectResponse().getString("auth_token"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    mensaje = "Solicitud cancelada";
+                    requests.set(position, false);
+                }
+            }else{
+                if(tipo){
+                    mensaje = "Error al enviar solicitud";
+                    button.setBackground(getResources().getDrawable(R.drawable.rounded_borders_button));
+                    button.setTextColor(getResources().getColor(R.color.white));
+                    button.setText("  Unirse  ");
+                }else{
+                    mensaje = "Error al cancelar solicitud";
+                    button.setBackground(getResources().getDrawable(R.drawable.rounded_borders_cancel_button));
+                    button.setTextColor(getResources().getColor(R.color.colorGrayButtonText));
+                    button.setText("Cancelar");
+                }
+            }
+
+            Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();
         }
     }
 
