@@ -1,6 +1,7 @@
 package elcarmen.project.community.Business;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -51,6 +53,17 @@ public class CommunitiesFragment extends Fragment {
         rlCommunities = v.findViewById(R.id.rlCommunities);
         rlCommunitiesPB = v.findViewById(R.id.rlCommunitiesPB);
         lvCommunities = v.findViewById(R.id.lvCommunities);
+        lvCommunities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), CommunityActivity.class);
+                int idCommunity_enviar = communities.get(position).getId();
+                String nameCommunity_enviar = communities.get(position).getName();
+                intent.putExtra("idCommunity",idCommunity_enviar);
+                intent.putExtra("nameCommunity", nameCommunity_enviar);
+                startActivity(intent);
+            }
+        });
 
         rlCommunities.setVisibility(View.INVISIBLE);
         rlCommunitiesPB.setVisibility(View.VISIBLE);

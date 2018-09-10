@@ -4,43 +4,43 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import elcarmen.project.community.R;
 
-public class MainActivity extends AppCompatActivity {
+public class CommunityActivity extends AppCompatActivity {
 
-    TabLayout tabLayout;
-    private ViewPager container;
+    public static int idCommunity;
+    public static String nameCommunity = "";
 
-    FragmentTransaction fragmentTransaction;
-
-    private int[] tabSelectedIcons = {R.drawable.ic_group_selected, R.drawable.ic_search_selected, R.drawable.ic_notifications_selected};
-    private int[] tabUnselectedIcons = {R.drawable.ic_group_unselected, R.drawable.ic_search_unselected, R.drawable.ic_notifications_unselected};
+    TabLayout tabLayoutCommunity;
+    private ViewPager containerCommunity;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
+
+    private int[] tabSelectedIcons = {R.drawable.ic_feed_selected, R.drawable.ic_events_selected, R.drawable.ic_chat_selected, R.drawable.ic_members_selected, R.drawable.ic_edit_community_selected};
+    private int[] tabUnselectedIcons = {R.drawable.ic_feed_unselected, R.drawable.ic_events_unselected, R.drawable.ic_chat_unselected, R.drawable.ic_members_unselected, R.drawable.ic_edit_community_unselected};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_community);
 
-        tabLayout = findViewById(R.id.appbartabs);
-        tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        idCommunity = getIntent().getIntExtra("idCommunit",0);
+        nameCommunity = getIntent().getStringExtra("nameCommunity");
+
+        getSupportActionBar().setSubtitle(nameCommunity);
+        tabLayoutCommunity = findViewById(R.id.appbartabsCommunity);
+        tabLayoutCommunity.setTabMode(TabLayout.MODE_FIXED);
+
         cargarTabLayout();
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+
+        tabLayoutCommunity.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                container.setCurrentItem(tab.getPosition());
+                containerCommunity.setCurrentItem(tab.getPosition());
                 cambiarIconoSeleccionado(tab.getPosition());
 
             }
@@ -58,37 +58,31 @@ public class MainActivity extends AppCompatActivity {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        container = findViewById(R.id.container);
-        container.setAdapter(mSectionsPagerAdapter);
-        container.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-
-        return super.onCreateOptionsMenu(menu);
+        containerCommunity = findViewById(R.id.containerCommunity);
+        containerCommunity.setAdapter(mSectionsPagerAdapter);
+        containerCommunity.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayoutCommunity));
     }
 
     /*
-    * Metodos para el TabLayout:
-    * cargarTabLayout()
-    * cambiarFragment(int tab)
-    * cambiarIconoSeleccionado(int position)
-    */
+     * Metodos para el TabLayout:
+     * cargarTabLayout()
+     * cambiarFragment(int tab)
+     * cambiarIconoSeleccionado(int position)
+     */
     private void cargarTabLayout(){
-        tabLayout.addTab(tabLayout.newTab().setIcon(tabSelectedIcons[0]));
-        tabLayout.addTab(tabLayout.newTab().setIcon(tabUnselectedIcons[1]));
-        tabLayout.addTab(tabLayout.newTab().setIcon(tabUnselectedIcons[2]));
+        tabLayoutCommunity.addTab(tabLayoutCommunity.newTab().setIcon(tabSelectedIcons[0]));
+        tabLayoutCommunity.addTab(tabLayoutCommunity.newTab().setIcon(tabUnselectedIcons[1]));
+        tabLayoutCommunity.addTab(tabLayoutCommunity.newTab().setIcon(tabUnselectedIcons[2]));
+        tabLayoutCommunity.addTab(tabLayoutCommunity.newTab().setIcon(tabUnselectedIcons[3]));
+        tabLayoutCommunity.addTab(tabLayoutCommunity.newTab().setIcon(tabUnselectedIcons[4]));
     }
 
     private void cambiarIconoSeleccionado(int position){
-        tabLayout.getTabAt(position).setIcon(tabSelectedIcons[position]);
+        tabLayoutCommunity.getTabAt(position).setIcon(tabSelectedIcons[position]);
     }
 
     private void cambiarIconoDeseleccionado(int position){
-        tabLayout.getTabAt(position).setIcon(tabUnselectedIcons[position]);
+        tabLayoutCommunity.getTabAt(position).setIcon(tabUnselectedIcons[position]);
     }
 
 
@@ -114,13 +108,19 @@ public class MainActivity extends AppCompatActivity {
 
             switch (sectionNumber){
                 case 1:
-                    fragment = new CommunitiesFragment();
+                    fragment = new CommunityFeedFragment();
                     break;
                 case 2:
-                    fragment = new SearchFragment();
+                    fragment = new CommunityEventsFragment();
                     break;
                 case 3:
-                    fragment = new NotificationsFragment();
+                    fragment = new CommunityChatListFragment();
+                    break;
+                case 4:
+                    fragment = new CommunityMembersFragment();
+                    break;
+                case 5:
+                    fragment = new CommunityProfileFragment();
                     break;
             }
             return fragment;
@@ -151,13 +151,13 @@ public class MainActivity extends AppCompatActivity {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
 
-            return PlaceholderFragment.newInstance(position + 1);
+            return CommunityActivity.PlaceholderFragment.newInstance(position + 1);
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Show 5 total pages.
+            return 5;
         }
     }
 }
