@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,7 +55,27 @@ public class CreateCommunityActivity extends AppCompatActivity {
 
         lvRulesListCreate = findViewById(R.id.lvRulesListCreate);
         edtxtCommName = findViewById(R.id.edtxtCommName);
-        edtxtCommName.setOnKeyListener(new View.OnKeyListener() {
+        edtxtCommName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(count == 0){
+                    menuCreateCommunity.getItem(0).setEnabled(false);
+                }else{
+                    menuCreateCommunity.getItem(0).setEnabled(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        /*edtxtCommName.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if(edtxtCommName.getText().toString().isEmpty()){
@@ -62,7 +85,7 @@ public class CreateCommunityActivity extends AppCompatActivity {
                 }
                 return false;
             }
-        });
+        });*/
         edtxtCommDescription  = findViewById(R.id.edtxtCommDescription);
         edtxtReglaConvivencia = findViewById(R.id.edtxtReglaConvivencia);
 
