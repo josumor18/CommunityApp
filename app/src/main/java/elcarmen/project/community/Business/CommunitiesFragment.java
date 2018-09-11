@@ -57,6 +57,7 @@ public class CommunitiesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), CreateCommunityActivity.class);
+                intent.putExtra("isSubcommunity", false);
                 startActivity(intent);
             }
         });

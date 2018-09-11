@@ -136,6 +136,10 @@ public class User_Singleton {
         }
     }
 
+    public void addCommunity_admin(int idCommunity){
+        communities_admin.add(idCommunity);
+    }
+
     public ArrayList<Integer> getCommunities_member() {
         return communities_member;
     }

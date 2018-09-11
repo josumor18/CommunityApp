@@ -1,7 +1,9 @@
 package elcarmen.project.community.Business;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -20,15 +22,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import elcarmen.project.community.Data.API_Access;
 import elcarmen.project.community.Data.HttpGetBitmap;
 import elcarmen.project.community.R;
 
 public class CreateCommunityActivity extends AppCompatActivity {
 
     Menu menuCreateCommunity;
+
+    boolean isSubcommunity = false;
 
     ListView lvRulesListCreate;
     EditText edtxtCommName, edtxtCommDescription, edtxtReglaConvivencia;
@@ -39,6 +47,8 @@ public class CreateCommunityActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_community);
+
+        isSubcommunity = getIntent().getBooleanExtra("isSubcommunity",false);
 
         lvRulesListCreate = findViewById(R.id.lvRulesListCreate);
         edtxtCommName = findViewById(R.id.edtxtCommName);
@@ -65,6 +75,7 @@ public class CreateCommunityActivity extends AppCompatActivity {
         }else {
             listaReglas.add(newRule);
             lvRulesListCreate.setAdapter(new RulesListAdapter());
+            edtxtReglaConvivencia.setText("");
         }
     }
 
@@ -79,6 +90,38 @@ public class CreateCommunityActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.createCommunityItem:
+
+                String[] valores = new String[6];
+
+                valores[0] = edtxtCommName.getText().toString();
+                valores[1] = edtxtCommDescription.getText().toString();
+                ArrayList<String> rulesAux = new ArrayList<String>();
+                String rulesArrayToString = "[";
+                for(int i = 0; i < listaReglas.size(); i++){
+                    rulesAux.add(listaReglas.get(i));
+                    rulesArrayToString += listaReglas.get(i) + ",";
+                }
+                rulesAux.add("");
+                rulesArrayToString += "]";
+                valores[2] = rulesAux.toString();
+                valores[2] = rulesArrayToString;
+
+                if(isSubcommunity){
+                    valores[3] = "true";
+                }else{
+                    valores[3] = "false";
+                }
+                valores[4] = "";
+                valores[5] = "";
+
+                ExecuteCreateCommunity executeCreateCommunity = new ExecuteCreateCommunity(valores);
+                executeCreateCommunity.execute();
+                //Toast.makeText(getApplicationContext(), "Crear comunidad", Toast.LENGTH_SHORT).show();
+                break;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -118,14 +161,84 @@ public class CreateCommunityActivity extends AppCompatActivity {
 
             txtRuleNumberCC.setText(Integer.toString(i+1) + ".");
             txtRuleTextCC.setText(listaReglas.get(i));
+
+            final int position = i;
             btnDeleteRuleCC.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    listaReglas.remove(position);
+                    lvRulesListCreate.setAdapter(new RulesListAdapter());
                     Toast.makeText(getApplicationContext(), "Regla eliminada", Toast.LENGTH_SHORT).show();
                 }
             });
 
             return view;
+        }
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    public class ExecuteCreateCommunity extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        String name, description, rules, isSubcommunity, photo, photo_thumbnail;
+
+        public ExecuteCreateCommunity(String[] values) {
+            this.name = values[0];
+            this.description = values[1];
+            this.rules = values[2];
+            this.isSubcommunity= values[3];
+            this.photo = values[4];
+            this.photo_thumbnail = values[5];
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //rlLoaderEmisoras.setVisibility(View.VISIBLE);
+            //rlLogin.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            API_Access api = API_Access.getInstance();
+            User_Singleton user = User_Singleton.getInstance();
+
+            String[] keys = {"id", "auth_token", "name", "description", "rules", "isSubcommunity", "photo", "photo_thumbnail"};
+            String[] values = {Integer.toString(user.getId()), user.getAuth_token(), name, description, rules, isSubcommunity, photo, photo_thumbnail};
+            isOk = api.post_put_base(keys, values, 8, "POST",0);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            String mensaje = "";
+            if(isOk){
+                try {
+                    JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+
+                    User_Singleton user = User_Singleton.getInstance();
+                    user.setAuth_token(response.getString("auth_token"));
+                    user.addCommunity_admin(response.getInt("id_community"));
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+
+                    mensaje = "Comunidad creada";
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                //cargarCommunities(API_Access.getInstance().getJsonObjectResponse());
+            }else{
+                mensaje = "Error al crear comunidad";
+            }
+
+            Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
         }
     }
 }

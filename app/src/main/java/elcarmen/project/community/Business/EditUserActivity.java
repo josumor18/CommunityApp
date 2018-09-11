@@ -364,7 +364,7 @@ public class EditUserActivity extends AppCompatActivity {
                     User_Singleton.getInstance().setAuth_token(token);
                     //LoginActivity.actualizarAuth_Token(token, getApplicationContext());
                     //Si es Activity
-                    LoginAcivity.actualizarAuth_Token(token,EditUserActivity.this);
+                    //LoginAcivity.actualizarAuth_Token(token,EditUserActivity.this);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
