@@ -73,7 +73,6 @@ public class EditUserActivity extends AppCompatActivity {
         edtAddress.setText(user.getAddress());
 
         if(user.isPrivateProfile()){
-            Toast.makeText(EditUserActivity.this, "Es privado", Toast.LENGTH_SHORT).show();
             checkPrivate.setChecked(true);
         }
 
