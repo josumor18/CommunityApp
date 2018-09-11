@@ -147,15 +147,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="181dp" />
 
-            <Button
-                android:id="@+id/btnCreateCommunity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/rounded_borders_default_button"
-                android:text="Crear Comunidad"
-                android:textColor="@android:color/background_light" />
-
         </LinearLayout>
     </ScrollView>
 
