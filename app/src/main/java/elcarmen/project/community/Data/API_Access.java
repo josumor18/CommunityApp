@@ -25,7 +25,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class API_Access {
 
     private final String url_base = "https://communityapp-api.herokuapp.com/api/";
-    private final String[] methods = {"users/register", "users/login", "communities/get_communities", "communities/search_community", "requests/get", "requests/create", "requests/delete"};
+    private final String[] methods = {"users/register", "users/login", "communities/get_communities", "communities/search_community", "requests/get", "requests/create", "requests/delete", "users/edit"};
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
 
     int estadoRequest = -1;
@@ -83,12 +83,6 @@ public class API_Access {
         }
 
         return result;
-    }
-
-    public boolean delete_request(String id ,String id_user2,String authToken){
-        //jsonObjectResponse = new JSONObject();
-        String urlEsp = "solicituds/delete?id=" + id + "&id_user2=" + id_user2 + "&auth_token=" + authToken;
-        return makeDELETERequest(urlEsp, "DELETE", HttpsURLConnection.HTTP_OK);
     }
 
     /////////////////////// GET Respuesta del servidor: JSONObject ////////////////////////////////

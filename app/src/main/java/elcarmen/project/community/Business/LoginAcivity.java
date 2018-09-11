@@ -3,6 +3,7 @@ package elcarmen.project.community.Business;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -111,6 +112,13 @@ public class LoginAcivity extends AppCompatActivity {
 
         //rlLogin.setVisibility(View.VISIBLE);
         //rlLoginPB.setVisibility(View.INVISIBLE);
+    }
+
+    public static void actualizarAuth_Token(String auth_token, Context c){
+        //SharedPreferences preferences = c.getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE);
+
+        //preferences.edit().putString(PREFERENCE_AUTH_TOKEN, auth_token).apply();
+        //preferences.edit().putString("tokenAux", auth_token).apply();
     }
 
 
