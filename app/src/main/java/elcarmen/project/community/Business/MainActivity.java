@@ -1,5 +1,6 @@
 package elcarmen.project.community.Business;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -69,6 +71,38 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.options_menu, menu);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Intent intent = null;
+        switch(item.getItemId()){
+            case R.id.main_item:
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.agenda_item:
+                //intent = new Intent(getApplicationContext(), MainActivity.class);
+                //startActivity(intent);
+                break;
+            case R.id.destacadas_item:
+                //intent = new Intent(getApplicationContext(), MainActivity.class);
+                //startActivity(intent);
+                break;
+            case R.id.perfil_item:
+                intent = new Intent(getApplicationContext(), EditUserActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.logout_item:
+                //TODO borrar auth token de las preferencias
+                intent = new Intent(getApplicationContext(), LoginAcivity.class);
+                startActivity(intent);
+                finish();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /*
