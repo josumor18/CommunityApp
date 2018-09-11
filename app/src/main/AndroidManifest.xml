@@ -26,7 +26,6 @@
             android:name=".Business.MainActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".Business.EditUserActivity"></activity>
-=======
         <activity
             android:name=".Business.CommunityActivity"
             android:screenOrientation="portrait">
