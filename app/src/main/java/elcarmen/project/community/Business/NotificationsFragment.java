@@ -35,6 +35,15 @@ public class NotificationsFragment extends Fragment {
                 startActivity(a);
             }
         });
+
+        Button but2 = v.findViewById(R.id.button2);
+        but2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent b = new Intent(getActivity().getApplicationContext() ,NewsActivity.class);
+                startActivity(b);
+            }
+        });
         // Inflate the layout for this fragment
         return v;
     }
