@@ -27,9 +27,20 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Business.EditUserActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Business.MainActivity" />
+        </activity>
         <activity
             android:name=".Business.CommunityActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Business.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Business.CreateCommunityActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
