@@ -27,7 +27,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Business.EditUserActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Business.CommunityActivity"
             android:screenOrientation="portrait">
@@ -35,6 +35,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Business.MainActivity" />
         </activity>
+        <activity android:name=".Business.NewsActivity"></activity>
     </application>
 
 </manifest>
