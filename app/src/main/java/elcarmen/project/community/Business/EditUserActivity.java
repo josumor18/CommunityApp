@@ -74,7 +74,7 @@ public class EditUserActivity extends AppCompatActivity {
 
         if(user.isPrivateProfile()){
             Toast.makeText(EditUserActivity.this, "Es privado", Toast.LENGTH_SHORT).show();
-            checkPrivate.setClickable(true);
+            checkPrivate.setChecked(true);
         }
 
         imageButton.setImageBitmap(user.getPhoto());
@@ -361,7 +361,7 @@ public class EditUserActivity extends AppCompatActivity {
             if (isOk) {
                 String token = null;
                 try {
-                    token = (API_Access.getInstance().getJsonObjectResponse()).getString("authentication_token");
+                    token = (API_Access.getInstance().getJsonObjectResponse()).getString("auth_token");
                     User_Singleton.getInstance().setAuth_token(token);
                     //LoginActivity.actualizarAuth_Token(token, getApplicationContext());
                     //Si es Activity
