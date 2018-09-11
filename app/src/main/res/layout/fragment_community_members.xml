@@ -6,9 +6,48 @@
     tools:context=".Business.CommunityMembersFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
 
+        <RelativeLayout
+            android:id="@+id/rlVerSolicitudes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#d7d7d7">
+
+            <TextView
+                android:id="@+id/txtVerSolicitudes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="15dp"
+                android:text="Ver Solicitudes"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtCantSolicitudes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="false"
+                android:layout_marginLeft="-3dp"
+                android:layout_marginTop="4dp"
+                android:layout_toEndOf="@+id/txtVerSolicitudes"
+                android:background="@drawable/circular_notification_text"
+                android:text="1"
+                android:textAllCaps="false"
+                android:textColor="@android:color/background_light"
+                android:textSize="8sp"
+                android:textStyle="bold|italic" />
+
+        </RelativeLayout>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 </FrameLayout>

@@ -4,9 +4,10 @@
     <color name="colorPrimaryDark">#713537</color>
     <color name="colorPrimaryLight">#B17577</color>
     <color name="colorGrayTab">#efefef</color>
-    <color name="colorGrayButtonText">#666666</color>
+    <color name="colorGrayButtonText">#d7d7d7</color>
     <color name="colorAccent">#479795</color>
     <color name="colorAccentTransparent">#4e479795</color>
     <color name="button_Request_Community">#004040</color>
     <color name="white">#ffffff</color>
+    <color name="Transparent">#00ffffff</color>
 </resources>
