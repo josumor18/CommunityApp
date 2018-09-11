@@ -43,7 +43,6 @@ public class EditUserActivity extends AppCompatActivity {
     CheckBox checkPrivate;
     Button btnSave;
 
-    boolean is_private;
 
     private static int IMG_RESULT = 1;
     String picturePath;
@@ -72,6 +71,11 @@ public class EditUserActivity extends AppCompatActivity {
         edtTel1.setText(user.getCel());
         edtTel2.setText(user.getTel());
         edtAddress.setText(user.getAddress());
+
+        if(user.isPrivateProfile()){
+            Toast.makeText(EditUserActivity.this, "Es privado", Toast.LENGTH_SHORT).show();
+            checkPrivate.setChecked(true);
+        }
 
         imageButton.setImageBitmap(user.getPhoto());
 
@@ -129,24 +133,7 @@ public class EditUserActivity extends AppCompatActivity {
         }
     }
 
-    public void saveChangesClicked(View view){
-        if (false/*checkbox is true */){
-            //then is_private = true
-        }
-        if (!TextUtils.isEmpty(edtName.getText()) && !TextUtils.isEmpty(edtTel1.getText())) {
 
-            //Falta checkbox
-            ExecuteChange executeChange = new ExecuteChange(Integer.toString(user.getId()),user.getAuth_token(),
-                    edtName.getText().toString(), edtTel1.getText().toString(),edtTel2.getText().toString(),
-                    edtAddress.getText().toString(), "");
-
-            executeChange.execute();
-        }
-        else {
-            edtName.setError("Campo Requerido");
-            edtTel1.setError("Campo Requerido");
-        }
-    }
 
     public String getFileName(Uri uri) {
         String result = null;
@@ -313,6 +300,22 @@ public class EditUserActivity extends AppCompatActivity {
         return result;
     }
 
+    public void saveChangesClicked(View view){
+
+        if (!TextUtils.isEmpty(edtName.getText()) && !TextUtils.isEmpty(edtTel1.getText())) {
+
+            //Falta checkbox
+            ExecuteChange executeChange = new ExecuteChange(Integer.toString(user.getId()),user.getAuth_token(),
+                    edtName.getText().toString(), edtTel1.getText().toString(),edtTel2.getText().toString(),
+                    edtAddress.getText().toString(), checkPrivate.isChecked());
+
+            executeChange.execute();
+        }
+        else {
+            edtName.setError("Campo Requerido");
+            edtTel1.setError("Campo Requerido");
+        }
+    }
 
     public class ExecuteChange extends AsyncTask<String,Void,String> {
         private String id;
@@ -320,12 +323,12 @@ public class EditUserActivity extends AppCompatActivity {
         private String tel1;
         private String tel2;
         private String address;
-        private String isPrivate;
+        private Boolean isPrivate;
 
         private String authToken;
         private boolean isOk = false;
 
-        public ExecuteChange(String id,String authToken,String name, String tel1, String tel2, String address, String isPrivate) {
+        public ExecuteChange(String id,String authToken,String name, String tel1, String tel2, String address, Boolean isPrivate) {
             this.name = name;
             this.tel1 = tel1;
             this.tel2 = tel2;
@@ -344,7 +347,7 @@ public class EditUserActivity extends AppCompatActivity {
 
             API_Access api = API_Access.getInstance();
             String[] keys = {"id", "auth_token", "name","cel","tel","address","isPrivate"};
-            String[] values = {id,authToken,name,tel1,tel2,address,isPrivate};
+            String[] values = {id,authToken,name,tel1,tel2,address,Boolean.toString(isPrivate)};
             isOk = api.post_put_base(keys,values,7,"PUT",1);
 
 
@@ -358,7 +361,7 @@ public class EditUserActivity extends AppCompatActivity {
             if (isOk) {
                 String token = null;
                 try {
-                    token = (API_Access.getInstance().getJsonObjectResponse()).getString("authentication_token");
+                    token = (API_Access.getInstance().getJsonObjectResponse()).getString("auth_token");
                     User_Singleton.getInstance().setAuth_token(token);
                     //LoginActivity.actualizarAuth_Token(token, getApplicationContext());
                     //Si es Activity
@@ -370,7 +373,7 @@ public class EditUserActivity extends AppCompatActivity {
                 user.setCel(tel1);
                 user.setTel(tel2);
                 user.setAddress(address);
-                user.setPrivateProfile(is_private);
+                user.setPrivateProfile(isPrivate);
                 Toast.makeText(EditUserActivity.this, "Cambio exitoso", Toast.LENGTH_SHORT).show();
                 //finish();
             } else
