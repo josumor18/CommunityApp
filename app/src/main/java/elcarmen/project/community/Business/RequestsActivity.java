@@ -31,7 +31,6 @@ import elcarmen.project.community.R;
 public class RequestsActivity extends AppCompatActivity {
 
     ArrayList<User> users_requests = new ArrayList<User>();
-    ArrayList<Boolean> seens_requests = new ArrayList<Boolean>();
 
     ListView lvUsersRequests;
 
@@ -56,14 +55,12 @@ public class RequestsActivity extends AppCompatActivity {
             //LoginActivity.actualizarAuth_Token(token, getActivity());
             //JSONArray jsonListUserPosts = jsonResult.getJSONArray("posts");
             JSONArray jsonUsersList = jsonResult.getJSONArray("users");
-            JSONArray jsonVistosList = jsonResult.getJSONArray("seens");
             for (int i = 0; i < jsonUsersList.length(); i++) {
                 JSONObject jsonUser = jsonUsersList.getJSONObject(i);
 
                 User user = new User(jsonUser.getString("id"), jsonUser.getString("name"), "", "", "", "", jsonUser.getString("photo"), jsonUser.getString("photo_thumbnail"), null, null, true);
-                users_requests.add(user);
 
-                seens_requests.add(jsonVistosList.getBoolean(i));
+                users_requests.add(user);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -109,7 +106,7 @@ public class RequestsActivity extends AppCompatActivity {
 
             ImageView imgUserReqItem = view.findViewById(R.id.img_UserReqItem);
             TextView txtUsernameReqItem = view.findViewById(R.id.txtUsernameReqItem);
-            Button btnAcceptRequest = view.findViewById(R.id.btnAcceptRequest);
+            Button btnAceptRequest = view.findViewById(R.id.btnAcceptRequest);
             Button btnRefuseRequest = view.findViewById(R.id.btnRefuseRequest);
 
             HttpGetBitmap request = new HttpGetBitmap();
@@ -128,27 +125,6 @@ public class RequestsActivity extends AppCompatActivity {
             imgUserReqItem.setImageBitmap(userImage);
 
             txtUsernameReqItem.setText(users_requests.get(i).getName());
-
-            final int position = i;
-            btnAcceptRequest.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ExecuteRequestResponse executeRequestResponse = new ExecuteRequestResponse(13, "POST", Integer.toString(CommunityActivity.idCommunity), users_requests.get(position).getId(), position);
-                    executeRequestResponse.execute();
-                }
-            });
-
-            btnRefuseRequest.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ExecuteRequestResponse executeRequestResponse = new ExecuteRequestResponse(6, "DELETE", Integer.toString(CommunityActivity.idCommunity), users_requests.get(position).getId(), position);
-                    executeRequestResponse.execute();
-                }
-            });
-
-            if(!seens_requests.get(i)){
-                view.setBackgroundColor(getResources().getColor(R.color.colorAccentTransparent));
-            }
 
             return view;
         }
@@ -185,62 +161,6 @@ public class RequestsActivity extends AppCompatActivity {
                 String mensaje = "Error al obtener las solicitudes";
 
                 Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    public class ExecuteRequestResponse extends AsyncTask<String, Void, String> {
-        boolean isOk = false;
-        int metodo;
-        String methodType;
-        String id_com;
-        String id_user;
-        int position;
-
-        public ExecuteRequestResponse(int metodo, String methodType, String id_com, String id_user, int position) {
-            this.metodo = metodo;
-            this.methodType = methodType;
-            this.id_com = id_com;
-            this.id_user = id_user;
-            this.position = position;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            API_Access api = API_Access.getInstance();
-            User_Singleton user = User_Singleton.getInstance();
-            String[] keys = {"id", "auth_token", "id_community", "id_user"};
-            String[] values = {Integer.toString(user.getId()), user.getAuth_token(), id_com, id_user};
-
-            if(metodo == 6){
-                isOk = api.get_delete_base(keys, values, metodo, methodType,1);
-            }else if (metodo == 13){
-                isOk = api.post_put_base(keys, values, metodo, methodType, 1);
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            if(isOk){
-                try {
-                    User_Singleton.getInstance().setAuth_token(API_Access.getInstance().getJsonObjectResponse().getString("auth_token"));
-
-                    users_requests.remove(position);
-                    seens_requests.remove(position);
-                    lvUsersRequests.setAdapter(new RequestsAdapter());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
