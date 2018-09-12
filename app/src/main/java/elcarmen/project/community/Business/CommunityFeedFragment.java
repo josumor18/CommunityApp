@@ -38,6 +38,10 @@ public class CommunityFeedFragment extends Fragment {
 
     FloatingActionButton ftbtnCreateNews;
 
+    User_Singleton user;
+
+    boolean isAdmin;
+
     private ArrayList<News> listNews = new ArrayList<News>();
 
     public CommunityFeedFragment() {
@@ -50,6 +54,7 @@ public class CommunityFeedFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_community_feed, container, false);
+        user = User_Singleton.getInstance();
         ftbtnCreateNews = v.findViewById(R.id.ftbtnCreateNews);
         ftbtnCreateNews.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,11 +67,32 @@ public class CommunityFeedFragment extends Fragment {
 
         lvNews = v.findViewById(R.id.lvNews);
 
-        ExecuteGetNews executeGetNews = new ExecuteGetNews();
-        executeGetNews.execute();
+        isAdmin = user.isAdmin(CommunityActivity.idCommunity);
+        if(isAdmin) {
+            ExecuteGetNews executeGetNews = new ExecuteGetNews();
+            executeGetNews.execute();
+        }
+        else{
+            ExecuteGetNews executeGetNews = new ExecuteGetNews(true);
+            executeGetNews.execute();
+        }
 
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        isAdmin = user.isAdmin(CommunityActivity.idCommunity);
+        if(isAdmin) {
+            ExecuteGetNews executeGetNews = new ExecuteGetNews();
+            executeGetNews.execute();
+        }
+        else{
+            ExecuteGetNews executeGetNews = new ExecuteGetNews(true);
+            executeGetNews.execute();
+        }
+        super.onResume();
     }
 
     private void cargarNews(JSONObject jsonResult) {
@@ -169,6 +195,15 @@ public class CommunityFeedFragment extends Fragment {
     /////////////////////////////////////////////////////////////////////////////////////////////////
     public class ExecuteGetNews extends AsyncTask<String, Void, String> {
         boolean isOk = false;
+        boolean isApproved = false;
+
+        ExecuteGetNews(){
+
+        }
+
+        ExecuteGetNews(boolean status){
+            this.isApproved = status;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -181,11 +216,21 @@ public class CommunityFeedFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
 
-            String[] keys = {"id"};
-            String[] values = {Integer.toString(CommunityActivity.idCommunity)};
-            //isOk = api.get_delete_base(keys, values, 10, "GET",1);
+            API_Access api = API_Access.getInstance();
+
+            if(isAdmin) {
+                String[] keys = {"id"};
+                String[] values = {Integer.toString(CommunityActivity.idCommunity)};
+                isOk = api.get_delete_base(keys, values, 10, "GET", 1);
+            }
+            else{
+                String[] keys = {"id","isApproved"};
+                String[] values = {Integer.toString(CommunityActivity.idCommunity),Boolean.toString(isApproved)};
+                isOk = api.get_delete_base(keys, values, 11, "GET", 1);
+            }
 
             return null;
+
         }
 
         @Override
