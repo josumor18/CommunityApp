@@ -39,7 +39,6 @@ public class API_Access {
             "news/get_news",
             "news/get_news_status",
             "requests/count_new_requests",
-            "requests/put_seen",
             "requests/accept"};
   
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};

@@ -79,7 +79,7 @@ public class CommunityMembersFragment extends Fragment {
             User_Singleton user = User_Singleton.getInstance();
             String[] keys = {"id", "auth_token", "id_community"};
             String[] values = {Integer.toString(user.getId()), user.getAuth_token(), Integer.toString(CommunityActivity.idCommunity)};
-            isOk = api.get_delete_base(keys, values, 11, "GET",1);
+            isOk = api.get_delete_base(keys, values, 12, "GET",1);
 
             return null;
         }
