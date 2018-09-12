@@ -27,7 +27,8 @@ public class API_Access {
     private final String url_base = "https://communityapp-api.herokuapp.com/api/";
     private final String[] methods = {"users/register", "users/login", "communities/get_communities",
             "communities/search_community", "requests/get", "requests/create", "requests/delete",
-            "users/edit", "communities/create","news/create","news/get_news"};
+            "users/edit", "communities/create","news/create","news/get_news", "requests/count_new_requests",
+            "requests/put_seen", "requests/accept"};
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
 
     int estadoRequest = -1;

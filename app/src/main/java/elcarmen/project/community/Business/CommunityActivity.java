@@ -8,6 +8,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+
 import elcarmen.project.community.R;
 
 public class CommunityActivity extends AppCompatActivity {
@@ -28,7 +30,7 @@ public class CommunityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community);
 
-        idCommunity = getIntent().getIntExtra("idCommunit",0);
+        idCommunity = getIntent().getIntExtra("idCommunity",0);
         nameCommunity = getIntent().getStringExtra("nameCommunity");
 
         getSupportActionBar().setSubtitle(nameCommunity);

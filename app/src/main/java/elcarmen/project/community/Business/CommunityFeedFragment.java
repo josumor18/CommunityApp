@@ -183,7 +183,7 @@ public class CommunityFeedFragment extends Fragment {
 
             String[] keys = {"id"};
             String[] values = {Integer.toString(CommunityActivity.idCommunity)};
-            isOk = api.get_delete_base(keys, values, 10, "GET",1);
+            //isOk = api.get_delete_base(keys, values, 10, "GET",1);
 
             return null;
         }
