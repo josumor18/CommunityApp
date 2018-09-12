@@ -28,7 +28,7 @@
                 android:layout_marginStart="11dp"
                 app:srcCompat="@mipmap/ic_launcher" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="85dp"
                 android:layout_toEndOf="@+id/img_CommListItem"
@@ -36,22 +36,24 @@
 
                 <TextView
                     android:id="@+id/txtCommListItem"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/btnUnirseCancelarSolicitud"
                     android:layout_weight="1"
                     android:gravity="center_horizontal|center"
                     android:text="Nombre de comunidad"
-                    android:textAlignment="textStart"
+                    android:textAlignment="viewStart"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/btnUnirseCancelarSolicitud"
-                    android:layout_width="30dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="35dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_borders_button"
@@ -62,7 +64,7 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </RelativeLayout>
 
