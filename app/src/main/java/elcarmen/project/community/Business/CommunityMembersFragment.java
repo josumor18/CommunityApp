@@ -1,12 +1,21 @@
 package elcarmen.project.community.Business;
 
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import elcarmen.project.community.Data.API_Access;
 import elcarmen.project.community.R;
 
 /**
@@ -14,6 +23,8 @@ import elcarmen.project.community.R;
  */
 public class CommunityMembersFragment extends Fragment {
 
+    RelativeLayout rlVerSolicitudes;
+    TextView txtCantSolicitudes;
 
     public CommunityMembersFragment() {
         // Required empty public constructor
@@ -24,7 +35,73 @@ public class CommunityMembersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_community_members, container, false);
+        View v = inflater.inflate(R.layout.fragment_community_members, container, false);
+
+        rlVerSolicitudes = v.findViewById(R.id.rlVerSolicitudes);
+        txtCantSolicitudes = v.findViewById(R.id.txtCantSolicitudes);
+        txtCantSolicitudes.setVisibility(View.INVISIBLE);
+
+        if(User_Singleton.getInstance().isAdmin(CommunityActivity.idCommunity)){
+            ExecuteGetRequestCount executeGetRequestCount = new ExecuteGetRequestCount();
+            executeGetRequestCount.execute();
+        }else{
+            rlVerSolicitudes.setVisibility(View.GONE);
+        }
+
+        rlVerSolicitudes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                txtCantSolicitudes.setVisibility(View.INVISIBLE);
+
+                Intent intent = new Intent(getActivity(), RequestsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        return v;
+    }
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    public class ExecuteGetRequestCount extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            API_Access api = API_Access.getInstance();
+            User_Singleton user = User_Singleton.getInstance();
+            String[] keys = {"id", "auth_token", "id_community"};
+            String[] values = {Integer.toString(user.getId()), user.getAuth_token(), Integer.toString(CommunityActivity.idCommunity)};
+            isOk = api.get_delete_base(keys, values, 11, "GET",1);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                try {
+                    JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+
+                    int cantidad = response.getInt("cantidad");
+                    if(cantidad > 0){
+                        txtCantSolicitudes.setText(Integer.toString(cantidad));
+                        txtCantSolicitudes.setVisibility(View.VISIBLE);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }

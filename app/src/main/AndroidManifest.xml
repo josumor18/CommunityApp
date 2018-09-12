@@ -4,10 +4,12 @@
     package="elcarmen.project.community">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        tools:remove="android:maxSdkVersion"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        tools:remove="android:maxSdkVersion"/>
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        tools:remove="android:maxSdkVersion" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:remove="android:maxSdkVersion" />
 
     <application
         android:allowBackup="true"
@@ -49,11 +51,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Business.MainActivity" />
         </activity>
-        <activity android:name=".Business.NewsActivity"
+        <activity
+            android:name=".Business.NewsActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Business.CommunityActivity" />
+        </activity>
+        <activity
+            android:name=".Business.RequestsActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

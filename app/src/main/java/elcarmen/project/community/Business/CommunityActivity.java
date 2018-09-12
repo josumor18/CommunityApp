@@ -8,6 +8,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+
 import elcarmen.project.community.R;
 
 public class CommunityActivity extends AppCompatActivity {
