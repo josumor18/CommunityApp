@@ -2,7 +2,10 @@ package elcarmen.project.community.Business;
 
 import android.graphics.Bitmap;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class News {
 
@@ -14,14 +17,26 @@ public class News {
     private Bitmap photo;
     private boolean approved;
 
-    public News(int id, String title, String description, Date date, String url_photo, Bitmap photo, boolean approved) {
+    public News(int id, String title, String description, String date, String url_photo, Bitmap photo, boolean approved) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.date = date;
         this.url_photo = url_photo;
         this.photo = photo;
         this.approved = approved;
+
+        String dateIn = date.split("T")[0];
+        String timeIn = date.split("T")[1];//.split(".")[0];
+        timeIn = timeIn.split("\\.")[0];
+        String fechaHora = dateIn + " " + timeIn;
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        Date newDate = new Date();
+        try{
+            newDate = format.parse(fechaHora);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        this.date = newDate;
     }
 
     public int getId() {
