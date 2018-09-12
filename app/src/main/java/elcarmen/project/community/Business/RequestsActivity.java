@@ -31,8 +31,8 @@ import elcarmen.project.community.R;
 public class RequestsActivity extends AppCompatActivity {
 
     ArrayList<User> users_requests = new ArrayList<User>();
+    //Agregué esto
     ArrayList<Boolean> seens_requests = new ArrayList<Boolean>();
-
 
     ListView lvUsersRequests;
 
@@ -111,7 +111,7 @@ public class RequestsActivity extends AppCompatActivity {
 
             ImageView imgUserReqItem = view.findViewById(R.id.img_UserReqItem);
             TextView txtUsernameReqItem = view.findViewById(R.id.txtUsernameReqItem);
-            Button btnAceptRequest = view.findViewById(R.id.btnAcceptRequest);
+            Button btnAcceptRequest = view.findViewById(R.id.btnAcceptRequest);
             Button btnRefuseRequest = view.findViewById(R.id.btnRefuseRequest);
 
             HttpGetBitmap request = new HttpGetBitmap();
@@ -252,3 +252,4 @@ public class RequestsActivity extends AppCompatActivity {
         }
     }
 }
+
