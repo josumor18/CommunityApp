@@ -164,4 +164,60 @@ public class RequestsActivity extends AppCompatActivity {
             }
         }
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    public class ExecuteRequestResponse extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int metodo;
+        String methodType;
+        String id_com;
+        String id_user;
+        int position;
+
+        public ExecuteRequestResponse(int metodo, String methodType, String id_com, String id_user, int position) {
+            this.metodo = metodo;
+            this.methodType = methodType;
+            this.id_com = id_com;
+            this.id_user = id_user;
+            this.position = position;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            API_Access api = API_Access.getInstance();
+            User_Singleton user = User_Singleton.getInstance();
+            String[] keys = {"id", "auth_token", "id_community", "id_user"};
+            String[] values = {Integer.toString(user.getId()), user.getAuth_token(), id_com, id_user};
+
+            if(metodo == 6){
+                isOk = api.get_delete_base(keys, values, metodo, methodType,1);
+            }else if (metodo == 14){
+                isOk = api.post_put_base(keys, values, metodo, methodType, 1);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                try {
+                    User_Singleton.getInstance().setAuth_token(API_Access.getInstance().getJsonObjectResponse().getString("auth_token"));
+
+                    users_requests.remove(position);
+                    seens_requests.remove(position);
+                    lvUsersRequests.setAdapter(new RequestsAdapter());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }
