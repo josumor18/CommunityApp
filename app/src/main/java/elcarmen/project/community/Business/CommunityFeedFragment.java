@@ -62,11 +62,20 @@ public class CommunityFeedFragment extends Fragment {
 
         lvNews = v.findViewById(R.id.lvNews);
 
+
+        
         ExecuteGetNews executeGetNews = new ExecuteGetNews();
         executeGetNews.execute();
 
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        ExecuteGetNews executeGetNews = new ExecuteGetNews();
+        executeGetNews.execute();
+        super.onResume();
     }
 
     private void cargarNews(JSONObject jsonResult) {
@@ -181,6 +190,7 @@ public class CommunityFeedFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
 
+            API_Access api = API_Access.getInstance();
             String[] keys = {"id"};
             String[] values = {Integer.toString(CommunityActivity.idCommunity)};
             isOk = api.get_delete_base(keys, values, 10, "GET",1);

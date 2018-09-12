@@ -259,6 +259,9 @@ public class NewsActivity extends AppCompatActivity {
 
             String date = dateFormat.format(date1);
 
+            Toast.makeText(NewsActivity.this, Integer.toString(CommunityActivity.idCommunity), Toast.LENGTH_SHORT).show();
+
+
             ExecutePost executePost = new ExecutePost(Integer.toString(CommunityActivity.idCommunity),edtName.getText().toString(),
                     edtContent.getText().toString(),photoN, date ,user.isAdmin(CommunityActivity.idCommunity));
 
@@ -308,7 +311,12 @@ public class NewsActivity extends AppCompatActivity {
             if (isPosted) {
 
                 Toast.makeText(NewsActivity.this, "Publicacion exitosa", Toast.LENGTH_SHORT).show();
-                //finish();
+                /*Intent intent = new Intent(getApplicationContext(), CommunityActivity.class);
+                intent.putExtra("idCommunity",CommunityActivity.idCommunity);
+                intent.putExtra("nameCommunity",CommunityActivity.nameCommunity);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);*/
+                finish();
             } else
                 Toast.makeText(NewsActivity.this, "Publicacion fallida", Toast.LENGTH_SHORT).show();
 

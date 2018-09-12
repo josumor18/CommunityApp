@@ -28,7 +28,7 @@ public class CommunityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community);
 
-        idCommunity = getIntent().getIntExtra("idCommunit",0);
+        idCommunity = getIntent().getIntExtra("idCommunity",0);
         nameCommunity = getIntent().getStringExtra("nameCommunity");
 
         getSupportActionBar().setSubtitle(nameCommunity);
