@@ -31,6 +31,8 @@ import elcarmen.project.community.R;
 public class RequestsActivity extends AppCompatActivity {
 
     ArrayList<User> users_requests = new ArrayList<User>();
+    ArrayList<Boolean> seens_requests = new ArrayList<Boolean>();
+
 
     ListView lvUsersRequests;
 
