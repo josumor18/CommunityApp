@@ -251,7 +251,7 @@ public class NewsActivity extends AppCompatActivity {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    public void publicarClicked(View view){
+    public void addClicked(View view){
 
         if (!TextUtils.isEmpty(edtContent.getText()) && ! TextUtils.isEmpty(edtName.getText())) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
