@@ -165,14 +165,14 @@ public class CommunityFeedFragment extends Fragment {
 
 
             TextView txtTitle = view.findViewById(R.id.txtTitleNew);
-            TextView txtContent = view.findViewById(R.id.txtContent);
+            //TextView txtContent = view.findViewById(R.id.txtContent);
             ImageView imgImageNew = view.findViewById(R.id.img_New);
             TextView txtDate = view.findViewById(R.id.txtFechaHora);
 
 
 
             txtTitle.setText(listNews.get(i).getTitle());
-            txtContent.setText(listNews.get(i).getDescription());
+            //txtContent.setText(listNews.get(i).getDescription());
 
             /*HttpGetBitmap request2 = new HttpGetBitmap();
             Bitmap postImage = null;
