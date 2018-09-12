@@ -183,6 +183,10 @@ public class CommunityFeedFragment extends Fragment {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }*/
+
+            if(listNews.get(i).getPhoto() == null)
+                imgImageNew.setVisibility(View.GONE);
+
             imgImageNew.setImageBitmap(listNews.get(i).getPhoto());
 
             txtDate.setText(listNews.get(i).getDate().toString());
