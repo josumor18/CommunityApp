@@ -67,8 +67,15 @@ public class CommunityFeedFragment extends Fragment {
 
         lvNews = v.findViewById(R.id.lvNews);
 
-
-
+        isAdmin = user.isAdmin(CommunityActivity.idCommunity);
+        if(isAdmin) {
+            ExecuteGetNews executeGetNews = new ExecuteGetNews();
+            executeGetNews.execute();
+        }
+        else{
+            ExecuteGetNews executeGetNews = new ExecuteGetNews(true);
+            executeGetNews.execute();
+        }
 
 
         return v;
