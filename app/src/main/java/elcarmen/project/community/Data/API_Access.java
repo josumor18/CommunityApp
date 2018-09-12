@@ -26,20 +26,20 @@ public class API_Access {
 
     private final String url_base = "https://communityapp-api.herokuapp.com/api/";
 
-    private final String[] methods = {"users/register",
-            "users/login",
-            "communities/get_communities",
-            "communities/search_community",
-            "requests/get",
-            "requests/create",
-            "requests/delete",
-            "users/edit",
-            "communities/create",
-            "news/create",
-            "news/get_news",
-            "news/get_news_status",
-            "requests/count_new_requests",
-            "requests/accept"};
+    private final String[] methods = {"users/register",// 0
+            "users/login",// 1
+            "communities/get_communities",// 2
+            "communities/search_community",// 3
+            "requests/get",// 4
+            "requests/create",// 5
+            "requests/delete",// 6
+            "users/edit",// 7
+            "communities/create",// 8
+            "news/create",// 9
+            "news/get_news",// 10
+            "news/get_news_status",// 11
+            "requests/count_new_requests",// 12
+            "requests/accept"};// 13
   
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
 
