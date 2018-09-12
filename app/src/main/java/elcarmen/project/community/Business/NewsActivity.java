@@ -259,7 +259,7 @@ public class NewsActivity extends AppCompatActivity {
 
             String date = dateFormat.format(date1);
 
-            ExecutePost executePost = new ExecutePost(edtName.getText().toString(),
+            ExecutePost executePost = new ExecutePost(Integer.toString(CommunityActivity.idCommunity),edtName.getText().toString(),
                     edtContent.getText().toString(),photoN, date ,user.isAdmin(CommunityActivity.idCommunity));
 
             executePost.execute();
@@ -272,19 +272,21 @@ public class NewsActivity extends AppCompatActivity {
 
 
     public class ExecutePost extends AsyncTask<String,Void,String> {
-        private String nameTitle;
-        private String content;
-        private String urlImage;
+        private String title;
+        private String idCommunity;
+        private String description;
+        private String photo; //Url image
         private String date;
-        private boolean isApproved;
+        private boolean approved;
         private boolean isPosted = false;
 
-        public ExecutePost(String nameTitle, String content,String urlImage,String date, boolean isApproved) {
-            this.nameTitle = nameTitle;
-            this.content = content;
-            this.urlImage = urlImage;
+        public ExecutePost(String idCommunity,String title, String description,String urlImage,String date, boolean isApproved) {
+            this.idCommunity = idCommunity;
+            this.title = title;
+            this.description = description;
+            this.photo = urlImage;
             this.date = date;
-            this.isApproved = isApproved;
+            this.approved = isApproved;
         }
 
 
@@ -294,8 +296,8 @@ public class NewsActivity extends AppCompatActivity {
 
 
             API_Access api = API_Access.getInstance();
-            String[] keys = {"title", "description", "date","photo","approved"};
-            String[] values = {nameTitle,content,date,urlImage,Boolean.toString(isApproved)};
+            String[] keys = {"idCommunity","title", "description", "date","photo","approved"};
+            String[] values = {idCommunity,title,description,date,photo,Boolean.toString(approved)};
             isPosted = api.post_put_base(keys,values,9,"POST",0);
             return null;
         }
