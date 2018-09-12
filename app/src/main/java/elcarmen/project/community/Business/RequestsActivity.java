@@ -57,13 +57,14 @@ public class RequestsActivity extends AppCompatActivity {
             //LoginActivity.actualizarAuth_Token(token, getActivity());
             //JSONArray jsonListUserPosts = jsonResult.getJSONArray("posts");
             JSONArray jsonUsersList = jsonResult.getJSONArray("users");
+            //Cambio
             JSONArray jsonVistosList = jsonResult.getJSONArray("seens");
             for (int i = 0; i < jsonUsersList.length(); i++) {
                 JSONObject jsonUser = jsonUsersList.getJSONObject(i);
 
                 User user = new User(jsonUser.getString("id"), jsonUser.getString("name"), "", "", "", "", jsonUser.getString("photo"), jsonUser.getString("photo_thumbnail"), null, null, true);
                 users_requests.add(user);
-
+                //Cambio
                 seens_requests.add(jsonVistosList.getBoolean(i));
             }
         } catch (JSONException e) {
@@ -147,9 +148,11 @@ public class RequestsActivity extends AppCompatActivity {
                 }
             });
 
+            //Cambio
             if(!seens_requests.get(i)){
                 view.setBackgroundColor(getResources().getColor(R.color.colorAccentTransparent));
             }
+            //Cambio
 
             return view;
         }
@@ -236,8 +239,11 @@ public class RequestsActivity extends AppCompatActivity {
                 try {
                     User_Singleton.getInstance().setAuth_token(API_Access.getInstance().getJsonObjectResponse().getString("auth_token"));
 
+                    //Cambio
                     users_requests.remove(position);
+                    //Cambio
                     seens_requests.remove(position);
+                    //Cambio
                     lvUsersRequests.setAdapter(new RequestsAdapter());
                 } catch (JSONException e) {
                     e.printStackTrace();
