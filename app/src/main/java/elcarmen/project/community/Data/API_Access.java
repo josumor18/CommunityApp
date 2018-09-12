@@ -25,9 +25,18 @@ import javax.net.ssl.HttpsURLConnection;
 public class API_Access {
 
     private final String url_base = "https://communityapp-api.herokuapp.com/api/";
-    private final String[] methods = {"users/register", "users/login", "communities/get_communities",
-            "communities/search_community", "requests/get", "requests/create", "requests/delete",
-            "users/edit", "communities/create","news/create","news/get_news"};
+    private final String[] methods = {"users/register",
+            "users/login",
+            "communities/get_communities",
+            "communities/search_community",
+            "requests/get",
+            "requests/create",
+            "requests/delete",
+            "users/edit",
+            "communities/create",
+            "news/create",
+            "news/get_news",
+            "news/get_news_status"};
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
 
     int estadoRequest = -1;
