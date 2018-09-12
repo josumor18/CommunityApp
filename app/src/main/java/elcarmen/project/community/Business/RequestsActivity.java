@@ -220,7 +220,7 @@ public class RequestsActivity extends AppCompatActivity {
 
             if(metodo == 6){
                 isOk = api.get_delete_base(keys, values, metodo, methodType,1);
-            }else if (metodo == 13){
+            }else if (metodo == 14){
                 isOk = api.post_put_base(keys, values, metodo, methodType, 1);
             }
 
