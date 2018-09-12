@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import elcarmen.project.community.R;
 
 public class LoginAcivity extends AppCompatActivity {
 
+    EditText edtxtEmail, edtxtPassword;
     Button btnLogin;
 
     RelativeLayout rlLogin, rlLoginPB;
@@ -38,15 +40,29 @@ public class LoginAcivity extends AppCompatActivity {
         rlLogin = findViewById(R.id.rlLogin);
         rlLoginPB = findViewById(R.id.rlLoginPB);
 
+        edtxtEmail = findViewById(R.id.edtxtEmail);
+        edtxtPassword = findViewById(R.id.edtxtPassword);
         btnLogin = findViewById(R.id.btn_Login);
     }
 
     public void loginClicked(View view){
-        ExecuteLogin executeLogin = new ExecuteLogin("prueba@email.com", "1234", 0);
-        executeLogin.execute();
+        String email = "";
+        String password = "";
 
-        rlLogin.setVisibility(View.INVISIBLE);
-        rlLoginPB.setVisibility(View.VISIBLE);
+        email = edtxtEmail.getText().toString();
+        password = edtxtPassword.getText().toString();
+
+        if(!(email.isEmpty() && password.isEmpty())){
+            ExecuteLogin executeLogin = new ExecuteLogin(email, password, 0);
+            executeLogin.execute();
+
+            rlLogin.setVisibility(View.INVISIBLE);
+            rlLoginPB.setVisibility(View.VISIBLE);
+        }else{
+            Toast.makeText(getApplicationContext(), "Datos incompletos", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     public void iniciarSesion(JSONObject response){
