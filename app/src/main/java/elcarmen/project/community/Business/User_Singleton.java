@@ -127,6 +127,7 @@ public class User_Singleton {
     }
 
     public void setCommunities_admin(JSONArray communities_admin) {
+        this.communities_admin.clear();
         for(int i = 0; i < communities_admin.length(); i++){
             try {
                 this.communities_admin.add(communities_admin.getInt(i));
