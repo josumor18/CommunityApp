@@ -13,8 +13,16 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_favorito"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/ic_feed_unselected" />
 
             <ImageView
                 android:id="@+id/img_New"

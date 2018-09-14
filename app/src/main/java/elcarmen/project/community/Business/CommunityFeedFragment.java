@@ -168,7 +168,11 @@ public class CommunityFeedFragment extends Fragment {
             //TextView txtContent = view.findViewById(R.id.txtContent);
             ImageView imgImageNew = view.findViewById(R.id.img_New);
             TextView txtDate = view.findViewById(R.id.txtFechaHora);
+            TextView txtAprobar = view.findViewById(R.id.txt_aprobar);
 
+            //Si ya esta aprobada
+            if(listNews.get(i).isApproved())
+                txtAprobar.setVisibility(View.GONE);
 
 
             txtTitle.setText(listNews.get(i).getTitle());
