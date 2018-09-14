@@ -170,9 +170,22 @@ public class CommunityFeedFragment extends Fragment {
             TextView txtDate = view.findViewById(R.id.txtFechaHora);
             TextView txtAprobar = view.findViewById(R.id.txt_aprobar);
 
+            final int idActual = listNews.get(i).getId();
+
+            txtAprobar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                        ExecuteApproveNews executeApproveNews = new ExecuteApproveNews(idActual);
+                        executeApproveNews.execute();
+
+                }
+            });
+
             //Si ya esta aprobada
             if(listNews.get(i).isApproved())
                 txtAprobar.setVisibility(View.GONE);
+
+
 
 
             txtTitle.setText(listNews.get(i).getTitle());
@@ -249,6 +262,49 @@ public class CommunityFeedFragment extends Fragment {
                 cargarNews(API_Access.getInstance().getJsonObjectResponse());
             }else{
                 String mensaje = "Error al obtener las difusiones";
+
+                Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    public class ExecuteApproveNews extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int id;
+
+
+
+        ExecuteApproveNews(int id){
+            this.id = id;
+        }
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            API_Access api = API_Access.getInstance();
+
+
+            String[] keys = {"id"};
+            String[] values = {Integer.toString(id)};
+            isOk = api.post_put_base(keys, values, 15, "PUT", 1);
+
+
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                ExecuteGetNews executeGetNews = new ExecuteGetNews();
+                executeGetNews.execute();
+            }else{
+                String mensaje = "Error al aprobar";
 
                 Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();
             }
