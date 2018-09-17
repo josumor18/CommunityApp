@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -37,6 +38,8 @@ public class CommunityFeedFragment extends Fragment {
     ListView lvNews;
 
     FloatingActionButton ftbtnCreateNews;
+
+
 
     User_Singleton user;
 
@@ -64,6 +67,9 @@ public class CommunityFeedFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+
+
 
         lvNews = v.findViewById(R.id.lvNews);
 
@@ -169,6 +175,7 @@ public class CommunityFeedFragment extends Fragment {
             ImageView imgImageNew = view.findViewById(R.id.img_New);
             TextView txtDate = view.findViewById(R.id.txtFechaHora);
             TextView txtAprobar = view.findViewById(R.id.txt_aprobar);
+            Button btnNewsMore = view.findViewById(R.id.btn_NewMore);
 
             final int idActual = listNews.get(i).getId();
 
@@ -177,6 +184,17 @@ public class CommunityFeedFragment extends Fragment {
                 public void onClick(View v) {
                         ExecuteApproveNews executeApproveNews = new ExecuteApproveNews(idActual);
                         executeApproveNews.execute();
+
+                }
+            });
+
+
+            btnNewsMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent(getActivity(),NewsMoreActivity.class);
+                    startActivity(intent);
 
                 }
             });
