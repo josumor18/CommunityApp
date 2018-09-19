@@ -20,13 +20,15 @@ public class FavoritesActivity  extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_favorites);
         btnPrueba = findViewById(R.id.btnPrueba);
+
     }
 
 
 
     public void pruebaClicked(View view){
-        Toast.makeText(FavoritesActivity.this, "hola", Toast.LENGTH_SHORT).show();
+        Toast.makeText(FavoritesActivity.this, "hola", Toast.LENGTH_LONG).show();
     }
 
 
