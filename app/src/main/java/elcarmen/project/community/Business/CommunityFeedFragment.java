@@ -23,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -45,7 +46,7 @@ public class CommunityFeedFragment extends Fragment {
 
     boolean isAdmin;
 
-    private ArrayList<News> listNews = new ArrayList<News>();
+    public static ArrayList<News> listNews = new ArrayList<News>();
 
     public CommunityFeedFragment() {
         // Required empty public constructor
@@ -176,8 +177,19 @@ public class CommunityFeedFragment extends Fragment {
             TextView txtDate = view.findViewById(R.id.txtFechaHora);
             TextView txtAprobar = view.findViewById(R.id.txt_aprobar);
             Button btnNewsMore = view.findViewById(R.id.btn_NewMore);
+            Button btnDeleteNews = view.findViewById(R.id.btn_EliminarNew);
 
             final int idActual = listNews.get(i).getId();
+
+            final String titleN = listNews.get(i).getTitle();
+
+            final String dateN = listNews.get(i).getDate().toString();
+
+            final String description = listNews.get(i).getDescription();
+
+            final Bitmap photoNews = listNews.get(i).getPhoto();
+
+            final boolean isApprovedNews = listNews.get(i).isApproved();
 
             txtAprobar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -193,20 +205,38 @@ public class CommunityFeedFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
+                    /*ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    photoNews.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();*/
+
                     Intent intent = new Intent(getActivity(),NewsMoreActivity.class);
+                    intent.putExtra("idActual", idActual);
+                    intent.putExtra("Title",titleN);
+                    //intent.putExtra("Photo", byteArray);
+                    intent.putExtra("DateN",dateN);
+                    intent.putExtra("Description",description);
+                    intent.putExtra("isApproved",isApprovedNews);
                     startActivity(intent);
 
                 }
             });
 
+            btnDeleteNews.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ExecuteDeleteNews executeDeleteNews = new ExecuteDeleteNews(idActual);
+                    executeDeleteNews.execute();
+                }
+            });
+
             //Si ya esta aprobada
-            if(listNews.get(i).isApproved())
+            if(isApprovedNews)
                 txtAprobar.setVisibility(View.GONE);
 
 
 
 
-            txtTitle.setText(listNews.get(i).getTitle());
+            txtTitle.setText(titleN);
             //txtContent.setText(listNews.get(i).getDescription());
 
             /*HttpGetBitmap request2 = new HttpGetBitmap();
@@ -222,9 +252,9 @@ public class CommunityFeedFragment extends Fragment {
             if(listNews.get(i).getPhoto() == null)
                 imgImageNew.setVisibility(View.GONE);
 
-            imgImageNew.setImageBitmap(listNews.get(i).getPhoto());
+            imgImageNew.setImageBitmap(photoNews);
 
-            txtDate.setText(listNews.get(i).getDate().toString());
+            txtDate.setText(dateN);
 
             return view;
         }
@@ -328,5 +358,51 @@ public class CommunityFeedFragment extends Fragment {
             }
         }
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    public class ExecuteDeleteNews extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int id;
+
+
+
+        ExecuteDeleteNews(int id){
+            this.id = id;
+        }
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            API_Access api = API_Access.getInstance();
+
+
+            String[] keys = {"id"};
+            String[] values = {Integer.toString(id)};
+            isOk = api.get_delete_base(keys, values, 16, "DELETE", 1);
+
+
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                ExecuteGetNews executeGetNews = new ExecuteGetNews();
+                executeGetNews.execute();
+                Toast.makeText(getActivity(), "Difusion eliminada", Toast.LENGTH_SHORT).show();
+
+            }else{
+                String mensaje = "Error al eliminar";
+
+                Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
 }
