@@ -87,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
                 //startActivity(intent);
                 break;
             case R.id.destacadas_item:
-                //intent = new Intent(getApplicationContext(), MainActivity.class);
-                //startActivity(intent);
+                intent = new Intent(getApplicationContext(), FavoritesActivity.class);
+                startActivity(intent);
                 break;
             case R.id.perfil_item:
                 intent = new Intent(getApplicationContext(), EditUserActivity.class);
