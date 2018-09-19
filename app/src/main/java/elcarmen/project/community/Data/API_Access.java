@@ -41,7 +41,8 @@ public class API_Access {
             "requests/count_new_requests",// 12
             "requests/accept",// 13
             "users/update_image",// 14
-            "news/approve_news"};//15
+            "news/approve_news",// 15
+            "news/delete_news"};// 16
   
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
 
