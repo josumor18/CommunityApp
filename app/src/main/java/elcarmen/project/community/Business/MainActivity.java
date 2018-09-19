@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.agenda_item:
-                //intent = new Intent(getApplicationContext(), MainActivity.class);
-                //startActivity(intent);
+                intent = new Intent(getApplicationContext(), EventsActivity.class);
+                startActivity(intent);
                 break;
             case R.id.destacadas_item:
                 //intent = new Intent(getApplicationContext(), MainActivity.class);
