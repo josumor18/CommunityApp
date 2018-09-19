@@ -42,7 +42,10 @@ public class API_Access {
             "requests/accept",// 13
             "users/update_image",// 14
             "news/approve_news",// 15
-            "news/delete_news"};// 16
+            "news/delete_news",// 16
+            "events/get_comm_events",// 17
+            "events/get_user_events"// 18
+    };
   
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
 
