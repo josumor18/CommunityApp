@@ -37,6 +37,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Business.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".Business.FavoritesActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Business.MainActivity" />
+        </activity>
+
+
         <activity
             android:name=".Business.CommunityActivity"
             android:screenOrientation="portrait">
@@ -69,6 +79,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Business.MainActivity" />
         </activity>
+      
     </application>
-
 </manifest>

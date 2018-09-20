@@ -184,7 +184,8 @@
                     android:layout_height="30dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
-                    android:background="@drawable/ic_add_box_black_24dp" />
+                    android:background="@drawable/ic_add_box_black_24dp"
+                    android:onClick="addComment" />
             </RelativeLayout>
 
         </LinearLayout>

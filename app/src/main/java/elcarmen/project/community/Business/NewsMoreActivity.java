@@ -6,11 +6,13 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,7 +22,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import elcarmen.project.community.Data.API_Access;
@@ -33,6 +38,7 @@ public class NewsMoreActivity extends AppCompatActivity {
     User_Singleton user;
     ListView lvComments;
     ListView lvNews;
+    String date = " ";
 
     ImageView imgNew;
     TextView txtApproveNew;
@@ -41,6 +47,8 @@ public class NewsMoreActivity extends AppCompatActivity {
     TextView txtDateNew;
     TextView txtAddCommentUser;
     Button btnDeleteNew;
+    Button btnAddComment;
+    EditText edtTextComment;
 
     int idActual;
     String titleNews;
@@ -88,6 +96,8 @@ public class NewsMoreActivity extends AppCompatActivity {
         txtDescriptionNew = findViewById(R.id.txtDescription);
         txtAddCommentUser = findViewById(R.id.txtAddComment);
         btnDeleteNew = findViewById(R.id.btn_EliminarNew);
+        btnAddComment = findViewById(R.id.btn_AddComment);
+        edtTextComment = findViewById(R.id.edtAddComment);
 
 
         txtAddCommentUser.setText(userComment);
@@ -126,6 +136,10 @@ public class NewsMoreActivity extends AppCompatActivity {
 
 
         isAdmin = user.isAdmin(CommunityActivity.idCommunity);
+
+       if(!isAdmin)
+            btnDeleteNew.setVisibility(View.GONE);
+
        /* if(isAdmin) {
             ExecuteGetNews executeGetNews = new ExecuteGetNews();
             executeGetNews.execute();
@@ -137,10 +151,26 @@ public class NewsMoreActivity extends AppCompatActivity {
 
     }
 
-    void callFeedActivity(){
-        Intent intent = new Intent(this, CommunityFeedFragment.class);
-        startActivity(intent);
+    public void addComment(View view){
+        if (!TextUtils.isEmpty(edtTextComment.getText())) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            Date date1 = new Date();
+
+            date = dateFormat.format(date1);
+
+            ExecuteAddComment executeAddComment = new ExecuteAddComment(user.getId(),
+                    idActual,edtTextComment.getText().toString(),date);
+
+            executeAddComment.execute();
+
+
+        }
+        else
+            edtTextComment.setError("Campo Requerido");
+
+
     }
+
 
 
 
@@ -232,6 +262,49 @@ public class NewsMoreActivity extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    public class ExecuteAddComment extends AsyncTask<String,Void,String> {
+        private int idUser;
+        private int idNews;
+        private String description;
+        private String date;
+        private boolean isAdded = false;
+
+        public ExecuteAddComment(int idUser,int idNews, String description, String date) {
+            this.idNews = idNews;
+            this.idUser = idUser;
+            this.description = description;
+            this.date = date;
+        }
+
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+
+            API_Access api = API_Access.getInstance();
+            String[] keys = {"id_news","id_user", "description", "date"};
+            String[] values = {Integer.toString(idNews),Integer.toString(idUser),description,date};
+            isAdded = api.post_put_base(keys,values,21,"POST",0);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (isAdded) {
+
+                Toast.makeText(NewsMoreActivity.this, "Comentario exitosa", Toast.LENGTH_SHORT).show();
+
+                //ExecuteGetComments
+
+
+            } else
+                Toast.makeText(NewsMoreActivity.this, "Comentario fallido", Toast.LENGTH_SHORT).show();
+
         }
     }
 }

@@ -89,7 +89,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <Button
@@ -102,6 +102,16 @@
                 android:layout_gravity="bottom|end"
                 android:layout_marginRight="12dp"
                 android:background="@drawable/ic_delete_forever_black_24dp"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btn_Favorito"
+                android:layout_width="30dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="bottom|end"
+                android:layout_toStartOf="@+id/btn_EliminarNew"
+                android:background="@drawable/ic_star_border_black_24dp"
                 android:textSize="12sp" />
 
             <Button
