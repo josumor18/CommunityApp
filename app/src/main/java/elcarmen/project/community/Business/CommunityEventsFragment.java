@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,7 @@ public class CommunityEventsFragment extends Fragment {
     TextView txtMesAno;
     Button btnMesAnterior, btnMesSiguiente;
     ListView lvEvents;
+    FloatingActionButton ftbtnCreateEvent;
     int mesActual, anoActual;
     private String[] meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
 
@@ -71,6 +73,7 @@ public class CommunityEventsFragment extends Fragment {
             }
         });
         lvEvents = view.findViewById(R.id.lvEvents);
+        ftbtnCreateEvent = view.findViewById(R.id.ftbtnCreateEvent);
 
         Date date = new Date();
         Calendar cal = Calendar.getInstance();
@@ -79,15 +82,40 @@ public class CommunityEventsFragment extends Fragment {
         anoActual = cal.get(Calendar.YEAR);
         txtMesAno.setText(meses[mesActual] + " " + anoActual);
 
-        int tipo = 0;
+        /*int tipo = 0;
         if(getActivity() instanceof CommunityActivity) {
             tipo = 0;
         }else if(getActivity() instanceof EventsActivity){
             tipo = 1;
+            ftbtnCreateEvent.setVisibility(View.INVISIBLE);
         }
         ExecuteGetEvents executeGetEvents = new ExecuteGetEvents(tipo);
-        executeGetEvents.execute();
+        executeGetEvents.execute();*/
+        if(getActivity() instanceof EventsActivity){
+            int tipo = 1;
+            ftbtnCreateEvent.setVisibility(View.INVISIBLE);
+            ExecuteGetEvents executeGetEvents = new ExecuteGetEvents(tipo);
+            executeGetEvents.execute();
+        }
+
         return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(isVisibleToUser){
+            int tipo = 0;
+            if(getActivity() instanceof CommunityActivity) {
+                tipo = 0;
+            }else if(getActivity() instanceof EventsActivity){
+                tipo = 1;
+                ftbtnCreateEvent.setVisibility(View.INVISIBLE);
+            }
+            ExecuteGetEvents executeGetEvents = new ExecuteGetEvents(tipo);
+            executeGetEvents.execute();
+        }
     }
 
     private void cambiarMes(int inc_dec){
@@ -191,7 +219,7 @@ public class CommunityEventsFragment extends Fragment {
             txtEventHours.setText(events_month.get(i).getHours());
 
             if (!(events_month.get(i).isApproved())) {
-                view.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                view.setBackgroundColor(getResources().getColor(R.color.colorAccentTransparent));
             }
 
             return view;
