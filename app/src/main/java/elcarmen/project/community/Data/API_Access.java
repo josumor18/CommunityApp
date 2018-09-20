@@ -46,7 +46,8 @@ public class API_Access {
             "events/get_comm_events",// 17
             "events/get_user_events",// 18
             "favorites/create", //19
-            "favorites/get_newsFavorites" //20
+            "favorites/get_newsFavorites", //20
+            "comments/create" //21
     };
 
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};

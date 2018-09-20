@@ -72,9 +72,9 @@
             android:name=".Business.RequestsActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".Business.NewsMoreActivity" />
-        <activity android:name=".Business.EventsActivity"></activity>
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".Business.NewsMoreActivity"></activity>
+        <activity android:name=".Business.EventsActivity"
+        android:screenOrientation="portrait"></activity>
+
 
 
     </application>

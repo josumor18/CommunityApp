@@ -86,7 +86,7 @@ public class CommunityEventsFragment extends Fragment {
             tipo = 1;
         }
         ExecuteGetEvents executeGetEvents = new ExecuteGetEvents(tipo);
-        executeGetEvents.execute();
+        //executeGetEvents.execute();
         return view;
     }
 
