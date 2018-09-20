@@ -33,13 +33,13 @@ public class FavoritesActivity  extends AppCompatActivity {
 
 
     ListView lvFavorites;
+    TextView avError;
 
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     static SecureRandom rnd = new SecureRandom();
 
 
     User_Singleton user;
-    boolean isAdmin;
     private ArrayList<News> listNews = new ArrayList<News>();
 
     @Override
@@ -47,25 +47,14 @@ public class FavoritesActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
         lvFavorites = findViewById(R.id.lvFavorites);
+        avError = findViewById(R.id.tvError);
         user = User_Singleton.getInstance();
-
-        isAdmin = user.isAdmin(CommunityActivity.idCommunity);
-        if(isAdmin) {
-            FavoritesActivity.ExecuteGetNews executeGetNews = new FavoritesActivity.ExecuteGetNews();
-            executeGetNews.execute();
-        }
-        else{
-            FavoritesActivity.ExecuteGetNews executeGetNews = new FavoritesActivity.ExecuteGetNews(true);
-            executeGetNews.execute();
-        }
+        avError.setVisibility(View.INVISIBLE);
+        FavoritesActivity.ExecuteGetNews executeGetNews = new FavoritesActivity.ExecuteGetNews();
+        executeGetNews.execute();
 
     }
 
-
-
-    public void pruebaClicked(View view){
-        Toast.makeText(FavoritesActivity.this, "hola", Toast.LENGTH_LONG).show();
-    }
 
 
     @Override
@@ -185,9 +174,6 @@ public class FavoritesActivity  extends AppCompatActivity {
 
         }
 
-        ExecuteGetNews(boolean status){
-            this.isApproved = status;
-        }
 
         @Override
         protected void onPreExecute() {
@@ -199,16 +185,10 @@ public class FavoritesActivity  extends AppCompatActivity {
 
             API_Access api = API_Access.getInstance();
 
-            if(isAdmin) {
-                String[] keys = {"id"};
-                String[] values = {Integer.toString(CommunityActivity.idCommunity)};
-                isOk = api.get_delete_base(keys, values, 10, "GET", 1);
-            }
-            else{
-                String[] keys = {"id","isApproved"};
-                String[] values = {Integer.toString(CommunityActivity.idCommunity),Boolean.toString(isApproved)};
-                isOk = api.get_delete_base(keys, values, 11, "GET", 1);
-            }
+
+            String[] keys = {"id"};
+            String[] values = {Integer.toString(user.getId())};
+            isOk = api.get_delete_base(keys, values, 17, "GET", 1);
 
             return null;
 
@@ -220,6 +200,13 @@ public class FavoritesActivity  extends AppCompatActivity {
 
             if(isOk){
                 cargarNews(API_Access.getInstance().getJsonObjectResponse());
+                if (listNews.isEmpty()){
+                    avError.setVisibility(View.VISIBLE);
+                }
+                else{
+                    avError.setVisibility(View.INVISIBLE);
+                }
+
             }else{
                 String mensaje = "Error al obtener las difusiones";
 
