@@ -109,19 +109,19 @@ public class CommunityActivity extends AppCompatActivity {
             Fragment fragment = null;
 
             switch (sectionNumber){
-                case 1:
+                case 0:
                     fragment = new CommunityFeedFragment();
                     break;
-                case 2:
+                case 1:
                     fragment = new CommunityEventsFragment();
                     break;
-                case 3:
+                case 2:
                     fragment = new CommunityChatListFragment();
                     break;
-                case 4:
+                case 3:
                     fragment = new CommunityMembersFragment();
                     break;
-                case 5:
+                case 4:
                     fragment = new CommunityProfileFragment();
                     break;
             }
@@ -153,7 +153,7 @@ public class CommunityActivity extends AppCompatActivity {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
 
-            return CommunityActivity.PlaceholderFragment.newInstance(position + 1);
+            return CommunityActivity.PlaceholderFragment.newInstance(position);// + 1);
         }
 
         @Override

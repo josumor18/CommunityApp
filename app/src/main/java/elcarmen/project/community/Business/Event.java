@@ -124,9 +124,19 @@ public class Event {
     public String getHours(){
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
-        String horario = cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) + " - ";
+        int min = cal.get(Calendar.MINUTE);
+        String minS = Integer.toString(min);
+        if(min < 10){
+            minS = "0" + min;
+        }
+        String horario = cal.get(Calendar.HOUR_OF_DAY) + ":" + minS + " - ";
         cal.setTime(end);
-        horario += cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE);
+        min = cal.get(Calendar.MINUTE);
+        minS = Integer.toString(min);
+        if(min < 10){
+            minS = "0" + min;
+        }
+        horario += cal.get(Calendar.HOUR_OF_DAY) + ":" + minS;
         return horario;
     }
 

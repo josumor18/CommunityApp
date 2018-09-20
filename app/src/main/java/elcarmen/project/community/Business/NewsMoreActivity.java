@@ -67,6 +67,7 @@ public class NewsMoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_more);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         user = User_Singleton.getInstance();
 
