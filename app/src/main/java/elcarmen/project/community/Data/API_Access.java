@@ -44,7 +44,7 @@ public class API_Access {
             "news/approve_news",// 15
             "news/delete_news",// 16
             "events/get_comm_events",// 17
-            "events/get_user_events"// 18
+            "events/get_user_events",// 18
             "favorites/create", //19
             "favorites/get_newsFavorites" //20
     };
