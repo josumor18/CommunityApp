@@ -1,6 +1,7 @@
 package elcarmen.project.community.Business;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -74,6 +75,13 @@ public class CommunityEventsFragment extends Fragment {
         });
         lvEvents = view.findViewById(R.id.lvEvents);
         ftbtnCreateEvent = view.findViewById(R.id.ftbtnCreateEvent);
+        ftbtnCreateEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CreateEventActivity.class);
+                startActivity(intent);
+            }
+        });
 
         Date date = new Date();
         Calendar cal = Calendar.getInstance();
