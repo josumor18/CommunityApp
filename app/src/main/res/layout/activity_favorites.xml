@@ -23,7 +23,7 @@
         android:id="@+id/tvError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="¡Oh no!  Parece que aún no has destacado ninguna difusión."
+        android:text="Parece que aún no has destacado ninguna difusión."
         android:textAllCaps="false"
         android:textSize="19sp"
         tools:textColor="@color/colorPrimaryDark" />
