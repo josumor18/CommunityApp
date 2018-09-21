@@ -1,5 +1,8 @@
 package elcarmen.project.community.Business;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,9 +10,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
+import elcarmen.project.community.Data.API_Access;
+import elcarmen.project.community.Data.HttpGetBitmap;
 import elcarmen.project.community.R;
 
 public class CommunityActivity extends AppCompatActivity {
@@ -21,6 +32,8 @@ public class CommunityActivity extends AppCompatActivity {
     private ViewPager containerCommunity;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
+
+    public static ArrayList<User> listUsers = new ArrayList<User>();
 
     private int[] tabSelectedIcons = {R.drawable.ic_feed_selected, R.drawable.ic_events_selected, R.drawable.ic_chat_selected, R.drawable.ic_members_selected, R.drawable.ic_edit_community_selected};
     private int[] tabUnselectedIcons = {R.drawable.ic_feed_unselected, R.drawable.ic_events_unselected, R.drawable.ic_chat_unselected, R.drawable.ic_members_unselected, R.drawable.ic_edit_community_unselected};
@@ -57,6 +70,9 @@ public class CommunityActivity extends AppCompatActivity {
 
             }
         });
+
+        ExecuteGetUsers executeGetUsers = new ExecuteGetUsers();
+        executeGetUsers.execute();
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -160,6 +176,107 @@ public class CommunityActivity extends AppCompatActivity {
         public int getCount() {
             // Show 5 total pages.
             return 5;
+        }
+    }
+
+    private void cargarUsers(JSONObject jsonResult) {
+
+        try {
+            listUsers.clear();
+
+            JSONArray jsonUsersList = jsonResult.getJSONArray("usuarios");  //Importante
+            for (int i = 0; i < jsonUsersList.length(); i++) {
+                JSONObject jsonUser = (JSONObject) jsonUsersList.get(i);
+
+                HttpGetBitmap request = new HttpGetBitmap();
+                Bitmap newImage = null;
+                try {
+                    newImage = request.execute(jsonUser.getString("photo")).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                 int id = jsonUser.getInt("id");
+                 String name = jsonUser.getString("name");
+                 String email = jsonUser.getString("email");
+                 String tel = jsonUser.getString("tel");
+                 String cel = jsonUser.getString("cel");
+                 String address = jsonUser.getString("address");
+                 String url_photo = jsonUser.getString("photo");
+                 String url_photo_rounded = jsonUser.getString("photo_thumbnail");
+                 Bitmap photo = convertirBitmap(url_photo);
+                 Bitmap photo_rounded = convertirBitmap(url_photo_rounded);
+                 boolean privateProfile = jsonUser.getBoolean("isPrivate");
+
+                if(photo == null){
+                    photo = BitmapFactory.decodeResource( this.getApplicationContext().getResources(),
+                            R.drawable.user_box_photo);
+                }
+                if(photo_rounded == null){
+                    photo_rounded = BitmapFactory.decodeResource( this.getApplicationContext().getResources(),
+                            R.drawable.user_rounded_photo);
+                }
+
+                User userObject = new User(Integer.toString(id),name,email,tel,cel,address,url_photo,url_photo_rounded,photo,photo_rounded,privateProfile);
+
+                listUsers.add(userObject);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private Bitmap convertirBitmap(String url){
+        HttpGetBitmap request = new HttpGetBitmap();
+        Bitmap newImage = null;
+        try {
+            newImage = request.execute(url).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return newImage;
+    }
+
+    public class ExecuteGetUsers extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+
+
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            API_Access api = API_Access.getInstance();
+
+
+            String[] keys = {"id_community"};
+            String[] values = {Integer.toString(idCommunity)};
+            isOk = api.get_delete_base(keys, values, 24, "GET", 1);
+
+
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                cargarUsers(API_Access.getInstance().getJsonObjectResponse());
+                Toast.makeText(CommunityActivity.this, "Usuarios obtenidos", Toast.LENGTH_SHORT).show();
+            }else{
+                String mensaje = "Error al obtener los usuarios";
+
+                Toast.makeText(CommunityActivity.this, mensaje, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
