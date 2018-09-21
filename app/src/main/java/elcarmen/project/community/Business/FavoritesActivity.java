@@ -1,8 +1,10 @@
 package elcarmen.project.community.Business;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -50,8 +52,8 @@ public class FavoritesActivity  extends AppCompatActivity {
         avError = findViewById(R.id.tvError);
         user = User_Singleton.getInstance();
         avError.setVisibility(View.INVISIBLE);
-        FavoritesActivity.ExecuteGetNews executeGetNews = new FavoritesActivity.ExecuteGetNews();
-        executeGetNews.execute();
+        FavoritesActivity.ExecuteGetFavNews executeFavGetNews = new FavoritesActivity.ExecuteGetFavNews();
+        executeFavGetNews.execute();
 
     }
 
@@ -99,15 +101,13 @@ public class FavoritesActivity  extends AppCompatActivity {
             TextView txtDate = view.findViewById(R.id.txtFechaHora);
             TextView txtAprobar = view.findViewById(R.id.txt_aprobar);
             Button btnNewsMore = view.findViewById(R.id.btn_NewMore);
+            Button btnEliminarNew = view.findViewById(R.id.btn_EliminarNew);
+            Button btn_delFavorite = view.findViewById(R.id.btn_delFavorite);
 
-            final int idActual = listNews.get(i).getId();
+            txtAprobar.setVisibility(View.INVISIBLE);
+            btnEliminarNew.setVisibility(View.INVISIBLE);
 
-
-            //Si ya esta aprobada
-            if(listNews.get(i).isApproved())
-                txtAprobar.setVisibility(View.GONE);
-
-
+            final int actualNewsID = listNews.get(i).getId();
             txtTitle.setText(listNews.get(i).getTitle());
 
 
@@ -118,6 +118,15 @@ public class FavoritesActivity  extends AppCompatActivity {
 
             txtDate.setText(listNews.get(i).getDate().toString());
 
+
+            btn_delFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ExecuteDelFavorites executeDelFavorites = new ExecuteDelFavorites(actualNewsID);
+                    executeDelFavorites.execute();
+
+                }
+            });
             return view;
         }
     }
@@ -125,7 +134,7 @@ public class FavoritesActivity  extends AppCompatActivity {
 
 
 
-    private void cargarNews(JSONObject jsonResult) {
+    private void loadNews(JSONObject jsonResult) {
 
         try {
             listNews.clear();
@@ -164,13 +173,61 @@ public class FavoritesActivity  extends AppCompatActivity {
 
     }
 
-
-
-    public class ExecuteGetNews extends AsyncTask<String, Void, String> {
+    public class ExecuteDelFavorites extends AsyncTask<String, Void, String> {
         boolean isOk = false;
-        boolean isApproved = false;
+        int favNewsID;
 
-        ExecuteGetNews(){
+        public ExecuteDelFavorites(int favNewsID) {
+            this.favNewsID = favNewsID;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            API_Access api = API_Access.getInstance();
+            String auth_token = user.getAuth_token();
+            int idUser = user.getId();
+            String[] keys = {"idNews", "idUser", "auth_token"};
+            String[] values = {Integer.toString(favNewsID), Integer.toString(idUser), auth_token};
+            isOk = api.get_delete_base(keys, values, 28, "DELETE",1);
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+
+                //set user auth_token
+                try {
+                    user.setAuth_token(response.getString("auth_token"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    String mensaje = "Error al cargar nuevo token de autenticacion";
+                    Toast.makeText(FavoritesActivity.this, mensaje, Toast.LENGTH_SHORT).show();;
+                }
+                Toast.makeText(FavoritesActivity.this, "Favorito eliminado", Toast.LENGTH_SHORT).show();
+                FavoritesActivity.ExecuteGetFavNews executeFavGetNews = new FavoritesActivity.ExecuteGetFavNews();
+                executeFavGetNews.execute();
+            }else{
+                String mensaje = "Error al eliminar difusión destacada";
+                Toast.makeText(FavoritesActivity.this, mensaje, Toast.LENGTH_SHORT).show();;
+            }
+        }
+    }
+
+    public class ExecuteGetFavNews extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+
+        ExecuteGetFavNews(){
 
         }
 
@@ -186,8 +243,8 @@ public class FavoritesActivity  extends AppCompatActivity {
             API_Access api = API_Access.getInstance();
 
 
-            String[] keys = {"id"};
-            String[] values = {Integer.toString(user.getId())};
+            String[] keys = {"id", "auth_token"};
+            String[] values = {Integer.toString(user.getId()),  user.getAuth_token()};
             isOk = api.get_delete_base(keys, values, 20, "GET", 1);
 
             return null;
@@ -199,7 +256,16 @@ public class FavoritesActivity  extends AppCompatActivity {
             super.onPostExecute(s);
 
             if(isOk){
-                cargarNews(API_Access.getInstance().getJsonObjectResponse());
+                JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+
+                //set user auth_token
+                try {
+                    user.setAuth_token(response.getString("auth_token"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                loadNews(response);
                 if (listNews.isEmpty()){
                     avError.setVisibility(View.VISIBLE);
                 }
@@ -209,7 +275,6 @@ public class FavoritesActivity  extends AppCompatActivity {
 
             }else{
                 String mensaje = "Error al obtener las difusiones";
-
                 Toast.makeText(FavoritesActivity.this, mensaje, Toast.LENGTH_SHORT).show();
             }
         }
