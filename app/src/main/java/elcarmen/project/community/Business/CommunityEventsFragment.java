@@ -1,14 +1,20 @@
 package elcarmen.project.community.Business;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -37,6 +43,7 @@ public class CommunityEventsFragment extends Fragment {
     TextView txtMesAno;
     Button btnMesAnterior, btnMesSiguiente;
     ListView lvEvents;
+    FloatingActionButton ftbtnCreateEvent;
     int mesActual, anoActual;
     private String[] meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
 
@@ -44,6 +51,8 @@ public class CommunityEventsFragment extends Fragment {
     ArrayList<Event> events_month = new ArrayList<Event>();
     ArrayList<String> comunidades = new ArrayList<String>();
     ArrayList<String> comunidades_mes = new ArrayList<String>();
+
+    static ArrayAdapter arrayAdapter;
 
     public CommunityEventsFragment() {
         // Required empty public constructor
@@ -70,7 +79,69 @@ public class CommunityEventsFragment extends Fragment {
                 cambiarMes(1);
             }
         });
+
         lvEvents = view.findViewById(R.id.lvEvents);
+        if(User_Singleton.getInstance().isAdmin(CommunityActivity.idCommunity)){
+            lvEvents.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                    final int event_mont_deleted = position;
+                    //final int idEvent = events_month.get(position);
+
+                    if(getActivity() instanceof CommunityActivity){
+                        if(events_month.get(position).approved){
+                            new AlertDialog.Builder(getContext())
+                                    .setIcon(R.drawable.ic_event_delete)
+                                    .setTitle("Está seguro?")
+                                    .setMessage("Desea eliminar evento?")
+                                    .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            ExecuteModifyEvents executeModifyEvents = new ExecuteModifyEvents(1, position);
+                                            executeModifyEvents.execute();
+                                        }
+                                    })
+                                    .setNegativeButton("No", null)
+                                    .show();
+                        }else{
+                            new AlertDialog.Builder(getContext())
+                                    .setIcon(R.drawable.ic_event_available_black_24dp)
+                                    .setTitle("Aprobar?")
+                                    .setMessage("Desea aprobar el evento?")
+                                    .setPositiveButton("Aprobar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                            ExecuteModifyEvents executeModifyEvents = new ExecuteModifyEvents(0, position);
+                                            executeModifyEvents.execute();
+                                        }
+                                    })
+                                    .setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                            ExecuteModifyEvents executeModifyEvents = new ExecuteModifyEvents(1, position);
+                                            executeModifyEvents.execute();
+                                        }
+                                    })
+                                    .show();
+                        }
+                    }
+                    return false;
+                }
+            });
+        }
+
+
+        ftbtnCreateEvent = view.findViewById(R.id.ftbtnCreateEvent);
+        ftbtnCreateEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CreateEventActivity.class);
+                startActivity(intent);
+            }
+        });
 
         Date date = new Date();
         Calendar cal = Calendar.getInstance();
@@ -79,15 +150,45 @@ public class CommunityEventsFragment extends Fragment {
         anoActual = cal.get(Calendar.YEAR);
         txtMesAno.setText(meses[mesActual] + " " + anoActual);
 
-        int tipo = 0;
-        if(getActivity() instanceof CommunityActivity) {
-            tipo = 0;
-        }else if(getActivity() instanceof EventsActivity){
-            tipo = 1;
+
+        if(getActivity() instanceof EventsActivity){
+            int tipo = 1;
+            ftbtnCreateEvent.setVisibility(View.INVISIBLE);
+            ExecuteGetEvents executeGetEvents = new ExecuteGetEvents(tipo);
+            executeGetEvents.execute();
         }
-        ExecuteGetEvents executeGetEvents = new ExecuteGetEvents(tipo);
-        executeGetEvents.execute();
+      
         return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(isVisibleToUser){
+            int tipo = 0;
+            if(getActivity() instanceof CommunityActivity) {
+                tipo = 0;
+            }else if(getActivity() instanceof EventsActivity){
+                tipo = 1;
+                ftbtnCreateEvent.setVisibility(View.INVISIBLE);
+            }
+            ExecuteGetEvents executeGetEvents = new ExecuteGetEvents(tipo);
+            executeGetEvents.execute();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(getActivity() instanceof CommunityActivity) {
+            int tipo = 0;
+
+            ExecuteGetEvents executeGetEvents = new ExecuteGetEvents(tipo);
+            executeGetEvents.execute();
+        }
+
     }
 
     private void cambiarMes(int inc_dec){
@@ -191,7 +292,7 @@ public class CommunityEventsFragment extends Fragment {
             txtEventHours.setText(events_month.get(i).getHours());
 
             if (!(events_month.get(i).isApproved())) {
-                view.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                view.setBackgroundColor(getResources().getColor(R.color.colorAccentTransparent));
             }
 
             return view;
@@ -239,6 +340,76 @@ public class CommunityEventsFragment extends Fragment {
                 cargarEventos(API_Access.getInstance().getJsonObjectResponse());
             }else{
                 String mensaje = "Error al obtener las eventos";
+
+                Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    public class ExecuteModifyEvents extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int tipo = 0; // 0: aprobar; 1: eliminar
+        int position; // posicion en events_month
+
+        public ExecuteModifyEvents(int tipo, int position) {
+            this.tipo = tipo;
+            this.position = position;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            API_Access api = API_Access.getInstance();
+            User_Singleton user = User_Singleton.getInstance();
+            String[] keys = {"id", "auth_token", "id_event"};
+            String[] values = {Integer.toString(user.getId()), user.getAuth_token(), Integer.toString(events_month.get(position).getId())};
+
+            if(tipo == 0){
+                isOk = api.post_put_base(keys, values, 26, "PUT",1);
+            }else{
+                isOk = api.get_delete_base(keys, values, 27, "DELETE",1);
+            }
+
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                if(tipo == 1){
+                    events.remove(events_month.get(position));
+                    events_month.remove(position);
+                }else{
+                    JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+
+                    User_Singleton user = User_Singleton.getInstance();
+                    try {
+                        user.setAuth_token(response.getString("auth_token"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    events_month.get(position).setApproved(true);
+                    for(int i = 0; i < events.size(); i++){
+                        if(events.get(i).getId() == events_month.get(position).getId()){
+                            events.get(i).setApproved(true);
+                        }
+                    }
+                }
+
+                lvEvents.setAdapter(new EventsAdapter());
+            }else{
+                String mensaje = "Error al modificar el evento";
 
                 Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();
             }

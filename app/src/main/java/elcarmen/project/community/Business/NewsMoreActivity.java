@@ -6,11 +6,13 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,7 +22,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import elcarmen.project.community.Data.API_Access;
@@ -33,14 +38,18 @@ public class NewsMoreActivity extends AppCompatActivity {
     User_Singleton user;
     ListView lvComments;
     ListView lvNews;
+    String date = " ";
 
     ImageView imgNew;
+    ImageView imgUserAddComment;
     TextView txtApproveNew;
     TextView txtTitleNew;
     TextView txtDescriptionNew;
     TextView txtDateNew;
     TextView txtAddCommentUser;
     Button btnDeleteNew;
+    Button btnAddComment;
+    EditText edtTextComment;
 
     int idActual;
     String titleNews;
@@ -52,13 +61,14 @@ public class NewsMoreActivity extends AppCompatActivity {
 
     boolean isAdmin;
 
-    //private ArrayList<Comment> listComments = new ArrayList<Comment>();
+    private ArrayList<Comment> listComments = new ArrayList<Comment>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_more);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         user = User_Singleton.getInstance();
 
@@ -76,8 +86,9 @@ public class NewsMoreActivity extends AppCompatActivity {
         }
 
         userComment = user.getName() + " dijo:";
+        Bitmap photoUserComment = user.getPhoto_rounded();
 
-        lvComments = findViewById(R.id.lvNews);
+        lvComments = findViewById(R.id.lv_comments);
         lvNews = findViewById(R.id.lvNews);
 
         txtApproveNew = findViewById(R.id.txt_aprobar);
@@ -87,6 +98,9 @@ public class NewsMoreActivity extends AppCompatActivity {
         txtDescriptionNew = findViewById(R.id.txtDescription);
         txtAddCommentUser = findViewById(R.id.txtAddComment);
         btnDeleteNew = findViewById(R.id.btn_EliminarNew);
+        btnAddComment = findViewById(R.id.btn_AddComment);
+        edtTextComment = findViewById(R.id.edtAddComment);
+        imgUserAddComment = findViewById(R.id.img_addComment);
 
 
         txtAddCommentUser.setText(userComment);
@@ -99,7 +113,12 @@ public class NewsMoreActivity extends AppCompatActivity {
         else
             imgNew.setVisibility(View.GONE);
 
-
+        if(photoUserComment == null){
+            photoUserComment = BitmapFactory.decodeResource( this.getApplicationContext().getResources(),
+                    R.drawable.user_rounded_photo);
+        }
+        else
+            imgUserAddComment.setImageBitmap(photoUserComment);
 
 
         if(isApprovedNews)
@@ -125,21 +144,172 @@ public class NewsMoreActivity extends AppCompatActivity {
 
 
         isAdmin = user.isAdmin(CommunityActivity.idCommunity);
-       /* if(isAdmin) {
-            ExecuteGetNews executeGetNews = new ExecuteGetNews();
-            executeGetNews.execute();
+
+       if(!isAdmin)
+            btnDeleteNew.setVisibility(View.GONE);
+
+       ExecuteGetComments executeGetComments = new ExecuteGetComments();
+       executeGetComments.execute();
+
+
+    }
+
+    public void addComment(View view){
+        if (!TextUtils.isEmpty(edtTextComment.getText())) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            Date date1 = new Date();
+
+            date = dateFormat.format(date1);
+
+            ExecuteAddComment executeAddComment = new ExecuteAddComment(user.getId(),
+                    idActual,edtTextComment.getText().toString());
+
+            executeAddComment.execute();
+
+
         }
-        else{
-            ExecuteGetNews executeGetNews = new ExecuteGetNews(true);
-            executeGetNews.execute();
-        }*/
+        else
+            edtTextComment.setError("Campo Requerido");
+
 
     }
 
-    void callFeedActivity(){
-        Intent intent = new Intent(this, CommunityFeedFragment.class);
-        startActivity(intent);
+    private void cargarComments(JSONObject jsonResult) {
+
+        try {
+            listComments.clear();
+
+            JSONArray jsonCommentsList = jsonResult.getJSONArray("comentarios");  //Importante
+            for (int i = 0; i < jsonCommentsList.length(); i++) {
+                JSONObject jsonComment = (JSONObject) jsonCommentsList.get(i);
+
+                /*HttpGetBitmap request = new HttpGetBitmap();
+                Bitmap newImage = null;
+                try {
+                    newImage = request.execute(jsonNew.getString("photo")).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                if(newImage == null){
+                    newImage = BitmapFactory.decodeResource( getActivity().getApplicationContext().getResources(),
+                            R.drawable.ic_add_a_photo_black_24dp);
+                }*/
+
+
+                Comment commentObject = new Comment(jsonComment.getInt("id"),
+                        jsonComment.getInt("id_news"), jsonComment.getInt("id_user"),
+                        jsonComment.getString("description"));
+
+                listComments.add(commentObject);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        lvComments.setAdapter(new CommentAdapter());
+
+
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    public class CommentAdapter extends BaseAdapter {
+
+        public CommentAdapter() {
+            super();
+        }
+
+        @Override
+        public int getCount() {
+            return listComments.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return listComments.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            LayoutInflater inflater = getLayoutInflater();
+            if (view == null) {
+                view = inflater.inflate(R.layout.comments_list_item, null);
+            }
+
+
+            TextView txtUsername = view.findViewById(R.id.txtUserComment);
+
+            ImageView imgImageComment = view.findViewById(R.id.img_Comment);
+
+            Button btnReport = view.findViewById(R.id.btn_Report);
+
+            TextView txtDescription = view.findViewById(R.id.txtCommentDescription);
+
+            final int idComment = listComments.get(i).getId();
+
+            final String description = listComments.get(i).getDescription();
+
+            final int idUser = listComments.get(i).getId_user();
+
+            String userName = "";
+
+            Bitmap photoUser = null;
+
+            for(int j = 0;j<CommunityActivity.listUsers.size();j++){
+                User userActual = CommunityActivity.listUsers.get(j);
+                if(Integer.toString(idUser).equals(userActual.getId())){
+                    userName = userActual.getName() + " dijo:";
+                    photoUser = userActual.getPhoto_rounded();
+
+                }
+            }
+
+
+
+
+
+
+
+            btnReport.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(isAdmin || idUser == user.getId()){
+                       ExecuteDeleteComments executeDeleteComment = new ExecuteDeleteComments(idComment);
+                        executeDeleteComment.execute();
+                    }
+                    else{
+                        //ExecuteReportComment
+                    }
+
+                }
+            });
+
+
+
+
+
+
+            txtDescription.setText(description);
+            txtUsername.setText(userName);
+
+
+
+            if(photoUser == null)
+                imgImageComment.setVisibility(View.GONE);
+
+            imgImageComment.setImageBitmap(photoUser);
+
+
+            return view;
+        }
+    }
+
 
 
 
@@ -230,6 +400,131 @@ public class NewsMoreActivity extends AppCompatActivity {
                 String mensaje = "Error al aprobar";
 
                 Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public class ExecuteAddComment extends AsyncTask<String,Void,String> {
+        private int idUser;
+        private int idNews;
+        private String description;
+        private String date;
+        private boolean isAdded = false;
+
+        public ExecuteAddComment(int idUser,int idNews, String description) {
+            this.idNews = idNews;
+            this.idUser = idUser;
+            this.description = description;
+            //this.date = date;
+        }
+
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+
+            API_Access api = API_Access.getInstance();
+            String[] keys = {"id_news","id_user", "description"};
+            String[] values = {Integer.toString(idNews),Integer.toString(idUser),description};
+            isAdded = api.post_put_base(keys,values,21,"POST",0);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (isAdded) {
+
+                Toast.makeText(NewsMoreActivity.this, "Comentario exitoso", Toast.LENGTH_SHORT).show();
+
+                ExecuteGetComments executeGetComments = new ExecuteGetComments();
+                executeGetComments.execute();
+
+
+            } else
+                Toast.makeText(NewsMoreActivity.this, "Comentario fallido", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    public class ExecuteGetComments extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+
+
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            API_Access api = API_Access.getInstance();
+
+
+            String[] keys = {"id"};
+            String[] values = {Integer.toString(idActual)};
+            isOk = api.get_delete_base(keys, values, 22, "GET", 1);
+
+
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                cargarComments(API_Access.getInstance().getJsonObjectResponse());
+                Toast.makeText(NewsMoreActivity.this, "Comentarios obtenidos", Toast.LENGTH_SHORT).show();
+            }else{
+                String mensaje = "Error al obtener los comentarios";
+
+                Toast.makeText(NewsMoreActivity.this, mensaje, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public class ExecuteDeleteComments extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int id;
+
+
+
+        ExecuteDeleteComments(int id){
+            this.id = id;
+        }
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            API_Access api = API_Access.getInstance();
+
+
+            String[] keys = {"id"};
+            String[] values = {Integer.toString(id)};
+            isOk = api.get_delete_base(keys, values, 23, "DELETE", 1);
+
+
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                ExecuteGetComments executeGetComments = new ExecuteGetComments();
+                executeGetComments.execute();
+                Toast.makeText(NewsMoreActivity.this, "Comentario eliminada", Toast.LENGTH_SHORT).show();
+
+            }else{
+                String mensaje = "Error al eliminar";
+
+                Toast.makeText(NewsMoreActivity.this, mensaje, Toast.LENGTH_SHORT).show();
             }
         }
     }

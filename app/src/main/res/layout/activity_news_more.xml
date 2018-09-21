@@ -127,8 +127,8 @@
             <ListView
                 android:id="@+id/lv_comments"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" >
+                android:layout_height="200dp"
+                android:layout_marginTop="10dp">
 
             </ListView>
 
@@ -150,9 +150,9 @@
                     android:id="@+id/img_addComment"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
+                    android:layout_below="@id/txtNameAddNewComment"
                     android:layout_marginLeft="6dp"
                     android:scaleType="fitXY"
-                    android:layout_below="@id/txtNameAddNewComment"
                     app:srcCompat="@drawable/user_rounded_photo" />
 
                 <TextView
@@ -184,7 +184,8 @@
                     android:layout_height="30dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
-                    android:background="@drawable/ic_add_box_black_24dp" />
+                    android:background="@drawable/ic_add_box_black_24dp"
+                    android:onClick="addComment" />
             </RelativeLayout>
 
         </LinearLayout>

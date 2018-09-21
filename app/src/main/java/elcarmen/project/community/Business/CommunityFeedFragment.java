@@ -229,6 +229,9 @@ public class CommunityFeedFragment extends Fragment {
                 }
             });
 
+           if(!isAdmin)
+                btnDeleteNews.setVisibility(View.GONE);
+
             //Si ya esta aprobada
             if(isApprovedNews)
                 txtAprobar.setVisibility(View.GONE);
