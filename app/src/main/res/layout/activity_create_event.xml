@@ -34,8 +34,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="88dp"
-                    android:background="@drawable/ic_file_upload_black_24dp"
-                    android:onClick="cargarImagen" />
+                    android:background="@drawable/ic_file_upload_black_24dp" />
             </RelativeLayout>
 
             <EditText
