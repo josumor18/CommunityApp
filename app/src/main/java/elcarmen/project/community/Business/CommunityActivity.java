@@ -46,6 +46,9 @@ public class CommunityActivity extends AppCompatActivity {
         idCommunity = getIntent().getIntExtra("idCommunity",0);
         nameCommunity = getIntent().getStringExtra("nameCommunity");
 
+        ExecuteGetUsers executeGetUsers = new ExecuteGetUsers();
+        executeGetUsers.execute();
+
         getSupportActionBar().setSubtitle(nameCommunity);
         tabLayoutCommunity = findViewById(R.id.appbartabsCommunity);
         tabLayoutCommunity.setTabMode(TabLayout.MODE_FIXED);
@@ -71,8 +74,7 @@ public class CommunityActivity extends AppCompatActivity {
             }
         });
 
-        ExecuteGetUsers executeGetUsers = new ExecuteGetUsers();
-        executeGetUsers.execute();
+
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 

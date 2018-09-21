@@ -41,6 +41,7 @@ public class NewsMoreActivity extends AppCompatActivity {
     String date = " ";
 
     ImageView imgNew;
+    ImageView imgUserAddComment;
     TextView txtApproveNew;
     TextView txtTitleNew;
     TextView txtDescriptionNew;
@@ -85,6 +86,7 @@ public class NewsMoreActivity extends AppCompatActivity {
         }
 
         userComment = user.getName() + " dijo:";
+        Bitmap photoUserComment = user.getPhoto_rounded();
 
         lvComments = findViewById(R.id.lv_comments);
         lvNews = findViewById(R.id.lvNews);
@@ -98,6 +100,7 @@ public class NewsMoreActivity extends AppCompatActivity {
         btnDeleteNew = findViewById(R.id.btn_EliminarNew);
         btnAddComment = findViewById(R.id.btn_AddComment);
         edtTextComment = findViewById(R.id.edtAddComment);
+        imgUserAddComment = findViewById(R.id.img_addComment);
 
 
         txtAddCommentUser.setText(userComment);
@@ -110,7 +113,12 @@ public class NewsMoreActivity extends AppCompatActivity {
         else
             imgNew.setVisibility(View.GONE);
 
-
+        if(photoUserComment == null){
+            photoUserComment = BitmapFactory.decodeResource( this.getApplicationContext().getResources(),
+                    R.drawable.user_rounded_photo);
+        }
+        else
+            imgUserAddComment.setImageBitmap(photoUserComment);
 
 
         if(isApprovedNews)
