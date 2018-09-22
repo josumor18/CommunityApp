@@ -40,6 +40,7 @@ import elcarmen.project.community.R;
  */
 public class CommunityEventsFragment extends Fragment {
 
+    private boolean isFirstTime = true;
     TextView txtMesAno;
     Button btnMesAnterior, btnMesSiguiente;
     ListView lvEvents;
@@ -81,6 +82,19 @@ public class CommunityEventsFragment extends Fragment {
         });
 
         lvEvents = view.findViewById(R.id.lvEvents);
+        lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), EventInfoActivity.class);
+                Event selected = events_month.get(position);
+                intent.putExtra("photo", selected.getPhoto());
+                intent.putExtra("title", selected.getTitle());
+                intent.putExtra("description", selected.getDescription());
+                intent.putExtra("date", selected.getDate());
+                intent.putExtra("hours", selected.getHours());
+                startActivity(intent);
+            }
+        });
         if(User_Singleton.getInstance().isAdmin(CommunityActivity.idCommunity)){
             lvEvents.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
@@ -182,13 +196,13 @@ public class CommunityEventsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if(getActivity() instanceof CommunityActivity) {
+        if(!CommunityActivity.isInFeedFragment && (getActivity() instanceof CommunityActivity)) {
             int tipo = 0;
 
             ExecuteGetEvents executeGetEvents = new ExecuteGetEvents(tipo);
             executeGetEvents.execute();
         }
-
+        isFirstTime = false;
     }
 
     private void cambiarMes(int inc_dec){
@@ -302,7 +316,7 @@ public class CommunityEventsFragment extends Fragment {
     /////////////////////////////////////////////////////////////////////////////////////////////////
     public class ExecuteGetEvents extends AsyncTask<String, Void, String> {
         boolean isOk = false;
-        int tipo = 0; // 0: eventos de comunidad; 1: eventos de todas las comunidades del usuario
+        int tipo; // 0: eventos de comunidad; 1: eventos de todas las comunidades del usuario
 
         public ExecuteGetEvents(int tipo) {
             this.tipo = tipo;

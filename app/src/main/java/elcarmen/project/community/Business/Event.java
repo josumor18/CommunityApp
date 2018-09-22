@@ -83,6 +83,12 @@ public class Event {
         return dateEvent;
     }
 
+    public String getDate(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateEvent);
+        return cal.get(Calendar.DATE) + "/" + (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.YEAR);
+    }
+
     public void setDateEvent(Date dateEvent) {
         this.dateEvent = dateEvent;
     }
