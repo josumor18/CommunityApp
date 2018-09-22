@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +19,7 @@ import elcarmen.project.community.R;
 public class EventInfoActivity extends AppCompatActivity {
 
     ImageView imgEventInfoPhoto;
-    TextView txtEventInfoTitle, txtEventInfoDescription, txtEventInfoFecha, txtEventInfoHInicio, txtEventInfoHFin;
+    TextView txtEventInfoTitle, txtEventInfoTerminado, txtEventInfoDescription, txtEventInfoFecha, txtEventInfoHInicio, txtEventInfoHFin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class EventInfoActivity extends AppCompatActivity {
 
         imgEventInfoPhoto = findViewById(R.id.imgEventInfoPhoto);
         txtEventInfoTitle = findViewById(R.id.txtEventInfoTitle);
+        txtEventInfoTerminado = findViewById(R.id.txtEventInfoTerminado);
         txtEventInfoDescription = findViewById(R.id.txtEventInfoDescription);
         txtEventInfoFecha = findViewById(R.id.txtEventInfoFecha);
         txtEventInfoHInicio = findViewById(R.id.txtEventInfoHInicio);
@@ -60,6 +62,10 @@ public class EventInfoActivity extends AppCompatActivity {
                     R.drawable.img_event_default);
         }
         imgEventInfoPhoto.setImageBitmap(userImage);
+
+        if(!intent.getBooleanExtra("terminado", false)){
+            txtEventInfoTerminado.setVisibility(View.GONE);
+        }
     }
 
     @Override

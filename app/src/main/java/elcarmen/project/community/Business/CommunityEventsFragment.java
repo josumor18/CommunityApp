@@ -46,7 +46,7 @@ public class CommunityEventsFragment extends Fragment {
     ListView lvEvents;
     FloatingActionButton ftbtnCreateEvent;
     int mesActual, anoActual;
-    private String[] meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+    private String[] meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"};
 
     ArrayList<Event> events = new ArrayList<Event>();
     ArrayList<Event> events_month = new ArrayList<Event>();
@@ -91,6 +91,12 @@ public class CommunityEventsFragment extends Fragment {
                 intent.putExtra("title", selected.getTitle());
                 intent.putExtra("description", selected.getDescription());
                 intent.putExtra("date", selected.getDate());
+                boolean terminado = false;
+                Date date = new Date();
+                if (date.after(events_month.get(position).getDateEventEnd())){
+                    terminado = true;
+                }
+                intent.putExtra("terminado", terminado);
                 intent.putExtra("hours", selected.getHours());
                 startActivity(intent);
             }
@@ -294,6 +300,8 @@ public class CommunityEventsFragment extends Fragment {
             TextView txtCommName = view.findViewById(R.id.txtCommName);
             TextView txtEventName = view.findViewById(R.id.txtEventName);
             TextView txtEventHours = view.findViewById(R.id.txtEventHours);
+            TextView txtEventTerminado = view.findViewById(R.id.txtEventTerminado);
+            txtEventTerminado.setVisibility(View.INVISIBLE);
 
             txtFechaEvento.setText(events_month.get(i).getFecha());
             if(getActivity() instanceof  CommunityActivity){
@@ -307,6 +315,11 @@ public class CommunityEventsFragment extends Fragment {
 
             if (!(events_month.get(i).isApproved())) {
                 view.setBackgroundColor(getResources().getColor(R.color.colorAccentTransparent));
+            }
+
+            Date date = new Date();
+            if (date.after(events_month.get(i).getDateEventEnd())){
+                txtEventTerminado.setVisibility(View.VISIBLE);
             }
 
             return view;

@@ -11,7 +11,7 @@ public class Event {
     int id_community;
     String title;
     String description;
-    Date dateEvent;
+    Date dateEvent, dateEventEnd;
     Date start;
     Date end;
     String photo;
@@ -42,9 +42,20 @@ public class Event {
         }
         this.dateEvent = date;
         this.start = timeS;
+        date.setHours(timeS.getHours());
+        date.setMinutes(timeS.getMinutes());
         this.end = timeE;
         this.photo = photo;
         this.approved = approved;
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        if(timeE.getTime() < timeS.getTime()){
+            c.add(Calendar.DATE, 1);
+        }
+        dateEventEnd = c.getTime();
+        dateEventEnd.setHours(timeE.getHours());
+        dateEventEnd.setMinutes(timeE.getMinutes());
     }
 
     public int getId() {
@@ -81,6 +92,10 @@ public class Event {
 
     public Date getDateEvent() {
         return dateEvent;
+    }
+
+    public Date getDateEventEnd(){
+        return dateEventEnd;
     }
 
     public String getDate(){
@@ -161,4 +176,5 @@ public class Event {
     public void setApproved(boolean approved) {
         this.approved = approved;
     }
+
 }
