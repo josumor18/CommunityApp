@@ -108,23 +108,13 @@
                 android:textSize="12sp" />
 
             <Button
-                android:id="@+id/btn_addFavorite"
+                android:id="@+id/btn_Favorite"
                 android:layout_width="30dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_gravity="bottom|end"
                 android:layout_toStartOf="@+id/btn_EliminarNew"
                 android:background="@drawable/ic_star_border_black_24dp"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/btn_delFavorite"
-                android:layout_width="30dp"
-                android:layout_height="24dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="bottom|end"
-                android:layout_toStartOf="@+id/btn_EliminarNew"
-                android:background="@drawable/ic_star_black_24dp"
                 android:textSize="12sp" />
 
             <Button

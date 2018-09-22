@@ -102,8 +102,9 @@ public class FavoritesActivity  extends AppCompatActivity {
             TextView txtAprobar = view.findViewById(R.id.txt_aprobar);
             Button btnNewsMore = view.findViewById(R.id.btn_NewMore);
             Button btnEliminarNew = view.findViewById(R.id.btn_EliminarNew);
-            Button btn_delFavorite = view.findViewById(R.id.btn_delFavorite);
+            Button btn_Favorite = view.findViewById(R.id.btn_Favorite);
 
+            btn_Favorite.setBackground(getResources().getDrawable(R.drawable.ic_star_black_24dp));
             txtAprobar.setVisibility(View.INVISIBLE);
             btnEliminarNew.setVisibility(View.INVISIBLE);
 
@@ -119,7 +120,7 @@ public class FavoritesActivity  extends AppCompatActivity {
             txtDate.setText(listNews.get(i).getDate().toString());
 
 
-            btn_delFavorite.setOnClickListener(new View.OnClickListener() {
+            btn_Favorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ExecuteDelFavorites executeDelFavorites = new ExecuteDelFavorites(actualNewsID);

@@ -40,7 +40,7 @@ public class CommunityFeedFragment extends Fragment {
 
     FloatingActionButton ftbtnCreateNews;
 
-
+    private JSONArray jsonFavsList;
 
     User_Singleton user;
 
@@ -107,7 +107,9 @@ public class CommunityFeedFragment extends Fragment {
         try {
             listNews.clear();
 
-            JSONArray jsonNewsList = jsonResult.getJSONArray("news");  //Importante
+            JSONArray jsonNewsList  = jsonResult.getJSONArray("news");       //Importante
+            jsonFavsList            = jsonResult.getJSONArray("favorites");  //Importante
+
             for (int i = 0; i < jsonNewsList.length(); i++) {
                 JSONObject jsonNew = (JSONObject) jsonNewsList.get(i);
 
@@ -178,6 +180,9 @@ public class CommunityFeedFragment extends Fragment {
             TextView txtAprobar = view.findViewById(R.id.txt_aprobar);
             Button btnNewsMore = view.findViewById(R.id.btn_NewMore);
             Button btnDeleteNews = view.findViewById(R.id.btn_EliminarNew);
+            Button btn_Favorite = view.findViewById(R.id.btn_Favorite);
+
+
 
             final int idActual = listNews.get(i).getId();
 
@@ -190,6 +195,9 @@ public class CommunityFeedFragment extends Fragment {
             final Bitmap photoNews = listNews.get(i).getPhoto();
 
             final boolean isApprovedNews = listNews.get(i).isApproved();
+
+            boolean isFavorite = isFavorite(listNews.get(i).getId());
+
 
             txtAprobar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -259,6 +267,19 @@ public class CommunityFeedFragment extends Fragment {
 
             txtDate.setText(dateN);
 
+            //===============Favorites button========================
+            btn_Favorite.setBackground(getResources().getDrawable(R.drawable.ic_star_black_24dp));
+            btn_Favorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //FavoritesActivity.ExecuteDelFavorites executeDelFavorites = new FavoritesActivity.ExecuteDelFavorites(actualNewsID);
+                    //executeDelFavorites.execute();
+
+                }
+            });
+
+
+
             return view;
         }
     }
@@ -289,15 +310,15 @@ public class CommunityFeedFragment extends Fragment {
         protected String doInBackground(String... strings) {
 
             API_Access api = API_Access.getInstance();
-
+            String strIdUser = Integer.toString(user.getId());
             if(isAdmin) {
-                String[] keys = {"id"};
-                String[] values = {Integer.toString(CommunityActivity.idCommunity)};
+                String[] keys = {"id", "idUser"};
+                String[] values = {Integer.toString(CommunityActivity.idCommunity), strIdUser};
                 isOk = api.get_delete_base(keys, values, 10, "GET", 1);
             }
             else{
-                String[] keys = {"id","isApproved"};
-                String[] values = {Integer.toString(CommunityActivity.idCommunity),Boolean.toString(isApproved)};
+                String[] keys = {"id","isApproved", "idUser"};
+                String[] values = {Integer.toString(CommunityActivity.idCommunity),Boolean.toString(isApproved), strIdUser};
                 isOk = api.get_delete_base(keys, values, 11, "GET", 1);
             }
 
@@ -407,5 +428,18 @@ public class CommunityFeedFragment extends Fragment {
         }
     }
 
+
+    private boolean isFavorite(int idNews){
+        for (int i = 0; i < jsonFavsList.length(); i++) {
+            try {
+                JSONObject jsonFav = (JSONObject) jsonFavsList.get(i);
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
 
 }
