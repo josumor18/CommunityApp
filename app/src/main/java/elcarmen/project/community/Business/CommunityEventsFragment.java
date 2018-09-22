@@ -82,6 +82,19 @@ public class CommunityEventsFragment extends Fragment {
         });
 
         lvEvents = view.findViewById(R.id.lvEvents);
+        lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), EventInfoActivity.class);
+                Event selected = events_month.get(position);
+                intent.putExtra("photo", selected.getPhoto());
+                intent.putExtra("title", selected.getTitle());
+                intent.putExtra("description", selected.getDescription());
+                intent.putExtra("date", selected.getDate());
+                intent.putExtra("hours", selected.getHours());
+                startActivity(intent);
+            }
+        });
         if(User_Singleton.getInstance().isAdmin(CommunityActivity.idCommunity)){
             lvEvents.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
@@ -183,7 +196,7 @@ public class CommunityEventsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if(!isFirstTime && (getActivity() instanceof CommunityActivity)) {
+        if(!CommunityActivity.isInFeedFragment && (getActivity() instanceof CommunityActivity)) {
             int tipo = 0;
 
             ExecuteGetEvents executeGetEvents = new ExecuteGetEvents(tipo);

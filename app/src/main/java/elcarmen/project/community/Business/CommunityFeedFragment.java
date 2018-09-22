@@ -89,6 +89,12 @@ public class CommunityFeedFragment extends Fragment {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        CommunityActivity.isInFeedFragment = isVisibleToUser;
+    }
+
+    @Override
     public void onResume() {
         isAdmin = user.isAdmin(CommunityActivity.idCommunity);
         if(isAdmin) {
