@@ -40,6 +40,7 @@ import elcarmen.project.community.R;
  */
 public class CommunityEventsFragment extends Fragment {
 
+    private boolean isFirstTime = true;
     TextView txtMesAno;
     Button btnMesAnterior, btnMesSiguiente;
     ListView lvEvents;
@@ -182,13 +183,13 @@ public class CommunityEventsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if(getActivity() instanceof CommunityActivity) {
+        if(!isFirstTime && (getActivity() instanceof CommunityActivity)) {
             int tipo = 0;
 
             ExecuteGetEvents executeGetEvents = new ExecuteGetEvents(tipo);
             executeGetEvents.execute();
         }
-
+        isFirstTime = false;
     }
 
     private void cambiarMes(int inc_dec){
@@ -302,7 +303,7 @@ public class CommunityEventsFragment extends Fragment {
     /////////////////////////////////////////////////////////////////////////////////////////////////
     public class ExecuteGetEvents extends AsyncTask<String, Void, String> {
         boolean isOk = false;
-        int tipo = 0; // 0: eventos de comunidad; 1: eventos de todas las comunidades del usuario
+        int tipo; // 0: eventos de comunidad; 1: eventos de todas las comunidades del usuario
 
         public ExecuteGetEvents(int tipo) {
             this.tipo = tipo;
