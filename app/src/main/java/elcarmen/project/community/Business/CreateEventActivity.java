@@ -71,6 +71,7 @@ public class CreateEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_event);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setSubtitle(CommunityActivity.nameCommunity);
 
         btnUploadEventImage = findViewById(R.id.btnUploadEventImage);
         btnUploadEventImage.setOnClickListener(new View.OnClickListener() {
@@ -210,10 +211,14 @@ public class CreateEventActivity extends AppCompatActivity {
                 ExecuteUploaded executeUploaded = new ExecuteUploaded();
                 executeUploaded.execute();
                 break;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     public class ExecuteCreateEvent extends AsyncTask<String, Void, String> {
