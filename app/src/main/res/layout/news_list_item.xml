@@ -20,7 +20,7 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/btn_favorito"
+                android:id="@+id/btn_newsIcon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginLeft="6dp"
@@ -114,7 +114,6 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="bottom|end"
                 android:layout_toStartOf="@+id/btn_EliminarNew"
-                android:background="@drawable/ic_star_border_black_24dp"
                 android:textSize="12sp" />
 
             <Button
