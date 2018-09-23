@@ -37,12 +37,8 @@ public class FavoritesActivity  extends AppCompatActivity {
     ListView lvFavorites;
     TextView avError;
 
-    static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    static SecureRandom rnd = new SecureRandom();
-
-
     User_Singleton user;
-    private ArrayList<News> listNews = new ArrayList<News>();
+    public static ArrayList<News> listNews = new ArrayList<News>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +59,6 @@ public class FavoritesActivity  extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
     }
-
 
 
 
@@ -108,7 +103,19 @@ public class FavoritesActivity  extends AppCompatActivity {
             txtAprobar.setVisibility(View.INVISIBLE);
             btnEliminarNew.setVisibility(View.INVISIBLE);
 
+
+
             final int actualNewsID = listNews.get(i).getId();
+
+            final String titleN = listNews.get(i).getTitle();
+
+            final String dateN = listNews.get(i).getDate().toString();
+
+            final String description = listNews.get(i).getDescription();
+
+
+            final boolean isApprovedNews = listNews.get(i).isApproved();
+
             txtTitle.setText(listNews.get(i).getTitle());
 
 
@@ -128,6 +135,30 @@ public class FavoritesActivity  extends AppCompatActivity {
 
                 }
             });
+
+
+            btnNewsMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ExecuteGetListUsersCommunity_by_idNews executeGetListUsersCommunity_by_idNews =
+                            new ExecuteGetListUsersCommunity_by_idNews(actualNewsID);
+                    executeGetListUsersCommunity_by_idNews.execute();
+
+
+                    Intent intent = new Intent(FavoritesActivity.this,NewsMoreActivity.class);
+                    intent.putExtra("idActual", actualNewsID);
+                    intent.putExtra("Title",titleN);
+                    intent.putExtra("DateN",dateN);
+                    intent.putExtra("Description",description);
+                    intent.putExtra("isApproved",isApprovedNews);
+                    NewsMoreActivity.fromFavorites = true;
+                    startActivity(intent);
+
+
+                }
+            });
+
+
             return view;
         }
     }
@@ -135,45 +166,9 @@ public class FavoritesActivity  extends AppCompatActivity {
 
 
 
-    private void loadNews(JSONObject jsonResult) {
-
-        try {
-            listNews.clear();
-
-            JSONArray jsonNewsList = jsonResult.getJSONArray("news");
-            for (int i = 0; i < jsonNewsList.length(); i++) {
-                JSONObject jsonNew = (JSONObject) jsonNewsList.get(i);
-
-                HttpGetBitmap request = new HttpGetBitmap();
-                Bitmap newImage = null;
-                try {
-                    newImage = request.execute(jsonNew.getString("photo")).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-                if(newImage == null){
-                    newImage = BitmapFactory.decodeResource( FavoritesActivity.this.getApplicationContext().getResources(),
-                            R.drawable.ic_add_a_photo_black_24dp);
-                }
 
 
-                News newObject = new News(jsonNew.getInt("id"),
-                        jsonNew.getString("title"), jsonNew.getString("description"), jsonNew.getString("date"),
-                        jsonNew.getString("photo"),newImage,jsonNew.getBoolean("approved"));
-
-                listNews.add(newObject);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        lvFavorites.setAdapter(new FavoritesActivity.NewsAdapter());
-
-
-    }
-
+    //=============================================================================================
     public class ExecuteDelFavorites extends AsyncTask<String, Void, String> {
         boolean isOk = false;
         int favNewsID;
@@ -225,6 +220,7 @@ public class FavoritesActivity  extends AppCompatActivity {
         }
     }
 
+    //=============================================================================================
     public class ExecuteGetFavNews extends AsyncTask<String, Void, String> {
         boolean isOk = false;
 
@@ -280,5 +276,160 @@ public class FavoritesActivity  extends AppCompatActivity {
             }
         }
     }
+
+    private void loadNews(JSONObject jsonResult) {
+
+        try {
+            listNews.clear();
+
+            JSONArray jsonNewsList = jsonResult.getJSONArray("news");
+            for (int i = 0; i < jsonNewsList.length(); i++) {
+                JSONObject jsonNew = (JSONObject) jsonNewsList.get(i);
+
+                HttpGetBitmap request = new HttpGetBitmap();
+                Bitmap newImage = null;
+                try {
+                    newImage = request.execute(jsonNew.getString("photo")).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                if(newImage == null){
+                    newImage = BitmapFactory.decodeResource( FavoritesActivity.this.getApplicationContext().getResources(),
+                            R.drawable.ic_add_a_photo_black_24dp);
+                }
+
+
+                News newObject = new News(jsonNew.getInt("id"),
+                        jsonNew.getString("title"), jsonNew.getString("description"), jsonNew.getString("date"),
+                        jsonNew.getString("photo"),newImage,jsonNew.getBoolean("approved"));
+
+                listNews.add(newObject);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        lvFavorites.setAdapter(new FavoritesActivity.NewsAdapter());
+
+
+    }
+
+    //=============================================================================================
+    public class ExecuteGetListUsersCommunity_by_idNews extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int idNews;
+
+        public ExecuteGetListUsersCommunity_by_idNews(int idNews) {
+            this.idNews = idNews;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            API_Access api = API_Access.getInstance();
+
+
+            String[] keys = {"idUser", "idNews", "auth_token"};
+            String[] values = {Integer.toString(user.getId()), Integer.toString(idNews),  user.getAuth_token()};
+            isOk = api.get_delete_base(keys, values, 29, "GET", 1);
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+
+                //set user auth_token
+                try {
+                    user.setAuth_token(response.getString("auth_token"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                cargarUsersFavorite(API_Access.getInstance().getJsonObjectResponse());
+                String mensaje = "Cargando contenido de la difusión destacada";
+                Toast.makeText(FavoritesActivity.this, mensaje, Toast.LENGTH_SHORT).show();
+
+            }else{
+                String mensaje = "Error al obtener las difusiones";
+                Toast.makeText(FavoritesActivity.this, mensaje, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void cargarUsersFavorite(JSONObject jsonResult) {
+
+        try {
+            CommunityActivity.listUsers.clear();
+
+            JSONArray jsonUsersList = jsonResult.getJSONArray("usuarios");  //Importante
+            for (int i = 0; i < jsonUsersList.length(); i++) {
+                JSONObject jsonUser = (JSONObject) jsonUsersList.get(i);
+
+                HttpGetBitmap request = new HttpGetBitmap();
+                Bitmap newImage = null;
+                try {
+                    newImage = request.execute(jsonUser.getString("photo")).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                int id = jsonUser.getInt("id");
+                String name = jsonUser.getString("name");
+                String email = jsonUser.getString("email");
+                String tel = jsonUser.getString("tel");
+                String cel = jsonUser.getString("cel");
+                String address = jsonUser.getString("address");
+                String url_photo = jsonUser.getString("photo");
+                String url_photo_rounded = jsonUser.getString("photo_thumbnail");
+                Bitmap photo = convertirBitmap(url_photo);
+                Bitmap photo_rounded = convertirBitmap(url_photo_rounded);
+                boolean privateProfile = jsonUser.getBoolean("isPrivate");
+
+                if(photo == null){
+                    photo = BitmapFactory.decodeResource( this.getApplicationContext().getResources(),
+                            R.drawable.user_box_photo);
+                }
+                if(photo_rounded == null){
+                    photo_rounded = BitmapFactory.decodeResource( this.getApplicationContext().getResources(),
+                            R.drawable.user_rounded_photo);
+                }
+
+                User userObject = new User(Integer.toString(id),name,email,tel,cel,address,url_photo,url_photo_rounded,photo,photo_rounded,privateProfile);
+
+                CommunityActivity.listUsers.add(userObject);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Bitmap convertirBitmap(String url){
+        HttpGetBitmap request = new HttpGetBitmap();
+        Bitmap newImage = null;
+        try {
+            newImage = request.execute(url).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return newImage;
+    }
+
+
 }
 
