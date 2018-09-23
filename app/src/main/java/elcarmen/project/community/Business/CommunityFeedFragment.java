@@ -186,7 +186,7 @@ public class CommunityFeedFragment extends Fragment {
             TextView txtAprobar = view.findViewById(R.id.txt_aprobar);
             Button btnNewsMore = view.findViewById(R.id.btn_NewMore);
             Button btnDeleteNews = view.findViewById(R.id.btn_EliminarNew);
-            Button btn_Favorite = view.findViewById(R.id.btn_Favorite);
+            final Button btn_Favorite = view.findViewById(R.id.btn_Favorite);
 
 
 
@@ -202,8 +202,31 @@ public class CommunityFeedFragment extends Fragment {
 
             final boolean isApprovedNews = listNews.get(i).isApproved();
 
-            boolean isFavorite = isFavorite(listNews.get(i).getId());
 
+
+            //================ favorites button ================
+            if(isFavorite(idActual)){
+                btn_Favorite.setBackground(getResources().getDrawable(R.drawable.ic_star_black_24dp));
+                btn_Favorite.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ExecuteDelFavorites executeDelFavs = new ExecuteDelFavorites(idActual);
+                        executeDelFavs.execute();
+                        changeBtnFavorite(btn_Favorite, true, idActual);
+                    }
+                });
+            }
+            else{
+                btn_Favorite.setBackground(getResources().getDrawable(R.drawable.ic_star_border_black_24dp));
+                btn_Favorite.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ExecuteAddFavorites executeAddFavs = new ExecuteAddFavorites(idActual);
+                        executeAddFavs.execute();
+                        changeBtnFavorite(btn_Favorite, false, idActual);
+                    }
+                });
+            }
 
             txtAprobar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -273,16 +296,6 @@ public class CommunityFeedFragment extends Fragment {
 
             txtDate.setText(dateN);
 
-            //===============Favorites button========================
-            btn_Favorite.setBackground(getResources().getDrawable(R.drawable.ic_star_black_24dp));
-            btn_Favorite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //FavoritesActivity.ExecuteDelFavorites executeDelFavorites = new FavoritesActivity.ExecuteDelFavorites(actualNewsID);
-                    //executeDelFavorites.execute();
-
-                }
-            });
 
 
 
@@ -434,18 +447,151 @@ public class CommunityFeedFragment extends Fragment {
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public class ExecuteDelFavorites extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int favNewsID;
+
+        public ExecuteDelFavorites(int favNewsID) {
+            this.favNewsID = favNewsID;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            API_Access api = API_Access.getInstance();
+            String auth_token = user.getAuth_token();
+            int idUser = user.getId();
+            String[] keys = {"idNews", "idUser", "auth_token"};
+            String[] values = {Integer.toString(favNewsID), Integer.toString(idUser), auth_token};
+            isOk = api.get_delete_base(keys, values, 28, "DELETE",1);
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+
+                //set user auth_token
+                /*
+                try {
+                    user.setAuth_token(response.getString("auth_token"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    String mensaje = "Error al cargar nuevo token de autenticacion";
+                    Toast.makeText(FavoritesActivity.this, mensaje, Toast.LENGTH_SHORT).show();;
+                }
+                */
+                Toast.makeText(getActivity(), "Favorito eliminado", Toast.LENGTH_SHORT).show();
+            }else{
+                String mensaje = "Error al eliminar difusión destacada";
+                Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();;
+            }
+        }
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public class ExecuteAddFavorites extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int favNewsID;
+
+        public ExecuteAddFavorites(int favNewsID) {
+            this.favNewsID = favNewsID;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            API_Access api = API_Access.getInstance();
+            String auth_token = user.getAuth_token();
+            int idUser = user.getId();
+            String[] keys = {"idNews", "idUser", "auth_token"};
+            String[] values = {Integer.toString(favNewsID), Integer.toString(idUser), auth_token};
+            isOk = api.post_put_base(keys, values, 19, "POST",0);
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+
+                //set user auth_token
+
+                User_Singleton user = User_Singleton.getInstance();
+                try {
+                    user.setAuth_token(response.getString("auth_token"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Toast.makeText(getActivity(), "Favorito agregado", Toast.LENGTH_SHORT).show();
+            }else{
+                String mensaje = "Error al agregar difusión destacada";
+                Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();;
+            }
+        }
+    }
+
 
     private boolean isFavorite(int idNews){
         for (int i = 0; i < jsonFavsList.length(); i++) {
             try {
                 JSONObject jsonFav = (JSONObject) jsonFavsList.get(i);
+                int idNewsFav = jsonFav.getInt("id_news");
 
+                if(idNews == idNewsFav){
+                    return true;
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        return true;
+        return false;
     }
 
+
+    private void changeBtnFavorite(final Button btnFav, boolean isFavorite, final int idNews){
+        if(isFavorite){
+            btnFav.setBackground(getResources().getDrawable(R.drawable.ic_star_border_black_24dp));
+            btnFav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ExecuteAddFavorites executeAddFavs = new ExecuteAddFavorites(idNews);
+                    executeAddFavs.execute();
+                    changeBtnFavorite(btnFav, false, idNews);
+                }
+            });
+        }
+        else{
+            btnFav.setBackground(getResources().getDrawable(R.drawable.ic_star_black_24dp));
+            btnFav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ExecuteDelFavorites executeDelFavs = new ExecuteDelFavorites(idNews);
+                    executeDelFavs.execute();
+                    changeBtnFavorite(btnFav, true, idNews);
+                }
+            });
+        }
+    }
 }

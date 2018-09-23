@@ -54,7 +54,8 @@ public class API_Access {
             "events/create", // 25
             "events/approve", // 26
             "events/delete", // 27,
-            "favorites/delete_Favorites" // 28
+            "favorites/delete_Favorites", // 28
+            "favorites/getListUsersCommunity_FavoriteNews"  //29
     };
 
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
