@@ -134,12 +134,24 @@ public class Event {
         this.start = start;
     }
 
+    public String getStart_to_String(){
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        //System.out.println(dateFormat.format(date));
+        return dateFormat.format(start);
+    }
+
     public Date getEnd() {
         return end;
     }
 
     public void setEnd(Date end) {
         this.end = end;
+    }
+
+    public String getEnd_to_String(){
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        //System.out.println(dateFormat.format(date));
+        return dateFormat.format(end);
     }
 
     public String getHours(){
