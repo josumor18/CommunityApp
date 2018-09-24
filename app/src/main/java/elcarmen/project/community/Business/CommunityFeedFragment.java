@@ -1,6 +1,7 @@
 package elcarmen.project.community.Business;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -261,8 +263,20 @@ public class CommunityFeedFragment extends Fragment {
             btnDeleteNews.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ExecuteDeleteNews executeDeleteNews = new ExecuteDeleteNews(idActual);
-                    executeDeleteNews.execute();
+                    new AlertDialog.Builder(getContext())
+                            .setIcon(R.drawable.ic_delete_forever_black_24dp)
+                            .setTitle("Está seguro?")
+                            .setMessage("Desea eliminar difusion?")
+                            .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    ExecuteDeleteNews executeDeleteNews = new ExecuteDeleteNews(idActual);
+                                    executeDeleteNews.execute();
+                                }
+                            })
+                            .setNegativeButton("No", null)
+                            .show();
+
                 }
             });
 
