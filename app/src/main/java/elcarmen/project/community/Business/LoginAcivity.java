@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import elcarmen.project.community.Data.API_Access;
@@ -29,8 +31,14 @@ public class LoginAcivity extends AppCompatActivity {
 
     EditText edtxtEmail, edtxtPassword;
     Button btnLogin;
+    CheckBox chbxSesionActiva;
 
     RelativeLayout rlLogin, rlLoginPB;
+
+    private static final String USER_PREFERENCES = "user.preferences.elcarmen.community";
+    private static final String PREFERENCE_EMAIL = "string.email.sesion";
+    private static final String PREFERENCE_AUTH_TOKEN = "string.token.sesion";
+    private static final String PREFERENCE_SESION_ACTIVA = "boolean.sesion.isActiva";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +51,17 @@ public class LoginAcivity extends AppCompatActivity {
         edtxtEmail = findViewById(R.id.edtxtEmail);
         edtxtPassword = findViewById(R.id.edtxtPassword);
         btnLogin = findViewById(R.id.btn_Login);
+        chbxSesionActiva = findViewById(R.id.chbxSesionActiva);
+
+        if(getEstadoSesion()){
+            String[] userData = getUsuarioSesion();
+
+            ExecuteLogin executeLogin = new ExecuteLogin(userData[0], userData[1], 1);
+            executeLogin.execute();
+
+            rlLogin.setVisibility(View.INVISIBLE);
+            rlLoginPB.setVisibility(View.VISIBLE);
+        }
     }
 
     public void loginClicked(View view){
@@ -82,6 +101,7 @@ public class LoginAcivity extends AppCompatActivity {
             user.setPrivateProfile(response.getBoolean("isPrivate"));
             user.setAuth_token(response.getString("auth_token"));
             user.setCommunities_admin(coms_admins);
+            user.setApplicationContext(getApplicationContext());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -116,10 +136,10 @@ public class LoginAcivity extends AppCompatActivity {
         }
         user.setPhoto_rounded(coverImage_r);
         //Si son correctas...hacer:
-        /*if(chckSesionActiva.isChecked()){
+        if(chbxSesionActiva.isChecked()){
             guardarUsuarioSesion(user.getEmail(), user.getAuth_token());
         }
-        */
+
         Toast.makeText(getApplicationContext(), "Sesión iniciada", Toast.LENGTH_LONG).show();
 
         Intent login = new Intent(getApplicationContext(), MainActivity.class);
@@ -130,12 +150,50 @@ public class LoginAcivity extends AppCompatActivity {
         //rlLoginPB.setVisibility(View.INVISIBLE);
     }
 
-    public static void actualizarAuth_Token(String auth_token, Context c){
-        //SharedPreferences preferences = c.getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE);
+    //------------------------------------------------------------------------------------------------------//
+    //----------------------------- Obtiene/Guarda las preferencias de sesion ------------------------------//
+    //------------------------------------------------------------------------------------------------------//
+    public void guardarUsuarioSesion(String email, String auth_token){
+        SharedPreferences preferences = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE);
 
-        //preferences.edit().putString(PREFERENCE_AUTH_TOKEN, auth_token).apply();
-        //preferences.edit().putString("tokenAux", auth_token).apply();
+        preferences.edit().putString(PREFERENCE_EMAIL, email).apply();
+        preferences.edit().putString(PREFERENCE_AUTH_TOKEN, auth_token).apply();
+        preferences.edit().putBoolean(PREFERENCE_SESION_ACTIVA, chbxSesionActiva.isChecked()).apply();
     }
+
+    public static void actualizarAuth_Token(String auth_token, Context c){
+        SharedPreferences preferences = c.getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE);
+
+        preferences.edit().putString(PREFERENCE_AUTH_TOKEN, auth_token).apply();
+    }
+
+    public static void cerrarSesion(Context c){
+        User_Singleton user = User_Singleton.getInstance();
+        user.setEmail("");
+        user.setAuth_token("");
+        user.setApplicationContext(null);
+
+        SharedPreferences preferences = c.getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE);
+
+        preferences.edit().putString(PREFERENCE_EMAIL, "").apply();
+        preferences.edit().putString(PREFERENCE_AUTH_TOKEN, "").apply();
+        preferences.edit().putBoolean(PREFERENCE_SESION_ACTIVA, false).apply();
+    }
+
+    public String[] getUsuarioSesion(){
+        String[] userData = new String[2];
+        SharedPreferences preferences = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE);
+        //Esto es para probar unicamente...después habría que ver si lo que se obtiene son todos los datos del usuario o que (segun lo que se haya guardado)...
+        userData[0] = preferences.getString(PREFERENCE_EMAIL, "");
+        userData[1] = preferences.getString(PREFERENCE_AUTH_TOKEN, "");
+        return userData;
+    }
+
+    public boolean getEstadoSesion(){
+        SharedPreferences preferences = getSharedPreferences(USER_PREFERENCES, MODE_PRIVATE);
+        return preferences.getBoolean(PREFERENCE_SESION_ACTIVA, false);
+    }
+    // ========================================================================================== //
 
 
     // ========================================================================================== //

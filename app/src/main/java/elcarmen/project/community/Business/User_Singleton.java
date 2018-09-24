@@ -1,5 +1,6 @@
 package elcarmen.project.community.Business;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import org.json.JSONArray;
@@ -26,6 +27,7 @@ public class User_Singleton {
     private ArrayList<Integer> communities_member = new ArrayList<Integer>();
     //private ArrayList<Notification> notifications = new ArrayList<Notification>();
     private ArrayList<News> news = new ArrayList<News>();
+    private Context applicationContext;
 
     public static User_Singleton getInstance() {
         return ourInstance;
@@ -172,5 +174,13 @@ public class User_Singleton {
 
     public void setPrivateProfile(boolean privateProfile) {
         this.privateProfile = privateProfile;
+    }
+
+    public Context getApplicationContext() {
+        return applicationContext;
+    }
+
+    public void setApplicationContext(Context applicationContext) {
+        this.applicationContext = applicationContext;
     }
 }

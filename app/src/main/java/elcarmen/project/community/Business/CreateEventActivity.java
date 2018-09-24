@@ -282,7 +282,10 @@ public class CreateEventActivity extends AppCompatActivity {
                     JSONObject response = API_Access.getInstance().getJsonObjectResponse();
 
                     User_Singleton user = User_Singleton.getInstance();
-                    user.setAuth_token(response.getString("auth_token"));
+                    String token = response.getString("auth_token");
+                    user.setAuth_token(token);
+
+                    LoginAcivity.actualizarAuth_Token(token, getApplicationContext());
 
                     //Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);

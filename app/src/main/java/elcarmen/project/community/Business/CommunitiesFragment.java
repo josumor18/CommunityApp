@@ -93,7 +93,7 @@ public class CommunitiesFragment extends Fragment {
             communities.clear();
             String token = jsonResult.getString("auth_token");
             User_Singleton.getInstance().setAuth_token(token);
-            //LoginActivity.actualizarAuth_Token(token, getActivity());
+            LoginAcivity.actualizarAuth_Token(token, getActivity());
             //JSONArray jsonListUserPosts = jsonResult.getJSONArray("posts");
             JSONArray jsonCommunitiesList = jsonResult.getJSONArray("communities");
             for (int i = 0; i < jsonCommunitiesList.length(); i++) {
