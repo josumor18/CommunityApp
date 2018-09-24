@@ -67,14 +67,15 @@
         </activity>
         <activity
             android:name=".Business.RequestsActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".Business.NewsMoreActivity"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".Business.NewsMoreActivity" />
         <activity android:name=".Business.EventsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Business.MainActivity" />
         </activity>
-        <activity android:name=".Business.CreateEventActivity"></activity>
+        <activity android:name=".Business.CreateEventActivity" />
+        <activity android:name=".Business.ReportsActivity"></activity>
     </application>
 
 </manifest>

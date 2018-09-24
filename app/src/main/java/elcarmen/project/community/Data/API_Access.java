@@ -50,7 +50,13 @@ public class API_Access {
             "comments/create", //21
             "comments/get_comments", //22
             "comments/delete_comments", //23
-            "users/get_users" //24
+            "users/get_users", //24
+            "events/create", // 25
+            "events/approve", // 26
+            "events/delete", // 27,
+            "favorites/delete_Favorites", // 28
+            "favorites/getListUsersCommunity_FavoriteNews",  //29
+            "reports/create" //30
     };
 
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
