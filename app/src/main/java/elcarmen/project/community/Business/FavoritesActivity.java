@@ -358,7 +358,9 @@ public class FavoritesActivity  extends AppCompatActivity {
 
                 //set user auth_token
                 try {
-                    user.setAuth_token(response.getString("auth_token"));
+                    String token = response.getString("auth_token");
+                    user.setAuth_token(token);
+                    LoginAcivity.actualizarAuth_Token(token, getApplicationContext());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

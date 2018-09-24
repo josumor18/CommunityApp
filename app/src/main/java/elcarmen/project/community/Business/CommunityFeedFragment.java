@@ -484,7 +484,9 @@ public class CommunityFeedFragment extends Fragment {
                 //set user auth_token
                 /*
                 try {
-                    user.setAuth_token(response.getString("auth_token"));
+                    String token = response.getString("auth_token");
+                    user.setAuth_token(token);
+                    LoginAcivity.actualizarAuth_Token(token, getActivity());
                 } catch (JSONException e) {
                     e.printStackTrace();
                     String mensaje = "Error al cargar nuevo token de autenticacion";
@@ -538,7 +540,9 @@ public class CommunityFeedFragment extends Fragment {
 
                 User_Singleton user = User_Singleton.getInstance();
                 try {
-                    user.setAuth_token(response.getString("auth_token"));
+                    String token = response.getString("auth_token");
+                    user.setAuth_token(token);
+                    LoginAcivity.actualizarAuth_Token(token, getActivity());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
