@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,14 +11,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?android:attr/panelBackground"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/btn_favorito"
+                android:id="@+id/btn_newsIcon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginLeft="6dp"
@@ -105,13 +108,12 @@
                 android:textSize="12sp" />
 
             <Button
-                android:id="@+id/btn_Favorito"
+                android:id="@+id/btn_Favorite"
                 android:layout_width="30dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_gravity="bottom|end"
                 android:layout_toStartOf="@+id/btn_EliminarNew"
-                android:background="@drawable/ic_star_border_black_24dp"
                 android:textSize="12sp" />
 
             <Button

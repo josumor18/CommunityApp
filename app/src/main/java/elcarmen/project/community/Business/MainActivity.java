@@ -95,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.logout_item:
-                //TODO borrar auth token de las preferencias
+                LoginAcivity.cerrarSesion(getApplicationContext());
+
                 intent = new Intent(getApplicationContext(), LoginAcivity.class);
                 startActivity(intent);
                 finish();

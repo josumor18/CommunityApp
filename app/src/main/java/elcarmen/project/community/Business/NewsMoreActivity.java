@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -59,6 +60,7 @@ public class NewsMoreActivity extends AppCompatActivity {
     Boolean isApprovedNews;
     String userComment;
 
+    public static Boolean fromFavorites = false;
     boolean isAdmin;
 
     private ArrayList<Comment> listComments = new ArrayList<Comment>();
@@ -80,9 +82,18 @@ public class NewsMoreActivity extends AppCompatActivity {
         //byte[] byteArray = getIntent().getByteArrayExtra("Photo");
         //photoNews = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
-        for(int i =0;i<CommunityFeedFragment.listNews.size();i++){
-            if(CommunityFeedFragment.listNews.get(i).getId() == idActual)
-                photoNews = CommunityFeedFragment.listNews.get(i).getPhoto();
+        if(!fromFavorites) {
+            for (int i = 0; i < CommunityFeedFragment.listNews.size(); i++) {
+                if (CommunityFeedFragment.listNews.get(i).getId() == idActual)
+                    photoNews = CommunityFeedFragment.listNews.get(i).getPhoto();
+            }
+        }
+        else{
+            fromFavorites = false;
+            for (int i = 0; i < FavoritesActivity.listNews.size(); i++) {
+                if (FavoritesActivity.listNews.get(i).getId() == idActual)
+                    photoNews = FavoritesActivity.listNews.get(i).getPhoto();
+            }
         }
 
         userComment = user.getName() + " dijo:";
@@ -152,6 +163,16 @@ public class NewsMoreActivity extends AppCompatActivity {
        executeGetComments.execute();
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void addComment(View view){
@@ -266,7 +287,6 @@ public class NewsMoreActivity extends AppCompatActivity {
                 if(Integer.toString(idUser).equals(userActual.getId())){
                     userName = userActual.getName() + " dijo:";
                     photoUser = userActual.getPhoto_rounded();
-
                 }
             }
 

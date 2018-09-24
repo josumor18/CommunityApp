@@ -11,7 +11,7 @@ public class Event {
     int id_community;
     String title;
     String description;
-    Date dateEvent;
+    Date dateEvent, dateEventEnd;
     Date start;
     Date end;
     String photo;
@@ -42,9 +42,20 @@ public class Event {
         }
         this.dateEvent = date;
         this.start = timeS;
+        date.setHours(timeS.getHours());
+        date.setMinutes(timeS.getMinutes());
         this.end = timeE;
         this.photo = photo;
         this.approved = approved;
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        if(timeE.getTime() < timeS.getTime()){
+            c.add(Calendar.DATE, 1);
+        }
+        dateEventEnd = c.getTime();
+        dateEventEnd.setHours(timeE.getHours());
+        dateEventEnd.setMinutes(timeE.getMinutes());
     }
 
     public int getId() {
@@ -83,6 +94,16 @@ public class Event {
         return dateEvent;
     }
 
+    public Date getDateEventEnd(){
+        return dateEventEnd;
+    }
+
+    public String getDate(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateEvent);
+        return cal.get(Calendar.DATE) + "/" + (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.YEAR);
+    }
+
     public void setDateEvent(Date dateEvent) {
         this.dateEvent = dateEvent;
     }
@@ -113,12 +134,24 @@ public class Event {
         this.start = start;
     }
 
+    public String getStart_to_String(){
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        //System.out.println(dateFormat.format(date));
+        return dateFormat.format(start);
+    }
+
     public Date getEnd() {
         return end;
     }
 
     public void setEnd(Date end) {
         this.end = end;
+    }
+
+    public String getEnd_to_String(){
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        //System.out.println(dateFormat.format(date));
+        return dateFormat.format(end);
     }
 
     public String getHours(){
@@ -155,4 +188,5 @@ public class Event {
     public void setApproved(boolean approved) {
         this.approved = approved;
     }
+
 }

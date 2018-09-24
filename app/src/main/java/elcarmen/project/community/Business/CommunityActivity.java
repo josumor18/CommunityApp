@@ -27,6 +27,7 @@ public class CommunityActivity extends AppCompatActivity {
 
     public static int idCommunity;
     public static String nameCommunity = "";
+    public static boolean isInFeedFragment = false;
 
     TabLayout tabLayoutCommunity;
     private ViewPager containerCommunity;
