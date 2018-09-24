@@ -116,8 +116,9 @@ public class ReportsActivity extends AppCompatActivity {
             super.onPostExecute(s);
 
             if(isOk){
-                /*Intent intent = new Intent(getApplicationContext(), NewsMoreActivity.class);
-                startActivity(intent);*/
+                String mensaje = "Reporte exitoso";
+
+                Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
                 finish();
             }else{
                 String mensaje = "Error al reportar";

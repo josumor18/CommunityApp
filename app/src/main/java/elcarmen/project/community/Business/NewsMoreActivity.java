@@ -1,9 +1,11 @@
 package elcarmen.project.community.Business;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -137,8 +139,20 @@ public class NewsMoreActivity extends AppCompatActivity {
         btnDeleteNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExecuteDeleteNews executeDeleteNews = new ExecuteDeleteNews(idActual);
-                executeDeleteNews.execute();
+                new AlertDialog.Builder(NewsMoreActivity.this)
+                        .setIcon(R.drawable.ic_delete_forever_black_24dp)
+                        .setTitle("Está seguro?")
+                        .setMessage("Desea eliminar difusion?")
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ExecuteDeleteNews executeDeleteNews = new ExecuteDeleteNews(idActual);
+                                executeDeleteNews.execute();
+                            }
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+
             }
         });
 
@@ -280,8 +294,20 @@ public class NewsMoreActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if(isAdmin || idUser == user.getId()){
-                       ExecuteDeleteComments executeDeleteComment = new ExecuteDeleteComments(idComment);
-                        executeDeleteComment.execute();
+                        new AlertDialog.Builder(NewsMoreActivity.this)
+                                .setIcon(R.drawable.ic_delete_forever_black_24dp)
+                                .setTitle("Está seguro?")
+                                .setMessage("Desea eliminar comentario?")
+                                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        ExecuteDeleteComments executeDeleteComment = new ExecuteDeleteComments(idComment);
+                                        executeDeleteComment.execute();
+                                    }
+                                })
+                                .setNegativeButton("No", null)
+                                .show();
+
                     }
                     else{
                         Intent intent = new Intent(getApplicationContext(), ReportsActivity.class);
