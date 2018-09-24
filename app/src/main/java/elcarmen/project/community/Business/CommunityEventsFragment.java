@@ -423,7 +423,10 @@ public class CommunityEventsFragment extends Fragment {
 
                     User_Singleton user = User_Singleton.getInstance();
                     try {
-                        user.setAuth_token(response.getString("auth_token"));
+                        String token = response.getString("auth_token");
+                        user.setAuth_token(token);
+
+                        LoginAcivity.actualizarAuth_Token(token, getActivity());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -439,6 +442,11 @@ public class CommunityEventsFragment extends Fragment {
                 lvEvents.setAdapter(new EventsAdapter());
             }else{
                 String mensaje = "Error al modificar el evento";
+                if(tipo == 0){
+                    mensaje = "Error al aprobar el evento";
+                }else if(tipo == 1){
+                    mensaje = "Error al eliminar el evento";
+                }
 
                 Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();
             }
