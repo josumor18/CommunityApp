@@ -246,6 +246,8 @@ public class CommunityEventsFragment extends Fragment {
             comunidades.clear();
             String token = jsonResult.getString("auth_token");
             User_Singleton.getInstance().setAuth_token(token);
+            LoginAcivity.actualizarAuth_Token(token, getActivity());
+
             JSONArray jsonEventsList = jsonResult.getJSONArray("events");
             for (int i = 0; i < jsonEventsList.length(); i++) {
                 JSONObject jsonEvent = jsonEventsList.getJSONObject(i);

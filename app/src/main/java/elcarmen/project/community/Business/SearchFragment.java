@@ -77,7 +77,8 @@ public class SearchFragment extends Fragment {
             requests.clear();
             String token = jsonResult.getString("auth_token");
             User_Singleton.getInstance().setAuth_token(token);
-            //LoginActivity.actualizarAuth_Token(token, getActivity());
+            LoginAcivity.actualizarAuth_Token(token, getActivity());
+
             JSONArray jsonCommunitiesList = jsonResult.getJSONArray("resultados");
             JSONArray jsonRequestsList = jsonResult.getJSONArray("solicitudes");
 
@@ -292,7 +293,9 @@ public class SearchFragment extends Fragment {
                     requests.set(position, true);
 
                     try {
-                        User_Singleton.getInstance().setAuth_token(API_Access.getInstance().getJsonObjectResponse().getString("auth_token"));
+                        String token = API_Access.getInstance().getJsonObjectResponse().getString("auth_token");
+                        User_Singleton.getInstance().setAuth_token(token);
+                        LoginAcivity.actualizarAuth_Token(token, getActivity());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
