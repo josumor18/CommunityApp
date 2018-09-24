@@ -25,6 +25,8 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.cloudinary.Cloudinary;
@@ -46,12 +48,13 @@ import elcarmen.project.community.R;
 
 public class CreateEventActivity extends AppCompatActivity {
 
+    RelativeLayout rlPickers;
     Menu menuCreateEvent;
     ImageView imgEventUploaded;
     Button btnUploadEventImage;
-    EditText txtNewEventDate, txtNewEventDescription, txtNewEventTitle;
+    EditText txtNewEventDate, txtNewEventDescription, txtNewEventTitle, txtNewEventHInicio, txtNewEventHFin;
     CalendarView calendarView;
-    NumberPicker nmbPckStartHour, nmbPckEndHour, nmbPckStartMinute, nmbPckEndMinute;
+    TimePicker tpHInicio, tpHFin;
 
     private static int IMG_RESULT = 1;
     String picturePath;
@@ -72,6 +75,18 @@ public class CreateEventActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setSubtitle(CommunityActivity.nameCommunity);
+
+        rlPickers = findViewById(R.id.rlPickers);
+        rlPickers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendarView.setVisibility(View.GONE);
+                tpHInicio.setVisibility(View.GONE);
+                tpHFin.setVisibility(View.GONE);
+                rlPickers.setVisibility(View.GONE);
+            }
+        });
+        rlPickers.setVisibility(View.GONE);
 
         btnUploadEventImage = findViewById(R.id.btnUploadEventImage);
         btnUploadEventImage.setOnClickListener(new View.OnClickListener() {
@@ -137,15 +152,23 @@ public class CreateEventActivity extends AppCompatActivity {
 
             }
         });
-        calendarView = findViewById(R.id.calendarView);
+        calendarView = findViewById(R.id.cvDate);
         calendarView.setVisibility(View.GONE);
+        tpHInicio = findViewById(R.id.tpHInicio);
+        tpHInicio.setIs24HourView(true);
+        tpHInicio.setVisibility(View.GONE);
+        tpHFin = findViewById(R.id.tpHFin);
+        tpHFin.setIs24HourView(true);
+        tpHFin.setVisibility(View.GONE);
 
         txtNewEventDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(calendarView.getVisibility() == View.GONE){
+                if(rlPickers.getVisibility() == View.GONE){
+                    rlPickers.setVisibility(View.VISIBLE);
                     calendarView.setVisibility(View.VISIBLE);
                 }else{
+                    rlPickers.setVisibility(View.GONE);
                     calendarView.setVisibility(View.GONE);
                 }
 
@@ -156,34 +179,69 @@ public class CreateEventActivity extends AppCompatActivity {
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 String fecha = dayOfMonth + "/" + (month + 1) + "/" + year;
                 txtNewEventDate.setText(fecha);
+                rlPickers.setVisibility(View.GONE);
                 view.setVisibility(View.GONE);
             }
         });
 
-        final String[] hourValues = {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
-        final String[] minuteValues = {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"};
+        txtNewEventHInicio = findViewById(R.id.txtNewEventHInicio);
+        txtNewEventHInicio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(rlPickers.getVisibility() == View.GONE){
+                    rlPickers.setVisibility(View.VISIBLE);
+                    tpHInicio.setVisibility(View.VISIBLE);
+                }else{
+                    rlPickers.setVisibility(View.GONE);
+                    tpHInicio.setVisibility(View.GONE);
+                }
+            }
+        });
 
-        nmbPckStartHour = findViewById(R.id.nmbPckStartHour);
-        nmbPckStartHour.setDisplayedValues(hourValues);
-        nmbPckStartHour.setMinValue(0);
-        nmbPckStartHour.setMaxValue(23);
-        nmbPckStartHour.setWrapSelectorWheel(true);
 
-        nmbPckStartMinute = findViewById(R.id.nmbPckStartMinute);
-        nmbPckStartMinute.setDisplayedValues(minuteValues);
-        nmbPckStartMinute.setMinValue(0);
-        nmbPckStartMinute.setMaxValue(59);
+        tpHInicio.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                String minutes = "0";
+                if(minute < 10){
+                    minutes += minute;
+                }else{
+                    minutes = Integer.toString(minute);
+                }
+                String fecha = hourOfDay + ":" + minutes;
+                txtNewEventHInicio.setText(fecha);
+            }
+        });
 
-        nmbPckEndHour = findViewById(R.id.nmbPckEndHour);
-        nmbPckEndHour.setDisplayedValues(hourValues);
-        nmbPckEndHour.setMinValue(0);
-        nmbPckEndHour.setMaxValue(23);
 
-        nmbPckEndMinute = findViewById(R.id.nmbPckEndMinute);
-        nmbPckEndMinute.setDisplayedValues(minuteValues);
-        nmbPckEndMinute.setMinValue(0);
-        nmbPckEndMinute.setMaxValue(59);
+        txtNewEventHFin = findViewById(R.id.txtNewEventHFin);
+        txtNewEventHFin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(rlPickers.getVisibility() == View.GONE){
+                    rlPickers.setVisibility(View.VISIBLE);
+                    tpHFin.setVisibility(View.VISIBLE);
+                }else{
+                    rlPickers.setVisibility(View.GONE);
+                    tpHFin.setVisibility(View.GONE);
+                }
+            }
+        });
 
+
+        tpHFin.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                String minutes = "0";
+                if(minute < 10){
+                    minutes += minute;
+                }else{
+                    minutes = Integer.toString(minute);
+                }
+                String fecha = hourOfDay + ":" + minutes;
+                txtNewEventHFin.setText(fecha);
+            }
+        });
     }
 
     private void habilitarBoton(){
@@ -233,30 +291,8 @@ public class CreateEventActivity extends AppCompatActivity {
             description = txtNewEventDescription.getText().toString();
             String[] dateSplited = txtNewEventDate.getText().toString().split("/");
             dateEvent = dateSplited[2] + "-" + dateSplited[1] + "-" + dateSplited[0];
-
-            int intHour = nmbPckStartHour.getValue();
-            int intMinute = nmbPckStartMinute.getValue();
-            String stringHour = Integer.toString(intHour);
-            String stringMinute = Integer.toString(intMinute);
-            if(intHour < 10){
-                stringHour = "0" + stringHour;
-            }
-            if(intMinute < 10){
-                stringMinute = "0" + stringMinute;
-            }
-            start = stringHour + ":" + stringMinute;
-
-            intHour = nmbPckEndHour.getValue();
-            intMinute = nmbPckEndMinute.getValue();
-            stringHour = Integer.toString(intHour);
-            stringMinute = Integer.toString(intMinute);
-            if(intHour < 10){
-                stringHour = "0" + stringHour;
-            }
-            if(intMinute < 10){
-                stringMinute = "0" + stringMinute;
-            }
-            end = stringHour + ":" + stringMinute;
+            start = txtNewEventHInicio.getText().toString();
+            end = txtNewEventHFin.getText().toString();
 
             approved = User_Singleton.getInstance().isAdmin(CommunityActivity.idCommunity);
         }

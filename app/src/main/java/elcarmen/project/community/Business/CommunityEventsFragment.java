@@ -4,6 +4,7 @@ package elcarmen.project.community.Business;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -32,6 +33,7 @@ import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import elcarmen.project.community.Data.API_Access;
+import elcarmen.project.community.Data.DB_Access;
 import elcarmen.project.community.Data.HttpGetBitmap;
 import elcarmen.project.community.R;
 
@@ -266,6 +268,14 @@ public class CommunityEventsFragment extends Fragment {
 
         setEventListMonth();
         lvEvents.setAdapter(new EventsAdapter());
+
+        DB_Access db_access = DB_Access.getInstance();
+        db_access.setContext(getActivity().getApplicationContext());
+        db_access.initDB();
+        db_access.clearEvents();
+        for(Event e : events){
+            db_access.insert_event(e);
+        }
     }
 
 
@@ -416,8 +426,14 @@ public class CommunityEventsFragment extends Fragment {
 
             if(isOk){
                 if(tipo == 1){
+                    int id = events_month.get(position).getId();
                     events.remove(events_month.get(position));
                     events_month.remove(position);
+
+                    DB_Access db_access = DB_Access.getInstance();
+                    db_access.setContext(getActivity().getApplicationContext());
+                    db_access.initDB();
+                    db_access.deleteEvent(id);
                 }else{
                     JSONObject response = API_Access.getInstance().getJsonObjectResponse();
 
