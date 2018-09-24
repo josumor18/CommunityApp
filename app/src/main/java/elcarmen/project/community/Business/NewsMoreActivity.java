@@ -290,7 +290,7 @@ public class NewsMoreActivity extends AppCompatActivity {
                 }
             }
 
-
+            final String usernameComment = userName;
 
 
 
@@ -304,7 +304,11 @@ public class NewsMoreActivity extends AppCompatActivity {
                         executeDeleteComment.execute();
                     }
                     else{
-                        //ExecuteReportComment
+                        Intent intent = new Intent(getApplicationContext(), ReportsActivity.class);
+                        intent.putExtra("idComment", idComment);
+                        intent.putExtra("idUser", idUser);
+                        intent.putExtra("username",usernameComment);
+                        startActivity(intent);
                     }
 
                 }
