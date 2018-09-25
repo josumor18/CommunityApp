@@ -34,8 +34,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="88dp"
-                    android:background="@drawable/ic_file_upload_black_24dp"
-                    android:onClick="cargarImagen" />
+                    android:background="@drawable/ic_file_upload_black_24dp" />
             </RelativeLayout>
 
             <EditText
@@ -83,93 +82,103 @@
                     android:clickable="true"
                     android:ems="10"
                     android:focusable="false"
-                    android:hint="26/09/2018"
+                    android:hint="26/9/2018"
                     android:inputType="date"
                     android:maxLines="1" />
 
             </RelativeLayout>
 
-            <CalendarView
-                android:id="@+id/calendarView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible" />
-
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp">
 
                 <TextView
-                    android:id="@+id/textView14"
+                    android:id="@+id/textViewlblHInicio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dp"
-                    android:text="Inicio:"
+                    android:text="Hora Inicio:"
                     android:textSize="18sp" />
 
-                <NumberPicker
-                    android:id="@+id/nmbPckStartHour"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/txtNewEventHInicio"
+                    android:layout_width="163dp"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/textView14" />
+                    android:layout_toEndOf="@+id/textViewlblHInicio"
+                    android:clickable="true"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:hint="12:30"
+                    android:inputType="time"
+                    android:maxLines="1" />
 
-                <TextView
-                    android:id="@+id/textView12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/nmbPckStartHour"
-                    android:text=" : "
-                    android:textSize="24sp" />
-
-                <NumberPicker
-                    android:id="@+id/nmbPckStartMinute"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/textView12" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp">
 
                 <TextView
-                    android:id="@+id/textfView14"
+                    android:id="@+id/textViewlblHFin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dp"
-                    android:text="    Fin:"
+                    android:text="Hora Fin:"
                     android:textSize="18sp" />
 
-                <NumberPicker
-                    android:id="@+id/nmbPckEndHour"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/txtNewEventHFin"
+                    android:layout_width="163dp"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/textfView14" />
+                    android:layout_toEndOf="@+id/textViewlblHFin"
+                    android:clickable="true"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:hint="13:30"
+                    android:inputType="time"
+                    android:maxLines="1" />
 
-                <TextView
-                    android:id="@+id/textView15"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/nmbPckEndHour"
-                    android:text=" : "
-                    android:textSize="24sp" />
-
-                <NumberPicker
-                    android:id="@+id/nmbPckEndMinute"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/textView15" />
             </RelativeLayout>
 
         </LinearLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/rlPickers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorGrayTransparent"
+        android:visibility="invisible">
+
+        <TimePicker
+            android:id="@+id/tpHInicio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@android:color/background_light"
+            android:visibility="invisible"></TimePicker>
+
+        <TimePicker
+            android:id="@+id/tpHFin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@android:color/background_light"
+            android:visibility="invisible"></TimePicker>
+
+        <CalendarView
+            android:id="@+id/cvDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@android:color/background_light"
+            android:visibility="visible" />
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

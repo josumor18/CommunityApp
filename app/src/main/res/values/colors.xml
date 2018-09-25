@@ -5,6 +5,7 @@
     <color name="colorPrimaryLight">#77b17577</color>
     <color name="colorGrayTab">#efefef</color>
     <color name="colorGrayButtonText">#666666</color>
+    <color name="colorGrayTransparent">#6f000000</color>
     <color name="colorAccent">#479795</color>
     <color name="colorAccentTransparent">#4e479795</color>
     <color name="button_Request_Community">#004040</color>

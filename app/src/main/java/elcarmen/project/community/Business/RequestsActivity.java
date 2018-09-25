@@ -54,7 +54,7 @@ public class RequestsActivity extends AppCompatActivity {
             users_requests.clear();
             String token = jsonResult.getString("auth_token");
             User_Singleton.getInstance().setAuth_token(token);
-            //LoginActivity.actualizarAuth_Token(token, getActivity());
+            LoginAcivity.actualizarAuth_Token(token, getApplicationContext());
             //JSONArray jsonListUserPosts = jsonResult.getJSONArray("posts");
             JSONArray jsonUsersList = jsonResult.getJSONArray("users");
             //Cambio
@@ -237,8 +237,10 @@ public class RequestsActivity extends AppCompatActivity {
 
             if(isOk){
                 try {
-                    User_Singleton.getInstance().setAuth_token(API_Access.getInstance().getJsonObjectResponse().getString("auth_token"));
+                    String token = API_Access.getInstance().getJsonObjectResponse().getString("auth_token");
+                    User_Singleton.getInstance().setAuth_token(token);
 
+                    LoginAcivity.actualizarAuth_Token(token, getApplicationContext());
                     //Cambio
                     users_requests.remove(position);
                     //Cambio

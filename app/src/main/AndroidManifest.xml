@@ -61,21 +61,26 @@
         <activity
             android:name=".Business.NewsActivity"
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Business.CommunityActivity" />
-        </activity>
+            </activity>
         <activity
             android:name=".Business.RequestsActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".Business.NewsMoreActivity" />
-        <activity android:name=".Business.EventsActivity">
+        <activity android:name=".Business.EventsActivity"
+            android:screenOrientation="portrait">
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Business.MainActivity" />
         </activity>
-        <activity android:name=".Business.CreateEventActivity" />
-        <activity android:name=".Business.ReportsActivity"></activity>
+
+        <activity
+            android:name=".Business.CreateEventActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Business.EventInfoActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

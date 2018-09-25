@@ -1,8 +1,10 @@
 package elcarmen.project.community.Business;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -35,12 +37,8 @@ public class FavoritesActivity  extends AppCompatActivity {
     ListView lvFavorites;
     TextView avError;
 
-    static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    static SecureRandom rnd = new SecureRandom();
-
-
     User_Singleton user;
-    private ArrayList<News> listNews = new ArrayList<News>();
+    public static ArrayList<News> listNews = new ArrayList<News>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +48,8 @@ public class FavoritesActivity  extends AppCompatActivity {
         avError = findViewById(R.id.tvError);
         user = User_Singleton.getInstance();
         avError.setVisibility(View.INVISIBLE);
-        FavoritesActivity.ExecuteGetNews executeGetNews = new FavoritesActivity.ExecuteGetNews();
-        executeGetNews.execute();
+        FavoritesActivity.ExecuteGetFavNews executeFavGetNews = new FavoritesActivity.ExecuteGetFavNews();
+        executeFavGetNews.execute();
 
     }
 
@@ -61,7 +59,6 @@ public class FavoritesActivity  extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
     }
-
 
 
 
@@ -99,14 +96,25 @@ public class FavoritesActivity  extends AppCompatActivity {
             TextView txtDate = view.findViewById(R.id.txtFechaHora);
             TextView txtAprobar = view.findViewById(R.id.txt_aprobar);
             Button btnNewsMore = view.findViewById(R.id.btn_NewMore);
+            Button btnEliminarNew = view.findViewById(R.id.btn_EliminarNew);
+            Button btn_Favorite = view.findViewById(R.id.btn_Favorite);
 
-            final int idActual = listNews.get(i).getId();
+            btn_Favorite.setBackground(getResources().getDrawable(R.drawable.ic_star_black_24dp));
+            txtAprobar.setVisibility(View.INVISIBLE);
+            btnEliminarNew.setVisibility(View.INVISIBLE);
 
 
-            //Si ya esta aprobada
-            if(listNews.get(i).isApproved())
-                txtAprobar.setVisibility(View.GONE);
 
+            final int actualNewsID = listNews.get(i).getId();
+
+            final String titleN = listNews.get(i).getTitle();
+
+            final String dateN = listNews.get(i).getDate().toString();
+
+            final String description = listNews.get(i).getDescription();
+
+
+            final boolean isApprovedNews = listNews.get(i).isApproved();
 
             txtTitle.setText(listNews.get(i).getTitle());
 
@@ -118,6 +126,39 @@ public class FavoritesActivity  extends AppCompatActivity {
 
             txtDate.setText(listNews.get(i).getDate().toString());
 
+
+            btn_Favorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ExecuteDelFavorites executeDelFavorites = new ExecuteDelFavorites(actualNewsID);
+                    executeDelFavorites.execute();
+
+                }
+            });
+
+
+            btnNewsMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ExecuteGetListUsersCommunity_by_idNews executeGetListUsersCommunity_by_idNews =
+                            new ExecuteGetListUsersCommunity_by_idNews(actualNewsID);
+                    executeGetListUsersCommunity_by_idNews.execute();
+
+
+                    Intent intent = new Intent(FavoritesActivity.this,NewsMoreActivity.class);
+                    intent.putExtra("idActual", actualNewsID);
+                    intent.putExtra("Title",titleN);
+                    intent.putExtra("DateN",dateN);
+                    intent.putExtra("Description",description);
+                    intent.putExtra("isApproved",isApprovedNews);
+                    NewsMoreActivity.fromFavorites = true;
+                    startActivity(intent);
+
+
+                }
+            });
+
+
             return view;
         }
     }
@@ -125,7 +166,124 @@ public class FavoritesActivity  extends AppCompatActivity {
 
 
 
-    private void cargarNews(JSONObject jsonResult) {
+
+
+    //=============================================================================================
+    public class ExecuteDelFavorites extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int favNewsID;
+
+        public ExecuteDelFavorites(int favNewsID) {
+            this.favNewsID = favNewsID;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            API_Access api = API_Access.getInstance();
+            String auth_token = user.getAuth_token();
+            int idUser = user.getId();
+            String[] keys = {"idNews", "idUser", "auth_token"};
+            String[] values = {Integer.toString(favNewsID), Integer.toString(idUser), auth_token};
+            isOk = api.get_delete_base(keys, values, 28, "DELETE",1);
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+
+                //set user auth_token
+                try {
+                    String token = response.getString("auth_token");
+                    user.setAuth_token(token);
+
+                    LoginAcivity.actualizarAuth_Token(token, getApplicationContext());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    String mensaje = "Error al cargar nuevo token de autenticacion";
+                    Toast.makeText(FavoritesActivity.this, mensaje, Toast.LENGTH_SHORT).show();;
+                }
+                Toast.makeText(FavoritesActivity.this, "Favorito eliminado", Toast.LENGTH_SHORT).show();
+                FavoritesActivity.ExecuteGetFavNews executeFavGetNews = new FavoritesActivity.ExecuteGetFavNews();
+                executeFavGetNews.execute();
+            }else{
+                String mensaje = "Error al eliminar difusión destacada";
+                Toast.makeText(FavoritesActivity.this, mensaje, Toast.LENGTH_SHORT).show();;
+            }
+        }
+    }
+
+    //=============================================================================================
+    public class ExecuteGetFavNews extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+
+        ExecuteGetFavNews(){
+
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            API_Access api = API_Access.getInstance();
+
+
+            String[] keys = {"id", "auth_token"};
+            String[] values = {Integer.toString(user.getId()),  user.getAuth_token()};
+            isOk = api.get_delete_base(keys, values, 20, "GET", 1);
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+
+                //set user auth_token
+                try {
+                    String token = response.getString("auth_token");
+                    user.setAuth_token(token);
+
+                    LoginAcivity.actualizarAuth_Token(token, getApplicationContext());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                loadNews(response);
+                if (listNews.isEmpty()){
+                    avError.setVisibility(View.VISIBLE);
+                }
+                else{
+                    avError.setVisibility(View.INVISIBLE);
+                }
+
+            }else{
+                String mensaje = "Error al obtener las difusiones";
+                Toast.makeText(FavoritesActivity.this, mensaje, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void loadNews(JSONObject jsonResult) {
 
         try {
             listNews.clear();
@@ -164,17 +322,14 @@ public class FavoritesActivity  extends AppCompatActivity {
 
     }
 
-
-
-    public class ExecuteGetNews extends AsyncTask<String, Void, String> {
+    //=============================================================================================
+    public class ExecuteGetListUsersCommunity_by_idNews extends AsyncTask<String, Void, String> {
         boolean isOk = false;
-        boolean isApproved = false;
+        int idNews;
 
-        ExecuteGetNews(){
-
+        public ExecuteGetListUsersCommunity_by_idNews(int idNews) {
+            this.idNews = idNews;
         }
-
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -186,9 +341,9 @@ public class FavoritesActivity  extends AppCompatActivity {
             API_Access api = API_Access.getInstance();
 
 
-            String[] keys = {"id"};
-            String[] values = {Integer.toString(user.getId())};
-            isOk = api.get_delete_base(keys, values, 20, "GET", 1);
+            String[] keys = {"idUser", "idNews", "auth_token"};
+            String[] values = {Integer.toString(user.getId()), Integer.toString(idNews),  user.getAuth_token()};
+            isOk = api.get_delete_base(keys, values, 29, "GET", 1);
 
             return null;
 
@@ -199,20 +354,90 @@ public class FavoritesActivity  extends AppCompatActivity {
             super.onPostExecute(s);
 
             if(isOk){
-                cargarNews(API_Access.getInstance().getJsonObjectResponse());
-                if (listNews.isEmpty()){
-                    avError.setVisibility(View.VISIBLE);
+                JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+
+                //set user auth_token
+                try {
+                    String token = response.getString("auth_token");
+                    user.setAuth_token(token);
+                    LoginAcivity.actualizarAuth_Token(token, getApplicationContext());
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                else{
-                    avError.setVisibility(View.INVISIBLE);
-                }
+
+                cargarUsersFavorite(API_Access.getInstance().getJsonObjectResponse());
+                String mensaje = "Cargando contenido de la difusión destacada";
+                Toast.makeText(FavoritesActivity.this, mensaje, Toast.LENGTH_SHORT).show();
 
             }else{
                 String mensaje = "Error al obtener las difusiones";
-
                 Toast.makeText(FavoritesActivity.this, mensaje, Toast.LENGTH_SHORT).show();
             }
         }
     }
+
+    private void cargarUsersFavorite(JSONObject jsonResult) {
+
+        try {
+            CommunityActivity.listUsers.clear();
+
+            JSONArray jsonUsersList = jsonResult.getJSONArray("usuarios");  //Importante
+            for (int i = 0; i < jsonUsersList.length(); i++) {
+                JSONObject jsonUser = (JSONObject) jsonUsersList.get(i);
+
+                HttpGetBitmap request = new HttpGetBitmap();
+                Bitmap newImage = null;
+                try {
+                    newImage = request.execute(jsonUser.getString("photo")).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                int id = jsonUser.getInt("id");
+                String name = jsonUser.getString("name");
+                String email = jsonUser.getString("email");
+                String tel = jsonUser.getString("tel");
+                String cel = jsonUser.getString("cel");
+                String address = jsonUser.getString("address");
+                String url_photo = jsonUser.getString("photo");
+                String url_photo_rounded = jsonUser.getString("photo_thumbnail");
+                Bitmap photo = convertirBitmap(url_photo);
+                Bitmap photo_rounded = convertirBitmap(url_photo_rounded);
+                boolean privateProfile = jsonUser.getBoolean("isPrivate");
+
+                if(photo == null){
+                    photo = BitmapFactory.decodeResource( this.getApplicationContext().getResources(),
+                            R.drawable.user_box_photo);
+                }
+                if(photo_rounded == null){
+                    photo_rounded = BitmapFactory.decodeResource( this.getApplicationContext().getResources(),
+                            R.drawable.user_rounded_photo);
+                }
+
+                User userObject = new User(Integer.toString(id),name,email,tel,cel,address,url_photo,url_photo_rounded,photo,photo_rounded,privateProfile);
+
+                CommunityActivity.listUsers.add(userObject);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Bitmap convertirBitmap(String url){
+        HttpGetBitmap request = new HttpGetBitmap();
+        Bitmap newImage = null;
+        try {
+            newImage = request.execute(url).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return newImage;
+    }
+
+
 }
 
