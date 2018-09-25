@@ -368,6 +368,9 @@ public class CommunityFeedFragment extends Fragment {
             if(isOk){
                 ExecuteGetNews executeGetNews = new ExecuteGetNews();
                 executeGetNews.execute();
+                String mensaje = "Difusion aprobada";
+
+                Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();
             }else{
                 String mensaje = "Error al aprobar";
 
