@@ -274,7 +274,9 @@ public class CommunityEventsFragment extends Fragment {
         db_access.initDB();
         db_access.clearEvents();
         for(Event e : events){
-            db_access.insert_event(e);
+            if(e.isApproved()){
+                db_access.insert_event(e);
+            }
         }
     }
 
