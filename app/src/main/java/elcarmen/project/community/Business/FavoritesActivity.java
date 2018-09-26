@@ -70,6 +70,7 @@ public class FavoritesActivity  extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        lvFavorites.setAdapter(new FavoritesActivity.NewsAdapter());
     }
 
 
@@ -149,24 +150,13 @@ public class FavoritesActivity  extends AppCompatActivity {
             });
 
 
+            final int position = i;
             btnNewsMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ExecuteGetListUsersCommunity_by_idNews executeGetListUsersCommunity_by_idNews =
-                            new ExecuteGetListUsersCommunity_by_idNews(actualNewsID);
+                            new ExecuteGetListUsersCommunity_by_idNews(actualNewsID, listNews.get(position));
                     executeGetListUsersCommunity_by_idNews.execute();
-
-
-                    Intent intent = new Intent(FavoritesActivity.this,NewsMoreActivity.class);
-                    intent.putExtra("idActual", actualNewsID);
-                    intent.putExtra("Title",titleN);
-                    intent.putExtra("DateN",dateN);
-                    intent.putExtra("Description",description);
-                    intent.putExtra("isApproved",isApprovedNews);
-                    NewsMoreActivity.fromFavorites = true;
-                    startActivity(intent);
-
-
                 }
             });
 
@@ -295,6 +285,7 @@ public class FavoritesActivity  extends AppCompatActivity {
         }
     }
 
+
     private void loadNews(JSONObject jsonResult) {
 
         try {
@@ -338,9 +329,11 @@ public class FavoritesActivity  extends AppCompatActivity {
     public class ExecuteGetListUsersCommunity_by_idNews extends AsyncTask<String, Void, String> {
         boolean isOk = false;
         int idNews;
+        News news;
 
-        public ExecuteGetListUsersCommunity_by_idNews(int idNews) {
+        public ExecuteGetListUsersCommunity_by_idNews(int idNews, News news) {
             this.idNews = idNews;
+            this.news = news;
         }
         @Override
         protected void onPreExecute() {
@@ -373,6 +366,8 @@ public class FavoritesActivity  extends AppCompatActivity {
                     String token = response.getString("auth_token");
                     user.setAuth_token(token);
                     LoginAcivity.actualizarAuth_Token(token, getApplicationContext());
+
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -381,6 +376,14 @@ public class FavoritesActivity  extends AppCompatActivity {
                 String mensaje = "Cargando contenido de la difusión destacada";
                 Toast.makeText(FavoritesActivity.this, mensaje, Toast.LENGTH_SHORT).show();
 
+                Intent intent = new Intent(FavoritesActivity.this,NewsMoreActivity.class);
+                intent.putExtra("idActual", news.getId());
+                intent.putExtra("Title",news.getTitle());
+                intent.putExtra("DateN",news.getDate());
+                intent.putExtra("Description",news.getDescription());
+                intent.putExtra("isApproved",news.isApproved());
+                NewsMoreActivity.fromFavorites = true;
+                startActivity(intent);
             }else{
                 String mensaje = "Error al obtener las difusiones";
                 Toast.makeText(FavoritesActivity.this, mensaje, Toast.LENGTH_SHORT).show();
