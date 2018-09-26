@@ -31,7 +31,7 @@ public class DB_Access extends AppCompatActivity{
             db = context.openOrCreateDatabase("Community_DB", MODE_PRIVATE, null);
 
             db.execSQL("CREATE TABLE IF NOT EXISTS events (" +
-                    "id INTEGER(100)," +
+                "id INTEGER(100) NOT NULL PRIMARY KEY," +
                     "id_community INTEGER(100)," +
                     "title VARCHAR," +
                     "description VARCHAR," +
@@ -93,6 +93,14 @@ public class DB_Access extends AppCompatActivity{
 
         db.delete("events", "id=?", new String[] {Integer.toString(id)});
 
+        db.close();
+    }
+
+    public void updateEvent(int id, boolean approved){
+        db = context.openOrCreateDatabase("Community_DB", MODE_PRIVATE, null);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("approved", approved);
+        db.update("events", contentValues, "id="+id, null);
         db.close();
     }
 }
