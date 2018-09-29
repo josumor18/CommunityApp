@@ -16,6 +16,11 @@ public class Event {
     Date end;
     String photo;
     boolean approved;
+    String name_community;
+
+    public Event(){
+
+    }
 
     public Event(int id, int id_community, String title, String description, String dateEvent, String start, String end, String photo, boolean approved) {
         this.id = id;
@@ -74,6 +79,14 @@ public class Event {
         this.id_community = id_community;
     }
 
+    public String getName_community() {
+        return name_community;
+    }
+
+    public void setName_community(String name_community) {
+        this.name_community = name_community;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -108,10 +121,48 @@ public class Event {
         this.dateEvent = dateEvent;
     }
 
+    public void setDatesEvent(String dateEvent, String timeStart, String timeEnd){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+
+        Date date = new Date();
+        Date timeS = new Date();
+        Date timeE = new Date();
+        try{
+            date = dateFormat.parse(dateEvent);
+            timeS = timeFormat.parse(timeStart);
+            timeE = timeFormat.parse(timeEnd);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        this.dateEvent = date;
+        this.start = timeS;
+        date.setHours(timeS.getHours());
+        date.setMinutes(timeS.getMinutes());
+        this.end = timeE;
+        this.photo = photo;
+        this.approved = approved;
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        if(timeE.getTime() < timeS.getTime()){
+            c.add(Calendar.DATE, 1);
+        }
+        dateEventEnd = c.getTime();
+        dateEventEnd.setHours(timeE.getHours());
+        dateEventEnd.setMinutes(timeE.getMinutes());
+    }
+
     public String getFecha(){
         Calendar cal = Calendar.getInstance();
         cal.setTime(dateEvent);
         return cal.get(Calendar.DATE) + "/" + (cal.get(Calendar.MONTH) + 1);
+    }
+
+    public String getFechaParam(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateEvent);
+        return cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DATE);
     }
 
     public int getMonth(){

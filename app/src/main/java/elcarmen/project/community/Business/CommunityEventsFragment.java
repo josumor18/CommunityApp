@@ -271,11 +271,15 @@ public class CommunityEventsFragment extends Fragment {
 
         DB_Access db_access = DB_Access.getInstance();
         db_access.setContext(getActivity().getApplicationContext());
-        db_access.initDB();
-        db_access.clearEvents();
-        for(Event e : events){
-            if(e.isApproved()){
-                db_access.insert_event(e);
+        //db_access.initDB();
+        //db_access.clearEvents();
+        for(int i = 0; i < events.size(); i++){
+            if(events.get(i).isApproved()){
+                if(getActivity() instanceof EventsActivity){
+                    db_access.insert_event(events.get(i), comunidades.get(i));
+                }else{
+                    db_access.insert_event(events.get(i), CommunityActivity.nameCommunity);
+                }
             }
         }
     }
