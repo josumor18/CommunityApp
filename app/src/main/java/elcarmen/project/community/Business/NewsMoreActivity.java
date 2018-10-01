@@ -309,7 +309,6 @@ public class NewsMoreActivity extends AppCompatActivity {
 
 
 
-
             btnReport.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
