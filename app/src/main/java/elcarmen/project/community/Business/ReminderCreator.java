@@ -63,6 +63,7 @@ public class ReminderCreator extends Service {
                         }
 
                         Intent intent = new Intent(context, EventInfoActivity.class);
+                        intent.putExtra("community_name", e.getName_community());
                         intent.putExtra("photo", e.getPhoto());
                         intent.putExtra("title", e.getTitle());
                         intent.putExtra("description", e.getDescription());

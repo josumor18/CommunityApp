@@ -89,6 +89,11 @@ public class CommunityEventsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), EventInfoActivity.class);
                 Event selected = events_month.get(position);
+                if(getActivity() instanceof EventsActivity){
+                    intent.putExtra("community_name", comunidades_mes.get(position));
+                }else{
+                    intent.putExtra("community_name", CommunityActivity.nameCommunity);
+                }
                 intent.putExtra("photo", selected.getPhoto());
                 intent.putExtra("title", selected.getTitle());
                 intent.putExtra("description", selected.getDescription());
