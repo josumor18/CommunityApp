@@ -1,6 +1,7 @@
 package elcarmen.project.community.Business;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import elcarmen.project.community.Data.DB_Access;
@@ -60,17 +62,30 @@ public class ReminderCreator extends Service {
                             er.printStackTrace();
                         }
 
+                        Intent intent = new Intent(context, EventInfoActivity.class);
+                        intent.putExtra("photo", e.getPhoto());
+                        intent.putExtra("title", e.getTitle());
+                        intent.putExtra("description", e.getDescription());
+                        intent.putExtra("date", e.getDate());
+                        intent.putExtra("terminado", false);
+                        intent.putExtra("hours", e.getHours());
+                        intent.setAction(Long.toString(System.currentTimeMillis()));
+
+                        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);//getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
                         String notif_body = "Evento: " + e.getTitle() + "\nFecha: " + e.getDate() + "\nHora de inicio: " + e.getStart_to_String();
                         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                                 .setSmallIcon(R.drawable.logo_community)
                                 .setLargeIcon(eventImage)
                                 .setContentTitle(e.getName_community())
                                 .setStyle(new NotificationCompat.BigTextStyle().bigText(notif_body))
-                                .setContentText(notif_body);
+                                .setContentText(notif_body)
+                                .setContentIntent(pendingIntent)
+                                .setAutoCancel(true);
                         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                         notificationManager.notify(e.getId(), builder.build());
                     }
-                    handler.postDelayed(this, 20000);
+                    handler.postDelayed(this, 30000);
                 }
             };
 
