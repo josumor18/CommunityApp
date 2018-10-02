@@ -27,7 +27,6 @@ public class EventInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_info);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setSubtitle(CommunityActivity.nameCommunity);
 
         imgEventInfoPhoto = findViewById(R.id.imgEventInfoPhoto);
         txtEventInfoTitle = findViewById(R.id.txtEventInfoTitle);
@@ -38,6 +37,7 @@ public class EventInfoActivity extends AppCompatActivity {
         txtEventInfoHFin = findViewById(R.id.txtEventInfoHFin);
 
         Intent intent = getIntent();
+        getSupportActionBar().setSubtitle(intent.getStringExtra("community_name"));
         txtEventInfoTitle.setText(intent.getStringExtra("title"));
         txtEventInfoDescription.setText(intent.getStringExtra("description"));
         txtEventInfoFecha.setText(intent.getStringExtra("date"));

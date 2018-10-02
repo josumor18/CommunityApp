@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
 import elcarmen.project.community.Data.API_Access;
+import elcarmen.project.community.Data.DB_Access;
 import elcarmen.project.community.Data.HttpGetBitmap;
 import elcarmen.project.community.R;
 
@@ -146,14 +147,11 @@ public class LoginAcivity extends AppCompatActivity {
             guardarUsuarioSesion(user.getEmail(), user.getAuth_token());
         }
 
-        Toast.makeText(getApplicationContext(), "Sesión iniciada", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), "Sesión iniciada", Toast.LENGTH_SHORT).show();
 
         Intent login = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(login);
         finish();
-
-        //rlLogin.setVisibility(View.VISIBLE);
-        //rlLoginPB.setVisibility(View.INVISIBLE);
     }
 
     //------------------------------------------------------------------------------------------------------//
@@ -174,6 +172,11 @@ public class LoginAcivity extends AppCompatActivity {
     }
 
     public static void cerrarSesion(Context c){
+        DB_Access db_access = DB_Access.getInstance();
+        db_access.setContext(c);
+        db_access.initDB();
+        db_access.clearEvents();
+
         User_Singleton user = User_Singleton.getInstance();
         user.setEmail("");
         user.setAuth_token("");

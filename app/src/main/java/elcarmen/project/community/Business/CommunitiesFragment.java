@@ -18,15 +18,19 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import elcarmen.project.community.Data.API_Access;
+import elcarmen.project.community.Data.DB_Access;
 import elcarmen.project.community.Data.HttpGetBitmap;
 import elcarmen.project.community.R;
 
@@ -123,6 +127,9 @@ public class CommunitiesFragment extends Fragment {
 
         rlCommunities.setVisibility(View.VISIBLE);
         rlCommunitiesPB.setVisibility(View.INVISIBLE);
+
+        ExecuteGetEvents executeGetEvents = new ExecuteGetEvents();
+        executeGetEvents.execute();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -225,4 +232,78 @@ public class CommunitiesFragment extends Fragment {
         }
     }
 
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    public class ExecuteGetEvents extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+
+        public ExecuteGetEvents() {
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            API_Access api = API_Access.getInstance();
+            User_Singleton user = User_Singleton.getInstance();
+
+            String[] keys = {"id", "auth_token"};
+            String[] values = {Integer.toString(user.getId()), user.getAuth_token()};
+            isOk = api.get_delete_base(keys, values, 18, "GET",1);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            DB_Access db_access = DB_Access.getInstance();
+            db_access.setContext(getActivity().getApplicationContext());
+            db_access.initDB();
+            db_access.clearEvents();
+
+            if(isOk){
+                ArrayList<Event> events = new ArrayList<Event>();
+                ArrayList<String> comunidades = new ArrayList<String>();
+                try {
+                    JSONObject jsonResult = API_Access.getInstance().getJsonObjectResponse();
+                    String token = jsonResult.getString("auth_token");
+                    User_Singleton.getInstance().setAuth_token(token);
+                    LoginAcivity.actualizarAuth_Token(token, getActivity());
+
+                    JSONArray jsonEventsList = jsonResult.getJSONArray("events");
+                    for (int i = 0; i < jsonEventsList.length(); i++) {
+                        JSONObject jsonEvent = jsonEventsList.getJSONObject(i);
+
+                        Event event = new Event(jsonEvent.getInt("id"), jsonEvent.getInt("id_community"), jsonEvent.getString("title"), jsonEvent.getString("description"), jsonEvent.getString("dateEvent"), jsonEvent.getString("start"), jsonEvent.getString("end"), jsonEvent.getString("photo"), jsonEvent.getBoolean("approved"));
+                        events.add(event);
+                    }
+
+                    JSONArray jsonCommunitiesNamesList = jsonResult.getJSONArray("comm_names");
+                    for (int i = 0; i < jsonEventsList.length(); i++) {
+                        comunidades.add(jsonCommunitiesNamesList.getString(i));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                for(int i = 0; i < events.size(); i++){
+                    if(events.get(i).isApproved()){
+                        db_access.insert_event(events.get(i), comunidades.get(i));
+                    }
+                }
+            }
+
+            //db_access.getNextEvents();
+
+            Intent intent = new Intent(getActivity(), ReminderCreator.class);
+            getActivity().startService(intent);
+        }
+    }
 }

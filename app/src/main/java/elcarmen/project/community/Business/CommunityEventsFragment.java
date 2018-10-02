@@ -89,6 +89,11 @@ public class CommunityEventsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), EventInfoActivity.class);
                 Event selected = events_month.get(position);
+                if(getActivity() instanceof EventsActivity){
+                    intent.putExtra("community_name", comunidades_mes.get(position));
+                }else{
+                    intent.putExtra("community_name", CommunityActivity.nameCommunity);
+                }
                 intent.putExtra("photo", selected.getPhoto());
                 intent.putExtra("title", selected.getTitle());
                 intent.putExtra("description", selected.getDescription());
@@ -271,10 +276,16 @@ public class CommunityEventsFragment extends Fragment {
 
         DB_Access db_access = DB_Access.getInstance();
         db_access.setContext(getActivity().getApplicationContext());
-        db_access.initDB();
-        db_access.clearEvents();
-        for(Event e : events){
-            db_access.insert_event(e);
+        //db_access.initDB();
+        //db_access.clearEvents();
+        for(int i = 0; i < events.size(); i++){
+            if(events.get(i).isApproved()){
+                if(getActivity() instanceof EventsActivity){
+                    db_access.insert_event(events.get(i), comunidades.get(i));
+                }else{
+                    db_access.insert_event(events.get(i), CommunityActivity.nameCommunity);
+                }
+            }
         }
     }
 

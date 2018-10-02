@@ -61,7 +61,6 @@ public class API_Access {
             "notifications/get_newsNotifications", //32
             "notifications/delete_Notification",   //33
             "news/getSingleNews_by_id" //34
-
     };
 
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};

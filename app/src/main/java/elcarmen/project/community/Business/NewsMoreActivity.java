@@ -404,6 +404,7 @@ public class NewsMoreActivity extends AppCompatActivity {
             super.onPostExecute(s);
 
             if(isOk){
+
                 //eliminar de notificaciones
                 if(!(NotificationsFragment.notifications.isEmpty())){
                     int index = 0;
@@ -415,6 +416,20 @@ public class NewsMoreActivity extends AppCompatActivity {
                     }
                     NotificationsFragment.notifications.remove(index);
                 }
+
+                //eliminar de favoritos
+                if(!(FavoritesActivity.listNews.isEmpty())){
+                    int index = 0;
+                    for (News n : FavoritesActivity.listNews){
+                        if (n.getId() == id){
+                            break;
+                        }
+                        index++;
+                    }
+                    FavoritesActivity.listNews.remove(index);
+                }
+
+
                 Toast.makeText(getApplicationContext(), "Eliminada", Toast.LENGTH_SHORT).show();
                 finish();
 
