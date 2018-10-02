@@ -41,7 +41,7 @@ public class NotificationsFragment extends Fragment {
     RelativeLayout rlNotifications;
 
 
-    private ArrayList<Notification> notifications = new ArrayList<Notification>();
+    public static ArrayList<Notification> notifications = new ArrayList<Notification>();
 
     public NotificationsFragment() {
         // Required empty public constructor
@@ -68,7 +68,11 @@ public class NotificationsFragment extends Fragment {
         return v;
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        lvNotifications.setAdapter(new NotificationsAdapter());
+    }
     private void loadNotifications(JSONObject jsonResult) {
 
         try {
@@ -407,6 +411,7 @@ public class NotificationsFragment extends Fragment {
                     intent.putExtra("DateN", jsonNews.getString("date"));
                     intent.putExtra("Description", jsonNews.getString("description"));
                     intent.putExtra("isApproved", jsonNews.getBoolean("approved"));
+                    intent.putExtra("idCommunity", jsonNews.getInt("idCommunity"));
                     NewsMoreActivity.fromFavorites = true;
                 } catch (JSONException e) {
                     e.printStackTrace();

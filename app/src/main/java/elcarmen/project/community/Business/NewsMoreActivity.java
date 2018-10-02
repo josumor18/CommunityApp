@@ -91,7 +91,6 @@ public class NewsMoreActivity extends AppCompatActivity {
             }
         }
         else{
-            fromFavorites = false;
             for (int i = 0; i < FavoritesActivity.listNews.size(); i++) {
                 if (FavoritesActivity.listNews.get(i).getId() == idActual)
                     photoNews = FavoritesActivity.listNews.get(i).getPhoto();
@@ -167,11 +166,21 @@ public class NewsMoreActivity extends AppCompatActivity {
             }
         });
 
+        if(!fromFavorites) {
+            isAdmin = user.isAdmin(CommunityActivity.idCommunity);
+            if(!isAdmin){
+                btnDeleteNew.setVisibility(View.GONE);
+            }
+        }
+       else{
+            int idCommunity = getIntent().getIntExtra("idCommunity",0);
+            isAdmin = user.isAdmin(idCommunity);
+            if(!isAdmin){
+                btnDeleteNew.setVisibility(View.GONE);
+            }
+        }
 
-        isAdmin = user.isAdmin(CommunityActivity.idCommunity);
 
-       if(!isAdmin)
-            btnDeleteNew.setVisibility(View.GONE);
 
        ExecuteGetComments executeGetComments = new ExecuteGetComments();
        executeGetComments.execute();
@@ -395,7 +404,17 @@ public class NewsMoreActivity extends AppCompatActivity {
             super.onPostExecute(s);
 
             if(isOk){
-                //callFeedActivity();
+                //eliminar de notificaciones
+                if(!(NotificationsFragment.notifications.isEmpty())){
+                    int index = 0;
+                    for (Notification n : NotificationsFragment.notifications){
+                        if (n.getIdContent() == id){
+                            break;
+                        }
+                        index++;
+                    }
+                    NotificationsFragment.notifications.remove(index);
+                }
                 Toast.makeText(getApplicationContext(), "Eliminada", Toast.LENGTH_SHORT).show();
                 finish();
 
