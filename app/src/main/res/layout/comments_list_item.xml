@@ -51,15 +51,6 @@
             android:layout_marginRight="5dp"
             android:background="@drawable/ic_delete_forever_black_24dp" />
 
-        <TextView
-            android:id="@+id/txtDateComment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@id/txtCommentDescription"
-            android:layout_marginRight="6dp"
-            android:text="yy/mm/dd "
-            android:textSize="10sp" />
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

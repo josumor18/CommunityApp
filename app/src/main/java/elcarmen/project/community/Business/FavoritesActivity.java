@@ -382,6 +382,7 @@ public class FavoritesActivity  extends AppCompatActivity {
                 intent.putExtra("DateN",news.getDate());
                 intent.putExtra("Description",news.getDescription());
                 intent.putExtra("isApproved",news.isApproved());
+
                 NewsMoreActivity.fromFavorites = true;
                 startActivity(intent);
             }else{
