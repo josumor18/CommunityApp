@@ -17,7 +17,7 @@ public class ChatActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
         Chat chat = (Chat) intent.getSerializableExtra("chat");
-        //getSupportActionBar().setSubtitle(chat.getCommunity_name());
+        getSupportActionBar().setSubtitle(chat.getCommunity_name());
 
 
     }

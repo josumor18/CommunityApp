@@ -1,6 +1,12 @@
 package elcarmen.project.community.Business;
 
+import android.util.Log;
+
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class Chat implements Serializable {
     private int id;
@@ -10,11 +16,12 @@ public class Chat implements Serializable {
     private String name_receiver;
     private boolean visto;
     private String last_message;
+    private Date created_at;
 
     public Chat() {
     }
 
-    public Chat(int id, int id_community, String community_name, int id_receiver, String name_receiver, boolean visto, String last_message) {
+    public Chat(int id, int id_community, String community_name, int id_receiver, String name_receiver, boolean visto, String last_message, Date created_at) {
         this.id = id;
         this.id_community = id_community;
         this.community_name = community_name;
@@ -22,6 +29,7 @@ public class Chat implements Serializable {
         this.name_receiver = name_receiver;
         this.visto = visto;
         this.last_message = last_message;
+        this.created_at = created_at;
     }
 
     public int getId() {
@@ -78,5 +86,29 @@ public class Chat implements Serializable {
 
     public void setLast_message(String last_message) {
         this.last_message = last_message;
+    }
+
+    public Date getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
+    }
+
+    public String getCreated_at_to_String(){
+        // Conversión de zona horaria, tomada de: https://code.i-harness.com/es/q/750a53
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(created_at);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+
+        //Here you say to java the initial timezone. This is the secret
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        //Here you set to your timezone
+        TimeZone timeZone = TimeZone.getDefault();
+        sdf.setTimeZone(timeZone);
+        //Will return on your default Timezone
+        return sdf.format(calendar.getTime());
     }
 }
