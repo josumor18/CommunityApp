@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import elcarmen.project.community.R;
+
 public class News {
 
     private int id;
@@ -16,6 +18,7 @@ public class News {
     private String url_photo;
     private Bitmap photo;
     private boolean approved;
+    private int idCommunity;
 
     public News(int id, String title, String description, String date, String url_photo, Bitmap photo, boolean approved) {
         this.id = id;
@@ -25,6 +28,28 @@ public class News {
         this.photo = photo;
         this.approved = approved;
 
+        String dateIn = date.split("T")[0];
+        String timeIn = date.split("T")[1];//.split(".")[0];
+        timeIn = timeIn.split("\\.")[0];
+        String fechaHora = dateIn + " " + timeIn;
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        Date newDate = new Date();
+        try{
+            newDate = format.parse(fechaHora);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        this.date = newDate;
+    }
+
+    public News(int id, String title, String description, String date, String url_photo, Bitmap photo, boolean approved, int idCommunity)  {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.url_photo = url_photo;
+        this.photo = photo;
+        this.approved = approved;
+        this.idCommunity = idCommunity;
         String dateIn = date.split("T")[0];
         String timeIn = date.split("T")[1];//.split(".")[0];
         timeIn = timeIn.split("\\.")[0];
@@ -93,5 +118,13 @@ public class News {
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    public int getIdCommunity() {
+        return idCommunity;
+    }
+
+    public void setIdCommunity(int idCommunity) {
+        this.idCommunity = idCommunity;
     }
 }

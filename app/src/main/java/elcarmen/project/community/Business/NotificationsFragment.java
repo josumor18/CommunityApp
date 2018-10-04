@@ -20,11 +20,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.cloudinary.json.JSONString;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import elcarmen.project.community.Data.API_Access;
@@ -165,7 +172,7 @@ public class NotificationsFragment extends Fragment {
                 descriptionNotif = "Se ha publicado un nuevo evento";
             }
             else if(notifications.get(i).isReports()){
-                descriptionNotif = "Se ha realizado un nuevo reporte";
+                descriptionNotif = "Se ha realizado un nuevo reporte en:";
             }
 
             btnDeleteNotif.setOnClickListener(new OnClickListener() {
@@ -189,11 +196,16 @@ public class NotificationsFragment extends Fragment {
                     }
 
                     else if(notifications.get(i).isEvents()){
-                        Toast.makeText(getActivity(), "aun no cargo eventos", Toast.LENGTH_SHORT).show();
+                        int idSearchEvent = notifications.get(i).getIdContent();
+                        NotificationsFragment.ExecuteGetDataEvent executeGetDataEvent = new
+                                NotificationsFragment. ExecuteGetDataEvent(idSearchEvent);
+                        executeGetDataEvent.execute();
+
                     }
 
                     else if(notifications.get(i).isReports()){
-                        Toast.makeText(getActivity(), "aun no cargo reportes", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "aun no cargo reportes", Toast.LENGTH_SHORT)
+                                                                                            .show();
                     }
 
                 }
@@ -399,6 +411,7 @@ public class NotificationsFragment extends Fragment {
                 try {
                     jsonNews = (JSONObject)  API_Access.getInstance().getJsonObjectResponse()
                                                                             .getJSONObject("news");
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -428,7 +441,98 @@ public class NotificationsFragment extends Fragment {
         }
     }
 
+    //=============================================================================================
+    public class ExecuteGetDataEvent extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int idEvent;
 
+        public ExecuteGetDataEvent(int idEvent) {
+            this.idEvent = idEvent;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            API_Access api = API_Access.getInstance();
+
+
+            String[] keys = {"idUser", "idEvent", "auth_token"};
+            String[] values = {Integer.toString(User_Singleton.getInstance().getId()),
+                    Integer.toString(idEvent),  User_Singleton.getInstance().getAuth_token()};
+            isOk = api.get_delete_base(keys, values, 35, "GET", 1);
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+
+                //set user auth_token
+                try {
+                    String token = response.getString("auth_token");
+                    User_Singleton.getInstance().setAuth_token(token);
+                    LoginAcivity.actualizarAuth_Token(token, getActivity());
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JSONObject  jsonEvent = null;
+                String NameComm =  "";
+                try {
+                    jsonEvent = (JSONObject) response.getJSONObject("event");
+                    NameComm = response.getString("nameCommunity");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Intent intent = new Intent(getActivity(),EventInfoActivity.class);
+                intent.putExtra("community_name", NameComm);
+                try {
+                    Event event = new Event(jsonEvent.getInt("id"),
+                                            jsonEvent.getInt("id_community"),
+                                            jsonEvent.getString("title"),
+                                            jsonEvent.getString("description"),
+                                            jsonEvent.getString("dateEvent"),
+                                            jsonEvent.getString("start"),
+                                            jsonEvent.getString("end"),
+                                            jsonEvent.getString("photo"),
+                                            jsonEvent.getBoolean("approved"));
+
+                    intent.putExtra("photo", event.getPhoto());
+                    intent.putExtra("title", event.getTitle());
+                    intent.putExtra("description", event.getDescription());
+                    intent.putExtra("date", event.getDate());
+                    boolean terminado = false;
+                    Date date = new Date();
+                    if (date.after(event.getDateEventEnd())){
+                        terminado = true;
+                    }
+                    intent.putExtra("terminado", terminado);
+                    intent.putExtra("hours", event.getHours());
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                String mensaje = "Cargando contenido del evento";
+                Toast.makeText( getActivity(), mensaje, Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+            }else{
+                String mensaje = "Error al obtener los datos del evento";
+                Toast.makeText( getActivity(), mensaje, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
     //=============================================================================================
 
     private Bitmap convertirBitmap(String url){
@@ -443,6 +547,5 @@ public class NotificationsFragment extends Fragment {
         }
         return newImage;
     }
-
 
 }

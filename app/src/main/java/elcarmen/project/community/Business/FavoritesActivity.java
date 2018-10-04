@@ -312,7 +312,8 @@ public class FavoritesActivity  extends AppCompatActivity {
 
                 News newObject = new News(jsonNew.getInt("id"),
                         jsonNew.getString("title"), jsonNew.getString("description"), jsonNew.getString("date"),
-                        jsonNew.getString("photo"),newImage,jsonNew.getBoolean("approved"));
+                        jsonNew.getString("photo"),newImage,jsonNew.getBoolean("approved"),
+                        jsonNew.getInt("idCommunity"));
 
                 listNews.add(newObject);
             }
@@ -382,7 +383,7 @@ public class FavoritesActivity  extends AppCompatActivity {
                 intent.putExtra("DateN",news.getDate());
                 intent.putExtra("Description",news.getDescription());
                 intent.putExtra("isApproved",news.isApproved());
-
+                intent.putExtra("idCommunity",news.getIdCommunity());
                 NewsMoreActivity.fromFavorites = true;
                 startActivity(intent);
             }else{
