@@ -60,7 +60,9 @@ public class API_Access {
             "notifications/put_seenNotification", //31
             "notifications/get_newsNotifications", //32
             "notifications/delete_Notification",   //33
-            "news/getSingleNews_by_id" //34
+            "news/getSingleNews_by_id", //34
+            "chats/get_chats", //35
+            "chats/send_message" //36
     };
 
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};

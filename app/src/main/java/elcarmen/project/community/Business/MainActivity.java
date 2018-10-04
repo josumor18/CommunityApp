@@ -21,6 +21,8 @@ import elcarmen.project.community.R;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static Intent reminderIntent;
+
     TabLayout tabLayout;
     private ViewPager container;
 
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+         reminderIntent = new Intent(this, ReminderCreator.class);
 
         tabLayout = findViewById(R.id.appbartabs);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
@@ -97,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.logout_item:
                 LoginAcivity.cerrarSesion(getApplicationContext());
 
+                stopService(reminderIntent);
                 intent = new Intent(getApplicationContext(), LoginAcivity.class);
                 startActivity(intent);
                 finish();

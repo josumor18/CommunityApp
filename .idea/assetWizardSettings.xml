@@ -3,61 +3,14 @@
   <component name="WizardSettings">
     <option name="children">
       <map>
-<<<<<<< HEAD
         <entry key="imageWizard">
           <value>
             <PersistentState />
           </value>
         </entry>
-=======
->>>>>>> master
         <entry key="vectorWizard">
           <value>
-            <PersistentState>
-              <option name="children">
-                <map>
-                  <entry key="vectorAssetStep">
-                    <value>
-                      <PersistentState>
-                        <option name="children">
-                          <map>
-                            <entry key="clipartAsset">
-                              <value>
-                                <PersistentState>
-                                  <option name="values">
-                                    <map>
-<<<<<<< HEAD
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_forward_black_24dp.xml" />
-=======
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_send_black_24dp.xml" />
->>>>>>> master
-                                    </map>
-                                  </option>
-                                </PersistentState>
-                              </value>
-                            </entry>
-                          </map>
-                        </option>
-                        <option name="values">
-                          <map>
-<<<<<<< HEAD
-                            <entry key="color" value="8c1e21" />
-                            <entry key="opacityPercent" value="84" />
-                            <entry key="outputName" value="ic_forward_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\Diego Armando" />
-=======
-                            <entry key="color" value="713537" />
-                            <entry key="outputName" value="ic_send_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\JosueAndroid" />
->>>>>>> master
-                          </map>
-                        </option>
-                      </PersistentState>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </PersistentState>
+            <PersistentState />
           </value>
         </entry>
       </map>
