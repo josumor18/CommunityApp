@@ -108,6 +108,7 @@ public class CommunityChatListFragment extends Fragment {
         }
 
         lvChatsList.setAdapter(new ChatsAdapter());
+
     }
 
 
@@ -190,9 +191,26 @@ public class CommunityChatListFragment extends Fragment {
 
             Message message = chats.get(i).getLast_message();
 
+            String messageText = "";
             if(message != null){
-                txtLastMessage.setText(message.getMessage());
-                if (!message.isSeen()) {
+                messageText = message.getMessage();
+                String userName = "";
+                if(chats.get(i).isIs_group()){
+                    if(message.getId_user() == User_Singleton.getInstance().getId()){
+                        userName = "Tú: ";
+                    }else{
+                        for (User u : CommunityActivity.listUsers) {
+                            if (Integer.parseInt(u.getId()) ==  message.getId_user()){
+                                userName = u.getName() + ": ";
+                                continue;
+                            }
+                        }
+                    }
+                }
+                messageText = userName + messageText;
+
+                txtLastMessage.setText(messageText);
+                if (!message.isSeen() && (message.getId_user() != User_Singleton.getInstance().getId())) {
                     view.setBackgroundColor(getResources().getColor(R.color.colorAccentTransparent));
                 }
             }else{
