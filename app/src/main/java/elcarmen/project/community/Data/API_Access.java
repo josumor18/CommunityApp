@@ -62,7 +62,8 @@ public class API_Access {
             "notifications/delete_Notification",   //33
             "news/getSingleNews_by_id", //34
             "chats/get_chats", //35
-            "chats/send_message" //36
+            "chats/send_message", //36
+            "chats/get_messages" //37
     };
 
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
