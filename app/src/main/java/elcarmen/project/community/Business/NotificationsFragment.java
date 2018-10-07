@@ -1,12 +1,14 @@
 package elcarmen.project.community.Business;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -141,7 +143,13 @@ public class NotificationsFragment extends Fragment {
             if (view == null) {
                 view = inflater.inflate(R.layout.notifications_list_item, null);
             }
-            view.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+
+            if(!notifications.get(i).isSeen()) {
+                view.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+            }
+            else {
+                view.setBackgroundColor(getResources().getColor(R.color.colorGrayTab));
+            }
 
             ImageView imgNotif = view.findViewById(R.id.imgNotif);
             TextView txtDescriptionNotif = view.findViewById(R.id.txtDescriptionNotif);
@@ -178,14 +186,23 @@ public class NotificationsFragment extends Fragment {
             btnDeleteNotif.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(), "HOLA222", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "aun no elimino notificaciones", Toast.LENGTH_SHORT).show();
                 }
             });
 
 
+            final View finalView = view;
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(!notifications.get(i).isSeen()) {
+                        finalView.setBackgroundColor(getResources().getColor(R.color.colorGrayTab));
+                        NotificationsFragment.ExecutePUTSeenNotif executePUTSeenNotif = new
+                                NotificationsFragment.ExecutePUTSeenNotif(notifications.get(i).getId());
+                        executePUTSeenNotif.execute();
+                        notifications.get(i).setSeen(true);
+                    }
+
 
                     if(notifications.get(i).isNews()){
                         int idSearchNews = notifications.get(i).getIdContent();
@@ -198,14 +215,16 @@ public class NotificationsFragment extends Fragment {
                     else if(notifications.get(i).isEvents()){
                         int idSearchEvent = notifications.get(i).getIdContent();
                         NotificationsFragment.ExecuteGetDataEvent executeGetDataEvent = new
-                                NotificationsFragment. ExecuteGetDataEvent(idSearchEvent);
+                                NotificationsFragment.ExecuteGetDataEvent(idSearchEvent);
                         executeGetDataEvent.execute();
 
                     }
 
                     else if(notifications.get(i).isReports()){
-                        Toast.makeText(getActivity(), "aun no cargo reportes", Toast.LENGTH_SHORT)
-                                                                                            .show();
+                        int idSearchReport = notifications.get(i).getIdContent();
+                        NotificationsFragment.ExecuteGetReportAndComment executeGetReportAndComment=
+                                new NotificationsFragment.ExecuteGetReportAndComment(idSearchReport);
+                        executeGetReportAndComment.execute();
                     }
 
                 }
@@ -213,6 +232,8 @@ public class NotificationsFragment extends Fragment {
 
             txtDescriptionNotif.setText(descriptionNotif);
             txtTitleNotif.setText(notifications.get(i).getTitleContent());
+
+
 
             return view;
         }
@@ -533,6 +554,201 @@ public class NotificationsFragment extends Fragment {
             }
         }
     }
+
+    //=============================================================================================
+    public class ExecuteGetReportAndComment extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int idReport;
+
+        public ExecuteGetReportAndComment(int idReport) {
+            this.idReport = idReport;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            API_Access api = API_Access.getInstance();
+
+
+            String[] keys = {"idUser", "idReport", "auth_token"};
+            String[] values = {Integer.toString(User_Singleton.getInstance().getId()),
+                    Integer.toString(idReport),  User_Singleton.getInstance().getAuth_token()};
+            isOk = api.get_delete_base(keys, values, 36, "GET", 1);
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+
+                try {
+                    JSONObject jsonReport  = (JSONObject) response.getJSONObject("report");
+                    JSONObject jsonComment = (JSONObject) response.getJSONObject("comment");
+                    String titleNews     = response.getString("titleNews");
+                    String nameCommunity = response.getString("nameCommunity");
+                    String nameUser      = response.getString("nameUser");
+                    final int idComment = jsonComment.getInt("id");
+                    final int idReport  = jsonReport.getInt("id");
+                    Comment comment = new Comment(idComment,
+                                                  jsonComment.getInt("id_news"),
+                                                  jsonComment.getInt("id_user"),
+                                                  jsonComment.getString("description"));
+
+                    String txtAlert = "Se ha registrado un reporte al usuario '" + nameUser +
+                            "´en la difusión '" + titleNews + "' " + " \n\nComentario:\n " +
+                            comment.getDescription() + "\n\nMotivo del reporte: " +
+                            jsonReport.getString("reason");
+
+                    new AlertDialog.Builder(getActivity())
+                            .setIcon(R.drawable.ic_report_black_24dp)
+                            .setTitle("Reporte en comunidad: " + nameCommunity)
+                            .setMessage(txtAlert)
+                            .setPositiveButton("Eliminar comentario", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    NotificationsFragment.ExecuteDeleteComment executeDeleteComment
+                                         = new NotificationsFragment.ExecuteDeleteComment
+                                                                            (idComment, idReport);
+                                    executeDeleteComment.execute();
+                                }
+                            })
+                            .setNegativeButton("Ignorar", null)
+                            .show();
+
+                    //set user auth_token
+                    try {
+                        String token = response.getString("auth_token");
+                        User_Singleton.getInstance().setAuth_token(token);
+                        LoginAcivity.actualizarAuth_Token(token, getActivity());
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                } catch (JSONException e) {
+                    String mensaje = "Error al obtener los datos del reporte";
+                    Toast.makeText( getActivity(), mensaje, Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+
+                String mensaje = "Cargando contenido del reporte";
+                Toast.makeText( getActivity(), mensaje, Toast.LENGTH_SHORT).show();
+            }else{
+                String mensaje = "Error al obtener los datos del reporte";
+                Toast.makeText( getActivity(), mensaje, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    //=============================================================================================
+    public class ExecuteDeleteComment extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int idComment;
+        int idReport;
+
+        public ExecuteDeleteComment(int idComment, int idReport) {
+            this.idComment = idComment;
+            this.idReport = idReport;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            API_Access api = API_Access.getInstance();
+            String[] keys = {"id"};
+            String[] values = {Integer.toString(idComment)};
+            isOk = api.get_delete_base(keys, values, 23, "DELETE",1);
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+                int indexDel = 0;
+                ExecuteGetNotifications executeGetNotifications = new
+                        ExecuteGetNotifications();
+                executeGetNotifications.execute();;
+
+                Toast.makeText(getActivity(), "Comentario eliminado", Toast.LENGTH_SHORT).show();
+            }else{
+                String mensaje = "Error al eliminar comentario";
+                Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    //=============================================================================================
+    public class ExecutePUTSeenNotif extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int idNotification;
+
+
+        public ExecutePUTSeenNotif(int idNotification) {
+            this.idNotification = idNotification;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            API_Access api = API_Access.getInstance();
+
+
+            String[] keys = {"idUser", "idNotification", "auth_token"};
+            String[] values = {Integer.toString(User_Singleton.getInstance().getId()),
+                    Integer.toString(idNotification),  User_Singleton.getInstance().getAuth_token()};
+            isOk = api.post_put_base(keys, values, 31, "PUT", 1);
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                JSONObject response = API_Access.getInstance().getJsonObjectResponse();
+
+                //set user auth_token
+                try {
+                    String token = response.getString("auth_token");
+                    User_Singleton.getInstance().setAuth_token(token);
+                    LoginAcivity.actualizarAuth_Token(token, getActivity());
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }else{
+                String mensaje = "Error al colocar en visto la notificacion";
+                Toast.makeText( getActivity(), mensaje, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     //=============================================================================================
 
     private Bitmap convertirBitmap(String url){

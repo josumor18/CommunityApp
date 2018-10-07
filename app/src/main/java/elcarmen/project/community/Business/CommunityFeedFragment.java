@@ -459,11 +459,12 @@ public class CommunityFeedFragment extends Fragment {
                 int index = 0;
                 for (News n : FavoritesActivity.listNews){
                     if (n.getId() == id){
+                        FavoritesActivity.listNews.remove(index);
                         break;
                     }
                     index++;
                 }
-                FavoritesActivity.listNews.remove(index);
+
 
                 Toast.makeText(getActivity(), "Difusion eliminada", Toast.LENGTH_SHORT).show();
 
