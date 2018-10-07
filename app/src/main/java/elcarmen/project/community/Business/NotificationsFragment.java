@@ -158,19 +158,20 @@ public class NotificationsFragment extends Fragment {
 
 
             HttpGetBitmap request = new HttpGetBitmap();
-            Bitmap userImage = null;
+            Bitmap notifImage = null;
+            String photo = notifications.get(i).getPhoto();
             try {
-                userImage = request.execute(notifications.get(i).getPhoto()).get();
+                notifImage = request.execute(photo).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            if(userImage == null){
-                userImage = BitmapFactory.decodeResource( getActivity().getApplicationContext()
+            if(notifImage == null){
+                notifImage = BitmapFactory.decodeResource( getActivity().getApplicationContext()
                                                 .getResources(),R.drawable.ic_report_black_24dp);
             }
-            imgNotif.setImageBitmap(userImage);
+            imgNotif.setImageBitmap(notifImage);
 
             String descriptionNotif = "";
             if(notifications.get(i).isNews()){
@@ -186,7 +187,10 @@ public class NotificationsFragment extends Fragment {
             btnDeleteNotif.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(), "aun no elimino notificaciones", Toast.LENGTH_SHORT).show();
+                    int idNotification = notifications.get(i).getId();
+                    NotificationsFragment.ExecuteDeleteNotification executeDeleteNotification = new
+                            NotificationsFragment.ExecuteDeleteNotification(idNotification);
+                    executeDeleteNotification.execute();
                 }
             });
 
@@ -748,6 +752,56 @@ public class NotificationsFragment extends Fragment {
             }
         }
     }
+
+
+    //=============================================================================================
+    public class ExecuteDeleteNotification extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int idNotification;
+
+        public ExecuteDeleteNotification(int idNotification) {
+            this.idNotification = idNotification;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            API_Access api = API_Access.getInstance();
+            String[] keys = {"idNotification"};
+            String[] values = {Integer.toString(idNotification)};
+            isOk = api.get_delete_base(keys, values, 33, "DELETE",1);
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(isOk){
+                int indexDelete = 0;
+                for(Notification n : notifications){
+                    if(n.getId() == idNotification){
+                        notifications.remove(indexDelete);
+                        break;
+                    }
+                    indexDelete++;
+                }
+
+                lvNotifications.setAdapter(new NotificationsAdapter());
+                Toast.makeText(getActivity(), "Notificacion eliminada",Toast.LENGTH_SHORT).show();
+            }else{
+                String mensaje = "Error al eliminar notificacion";
+                Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     //=============================================================================================
 
