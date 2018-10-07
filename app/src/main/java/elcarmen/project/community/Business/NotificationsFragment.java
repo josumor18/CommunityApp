@@ -484,7 +484,7 @@ public class NotificationsFragment extends Fragment {
             String[] keys = {"idUser", "idEvent", "auth_token"};
             String[] values = {Integer.toString(User_Singleton.getInstance().getId()),
                     Integer.toString(idEvent),  User_Singleton.getInstance().getAuth_token()};
-            isOk = api.get_delete_base(keys, values, 35, "GET", 1);
+            isOk = api.get_delete_base(keys, values, 38, "GET", 1);
 
             return null;
 
@@ -577,7 +577,7 @@ public class NotificationsFragment extends Fragment {
             String[] keys = {"idUser", "idReport", "auth_token"};
             String[] values = {Integer.toString(User_Singleton.getInstance().getId()),
                     Integer.toString(idReport),  User_Singleton.getInstance().getAuth_token()};
-            isOk = api.get_delete_base(keys, values, 36, "GET", 1);
+            isOk = api.get_delete_base(keys, values, 39, "GET", 1);
 
             return null;
 
