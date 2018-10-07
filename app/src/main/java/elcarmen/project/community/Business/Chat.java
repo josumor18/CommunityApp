@@ -1,27 +1,32 @@
 package elcarmen.project.community.Business;
 
+import android.util.Log;
+
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class Chat implements Serializable {
     private int id;
     private int id_community;
     private String community_name;
-    private int id_receiver;
-    private String name_receiver;
-    private boolean visto;
-    private String last_message;
+    private boolean is_group;
+    private int id_user;
+    private String name_user;
+    private Message last_message;
 
     public Chat() {
     }
 
-    public Chat(int id, int id_community, String community_name, int id_receiver, String name_receiver, boolean visto, String last_message) {
+    public Chat(int id, int id_community, String community_name, boolean is_group, int id_user, String name_user) {
         this.id = id;
         this.id_community = id_community;
         this.community_name = community_name;
-        this.id_receiver = id_receiver;
-        this.name_receiver = name_receiver;
-        this.visto = visto;
-        this.last_message = last_message;
+        this.is_group = is_group;
+        this.id_user = id_user;
+        this.name_user = name_user;
     }
 
     public int getId() {
@@ -48,35 +53,35 @@ public class Chat implements Serializable {
         this.community_name = community_name;
     }
 
-    public int getId_receiver() {
-        return id_receiver;
+    public boolean isIs_group() {
+        return is_group;
     }
 
-    public void setId_receiver(int id_receiver) {
-        this.id_receiver = id_receiver;
+    public void setIs_group(boolean is_group) {
+        this.is_group = is_group;
     }
 
-    public String getName_receiver() {
-        return name_receiver;
+    public int getId_user() {
+        return id_user;
     }
 
-    public void setName_receiver(String name_receiver) {
-        this.name_receiver = name_receiver;
+    public void setId_user(int id_user) {
+        this.id_user = id_user;
     }
 
-    public boolean isVisto() {
-        return visto;
+    public String getName_user() {
+        return name_user;
     }
 
-    public void setVisto(boolean visto) {
-        this.visto = visto;
+    public void setName_user(String name_user) {
+        this.name_user = name_user;
     }
 
-    public String getLast_message() {
+    public Message getLast_message() {
         return last_message;
     }
 
-    public void setLast_message(String last_message) {
+    public void setLast_message(Message last_message) {
         this.last_message = last_message;
     }
 }

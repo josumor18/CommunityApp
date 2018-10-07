@@ -302,8 +302,8 @@ public class CommunitiesFragment extends Fragment {
 
             //db_access.getNextEvents();
 
-            Intent intent = new Intent(getActivity(), ReminderCreator.class);
-            getActivity().startService(intent);
+            //Intent intent = new Intent(getActivity(), ReminderCreator.class);
+            getActivity().startService(MainActivity.reminderIntent);
         }
     }
 }
