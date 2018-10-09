@@ -454,6 +454,17 @@ public class CommunityFeedFragment extends Fragment {
             if(isOk){
                 ExecuteGetNews executeGetNews = new ExecuteGetNews();
                 executeGetNews.execute();
+
+                //eliminar de favoritos
+                int index = 0;
+                for (News n : FavoritesActivity.listNews){
+                    if (n.getId() == id){
+                        break;
+                    }
+                    index++;
+                }
+                FavoritesActivity.listNews.remove(index);
+
                 Toast.makeText(getActivity(), "Difusion eliminada", Toast.LENGTH_SHORT).show();
 
             }else{

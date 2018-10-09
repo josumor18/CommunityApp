@@ -55,10 +55,11 @@ public class API_Access {
             "events/approve", // 26
             "events/delete", // 27,
             "favorites/delete_Favorites", // 28
-
             "favorites/getListUsersCommunity_FavoriteNews",  //29
-            "reports/create" //30
-
+            "reports/create", //30
+            "notifications/put_seenNotification", //31
+            "notifications/get_newsNotifications", //32
+            "notifications/delete_Notification"  //33
     };
 
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
