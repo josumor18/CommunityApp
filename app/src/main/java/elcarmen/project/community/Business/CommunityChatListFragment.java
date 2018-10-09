@@ -1,6 +1,7 @@
 package elcarmen.project.community.Business;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -47,11 +49,31 @@ public class CommunityChatListFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_community_chat_list, container, false);
         lvChatsList = v.findViewById(R.id.lvChatsList);
+        lvChatsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), ChatActivity.class);
 
-        ExecuteGetChats executeGetChats = new ExecuteGetChats();
-        executeGetChats.execute();
+                Chat selected = chats.get(position);
+                intent.putExtra("id_chat", selected.getId());
+                intent.putExtra("user_name", selected.getName_user());
+                intent.putExtra("community_name", selected.getCommunity_name());
+                intent.putExtra("is_group", selected.isIs_group());
+                startActivity(intent);
+            }
+        });
 
         return v;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(isVisibleToUser){
+            ExecuteGetChats executeGetChats = new ExecuteGetChats();
+            executeGetChats.execute();
+        }
     }
 
     private void cargarChats(JSONObject jsonResult) {
@@ -77,19 +99,20 @@ public class CommunityChatListFragment extends Fragment {
 
                 if(!is_group){
                     id_user = jsonChat.getInt("id_user");
-                    ArrayList<User> users = CommunityActivity.listUsers;
 
-                    for(User u: users){
-                        if(Integer.parseInt(u.getId()) == id_user){
-                            userName = u.getName();
+                    if(jsonChatsList.length() == 2){
+                        userName = "Administración";
+                    }else{
+                        ArrayList<User> users = CommunityActivity.listUsers;
+
+                        for(User u: users){
+                            if(Integer.parseInt(u.getId()) == id_user){
+                                userName = u.getName();
+                            }
                         }
                     }
                 }
 
-
-                Chat chat = new Chat(jsonChat.getInt("id"), jsonChat.getInt("id_community"),
-                        CommunityActivity.nameCommunity, is_group,
-                        id_user, userName);
 
                 Message last_msg = null;
                 if(jsonLastMessage != null){
@@ -98,6 +121,10 @@ public class CommunityChatListFragment extends Fragment {
                             jsonLastMessage.getString("message"), jsonLastMessage.getBoolean("seen"),
                             jsonLastMessage.getString("created_at"));
                 }
+
+                Chat chat = new Chat(jsonChat.getInt("id"), jsonChat.getInt("id_community"),
+                        CommunityActivity.nameCommunity, is_group,
+                        id_user, userName, last_msg);
 
                 chat.setLast_message(last_msg);
 
@@ -149,10 +176,12 @@ public class CommunityChatListFragment extends Fragment {
 
             String link_photo = "";
             if (!chats.get(i).isIs_group()){
-                for (User u : CommunityActivity.listUsers) {
-                    if (Integer.parseInt(u.getId()) == chats.get(i).getId_user()){
-                        link_photo = u.getUrl_photo_rounded();
-                        continue;
+                if(chats.size() > 2){
+                    for (User u : CommunityActivity.listUsers) {
+                        if (Integer.parseInt(u.getId()) == chats.get(i).getId_user()){
+                            link_photo = u.getUrl_photo_rounded();
+                            continue;
+                        }
                     }
                 }
             }

@@ -61,7 +61,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="90dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/rounded_user_message"
+                    android:background="@drawable/rounded_user_sending_message"
                     android:padding="10dp"
                     android:text=" Este es un mensaje "
                     android:textColor="@android:color/background_light" />
@@ -88,6 +88,16 @@
                     android:layout_marginRight="10dp"
                     android:text="1/10/2018 3:45"
                     android:textSize="10sp" />
+
+                <ImageView
+                    android:id="@+id/imgClock"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="15dp"
+                    android:paddingTop="1dp"
+                    app:srcCompat="@drawable/ic_access_time_black_24dp" />
             </RelativeLayout>
 
 
