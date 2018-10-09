@@ -12,11 +12,12 @@
         android:orientation="vertical">
 
         <ListView
-            android:id="@+id/lvMensajesChat"
+            android:id="@+id/lvChatMessages"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/sendLinearLayout"
-            android:stackFromBottom="true">
+            android:layout_alignParentTop="false"
+            android:stackFromBottom="false">
 
         </ListView>
 

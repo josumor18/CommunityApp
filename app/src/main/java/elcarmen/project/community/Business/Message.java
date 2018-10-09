@@ -15,6 +15,7 @@ public class Message {
     private String message;
     private boolean seen;
     private Date created_at;
+    private boolean sent;
 
     public Message(int id, int id_chat, int id_user, String message, boolean seen, String created_at) {
         this.id = id;
@@ -35,6 +36,7 @@ public class Message {
             e.printStackTrace();
         }
         this.created_at = date;
+        this.sent = true;
     }
 
     public int getId() {
@@ -93,11 +95,21 @@ public class Message {
 
         //Here you say to java the initial timezone. This is the secret
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        //String t1 = sdf.format(calendar.getTime());
 
         //Here you set to your timezone
-        TimeZone timeZone = TimeZone.getDefault();
-        sdf.setTimeZone(timeZone);
+        //TimeZone timeZone = TimeZone.getDefault();
+        //sdf.setTimeZone(timeZone);
+        //String t2 = sdf.format(calendar.getTime());
         //Will return on your default Timezone
         return sdf.format(calendar.getTime());
+    }
+
+    public boolean isSent() {
+        return sent;
+    }
+
+    public void setSent(boolean sent) {
+        this.sent = sent;
     }
 }

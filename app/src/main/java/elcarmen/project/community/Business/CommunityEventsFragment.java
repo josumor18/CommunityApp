@@ -84,6 +84,7 @@ public class CommunityEventsFragment extends Fragment {
         });
 
         lvEvents = view.findViewById(R.id.lvEvents);
+
         lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -108,6 +109,7 @@ public class CommunityEventsFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
         if(User_Singleton.getInstance().isAdmin(CommunityActivity.idCommunity)){
             lvEvents.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override

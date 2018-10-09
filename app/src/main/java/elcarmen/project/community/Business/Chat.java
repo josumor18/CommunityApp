@@ -1,5 +1,8 @@
 package elcarmen.project.community.Business;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.Serializable;
@@ -8,7 +11,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class Chat implements Serializable {
+import elcarmen.project.community.R;
+
+public class Chat {
     private int id;
     private int id_community;
     private String community_name;
@@ -20,13 +25,14 @@ public class Chat implements Serializable {
     public Chat() {
     }
 
-    public Chat(int id, int id_community, String community_name, boolean is_group, int id_user, String name_user) {
+    public Chat(int id, int id_community, String community_name, boolean is_group, int id_user, String name_user, Message last_message) {
         this.id = id;
         this.id_community = id_community;
         this.community_name = community_name;
         this.is_group = is_group;
         this.id_user = id_user;
         this.name_user = name_user;
+        this.last_message = last_message;
     }
 
     public int getId() {
