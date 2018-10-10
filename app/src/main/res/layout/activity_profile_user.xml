@@ -125,9 +125,8 @@
             </RelativeLayout>
 
 
-
             <Button
-                android:id="@+id/btn_saveEditUser"
+                android:id="@+id/btn_ejectUser"
                 style="@android:style/Widget.Material.Light.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -135,6 +134,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/rounded_borders_default_button"
+                android:onClick="ejectUser"
                 android:text="Expulsar Usuario"
                 android:textColor="@color/colorGrayTab" />
         </LinearLayout>
