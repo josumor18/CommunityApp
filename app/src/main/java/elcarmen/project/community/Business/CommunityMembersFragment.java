@@ -1,19 +1,30 @@
 package elcarmen.project.community.Business;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 import elcarmen.project.community.Data.API_Access;
 import elcarmen.project.community.R;
@@ -25,6 +36,8 @@ public class CommunityMembersFragment extends Fragment {
 
     RelativeLayout rlVerSolicitudes;
     TextView txtCantSolicitudes;
+    ListView lvUsers;
+
 
     public CommunityMembersFragment() {
         // Required empty public constructor
@@ -37,6 +50,7 @@ public class CommunityMembersFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_community_members, container, false);
 
+        lvUsers = v.findViewById(R.id.lvUsers);
         rlVerSolicitudes = v.findViewById(R.id.rlVerSolicitudes);
         txtCantSolicitudes = v.findViewById(R.id.txtCantSolicitudes);
         txtCantSolicitudes.setVisibility(View.INVISIBLE);
@@ -58,8 +72,116 @@ public class CommunityMembersFragment extends Fragment {
             }
         });
 
+        lvUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), ProfileUserActivity.class);
+                User selected = CommunityActivity.listUsers.get(position);
+
+                intent.putExtra("idUser",selected.getId());
+                intent.putExtra("photo", selected.getUrl_photo());
+                intent.putExtra("name", selected.getName());
+                intent.putExtra("cel", selected.getCel());
+                intent.putExtra("tel", selected.getTel());
+                intent.putExtra("address", selected.getAddress());
+                startActivity(intent);
+            }
+        });
+
+        lvUsers.setAdapter(new UserAdapter());
+
 
         return v;
+    }
+
+
+
+    public class UserAdapter extends BaseAdapter {
+
+        public UserAdapter() {
+            super();
+        }
+
+        @Override
+        public int getCount() {
+            return CommunityActivity.listUsers.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return CommunityActivity.listUsers.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            LayoutInflater inflater = getLayoutInflater();
+            if (view == null) {
+                view = inflater.inflate(R.layout.profiles_list_item, null);
+            }
+
+
+            TextView txtUserProfile = view.findViewById(R.id.txtUserProfile);
+
+            ImageView imgUserProfile = view.findViewById(R.id.img_userProfile);
+
+            final String idUser = CommunityActivity.listUsers.get(i).getId();
+
+            String userName = CommunityActivity.listUsers.get(i).getName();
+
+            Bitmap photoUser = CommunityActivity.listUsers.get(i).getPhoto_rounded();
+
+
+
+
+            /*btnReport.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(isAdmin || idUser == user.getId()){
+                        new AlertDialog.Builder(NewsMoreActivity.this)
+                                .setIcon(R.drawable.ic_delete_forever_black_24dp)
+                                .setTitle("Está seguro?")
+                                .setMessage("Desea eliminar comentario?")
+                                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        ExecuteDeleteComments executeDeleteComment = new ExecuteDeleteComments(idComment);
+                                        executeDeleteComment.execute();
+                                    }
+                                })
+                                .setNegativeButton("No", null)
+                                .show();
+
+                    }
+                    else{
+                        Intent intent = new Intent(getApplicationContext(), ReportsActivity.class);
+                        intent.putExtra("idComment", idComment);
+                        intent.putExtra("idUser", idUser);
+                        intent.putExtra("username",usernameComment);
+                        startActivity(intent);
+                    }
+
+                }
+            });*/
+
+            txtUserProfile.setText(userName);
+
+
+
+            if(photoUser == null)
+                BitmapFactory.decodeResource( getContext().getResources(),
+                        R.drawable.user_rounded_photo);
+
+            else
+                imgUserProfile.setImageBitmap(photoUser);
+
+
+            return view;
+        }
     }
 
 
@@ -103,5 +225,7 @@ public class CommunityMembersFragment extends Fragment {
             }
         }
     }
+
+
 
 }

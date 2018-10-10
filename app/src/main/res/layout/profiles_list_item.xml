@@ -15,7 +15,9 @@
             android:id="@+id/img_userProfile"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginLeft="12dp"
+            android:layout_marginTop="8dp"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/user_rounded_photo" />
 
