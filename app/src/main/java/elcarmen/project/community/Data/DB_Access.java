@@ -35,7 +35,7 @@ public class DB_Access extends AppCompatActivity{
         try{
             db = context.openOrCreateDatabase("Community_DB", MODE_PRIVATE, null);
 
-            //db.execSQL("DROP TABLE events");
+            db.execSQL("DROP TABLE events");
 
             db.execSQL("CREATE TABLE IF NOT EXISTS events (" +
                 "id INTEGER(100) NOT NULL PRIMARY KEY," +
