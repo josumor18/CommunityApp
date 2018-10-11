@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -42,7 +43,6 @@ public class ReminderCreator extends Service {
             // For our sample, we just sleep for 5 seconds.
             Runnable runnable;
             final Handler handler  = new Handler();
-
 
             runnable = new Runnable() {
                 public void run() {
@@ -82,7 +82,9 @@ public class ReminderCreator extends Service {
                                 .setStyle(new NotificationCompat.BigTextStyle().bigText(notif_body))
                                 .setContentText(notif_body)
                                 .setContentIntent(pendingIntent)
-                                .setAutoCancel(true);
+                                .setAutoCancel(true)
+                                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+
                         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                         notificationManager.notify(e.getId(), builder.build());
                     }
