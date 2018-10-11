@@ -211,7 +211,7 @@ public class CommunityEventsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if(!CommunityActivity.isInFeedFragment && (getActivity() instanceof CommunityActivity)) {
+        if(getUserVisibleHint() && (getActivity() instanceof CommunityActivity)) {//!CommunityActivity.isInFeedFragment && (getActivity() instanceof CommunityActivity)) {
             int tipo = 0;
 
             ExecuteGetEvents executeGetEvents = new ExecuteGetEvents(tipo);

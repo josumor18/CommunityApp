@@ -11,6 +11,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/lvChatMessages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/sendLinearLayout">
+
+        </android.support.v7.widget.RecyclerView>
+        <!-->
         <ListView
             android:id="@+id/lvChatMessages"
             android:layout_width="match_parent"
@@ -20,7 +28,7 @@
             android:stackFromBottom="false">
 
         </ListView>
-
+        </-->
         <RelativeLayout
             android:id="@+id/sendLinearLayout"
             android:layout_width="match_parent"

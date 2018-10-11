@@ -67,13 +67,22 @@ public class CommunityChatListFragment extends Fragment {
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if(isVisibleToUser){
+    public void onResume() {
+        super.onResume();
+        if(getUserVisibleHint()){
             ExecuteGetChats executeGetChats = new ExecuteGetChats();
             executeGetChats.execute();
         }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        /*if(isVisibleToUser){
+            ExecuteGetChats executeGetChats = new ExecuteGetChats();
+            executeGetChats.execute();
+        }*/
     }
 
     private void cargarChats(JSONObject jsonResult) {

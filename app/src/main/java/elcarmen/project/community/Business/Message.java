@@ -28,7 +28,7 @@ public class Message {
         String timeIn = created_at.split("T")[1];//.split(".")[0];
         timeIn = timeIn.split("\\.")[0];
         String fechaHora = dateIn + " " + timeIn;
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
         Date date = new Date();
         try{
             date = format.parse(fechaHora);
