@@ -29,6 +29,7 @@ public class Message {
         timeIn = timeIn.split("\\.")[0];
         String fechaHora = dateIn + " " + timeIn;
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date date = new Date();
         try{
             date = format.parse(fechaHora);
@@ -90,16 +91,17 @@ public class Message {
     public String getCreated_at_to_String(){
         // Conversión de zona horaria, tomada de: https://code.i-harness.com/es/q/750a53
         Calendar calendar = Calendar.getInstance();
+        //calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         calendar.setTime(created_at);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
 
         //Here you say to java the initial timezone. This is the secret
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        //sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         //String t1 = sdf.format(calendar.getTime());
 
         //Here you set to your timezone
-        //TimeZone timeZone = TimeZone.getDefault();
-        //sdf.setTimeZone(timeZone);
+        TimeZone timeZone = TimeZone.getDefault();
+        sdf.setTimeZone(timeZone);
         //String t2 = sdf.format(calendar.getTime());
         //Will return on your default Timezone
         return sdf.format(calendar.getTime());
