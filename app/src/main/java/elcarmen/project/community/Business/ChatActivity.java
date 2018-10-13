@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,6 +46,10 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView lvChatMessages;
     TextView txtMessage;
 
+    private boolean shutdown = false;
+    Runnable runnable;
+    final Handler handler  = new Handler();
+
     ArrayList<Message> messages = new ArrayList<Message>();
 
     @Override
@@ -68,11 +73,32 @@ public class ChatActivity extends AppCompatActivity {
 
         lvChatMessages = findViewById(R.id.lvChatMessages);
         lvChatMessages.setLayoutManager(new LinearLayoutManager(this, LinearLayout.VERTICAL, false));
-        //lvChatMessages.setDivider(null);
+
         txtMessage = findViewById(R.id.txtMessage);
 
-        ExecuteGetMessages executeGetMessages = new ExecuteGetMessages(true, -1);
-        executeGetMessages.execute();
+        runnable = new Runnable() {
+            public void run() {
+                if(!shutdown){
+                    int last_id = -1;
+                    if(!messages.isEmpty()){
+                        //last_id = messages.get(messages.size() - 1).getId();
+                        for(int ind = messages.size() - 1; ind > -1; ind--){
+                            if(messages.get(ind).isSent()){
+                                last_id = messages.get(ind).getId();
+                                ind = -1;
+                            }
+                        }
+                    }
+                    ExecuteGetMessages executeGetMessages = new ExecuteGetMessages(true, last_id);
+                    executeGetMessages.execute();
+                    Toast.makeText(getApplicationContext(), "Getting messages", Toast.LENGTH_SHORT).show();
+                }
+
+                handler.postDelayed(this, 20000);
+            }
+        };
+
+        handler.postDelayed(runnable, 1000);
     }
 
     @Override
@@ -80,6 +106,8 @@ public class ChatActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                //shutdown = true;
+                handler.removeCallbacks(runnable);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -154,11 +182,14 @@ public class ChatActivity extends AppCompatActivity {
             for(Message m: newMessages){
                 messages.add(m);
             }
+
+            MessagesAdapter messagesAdapter = new MessagesAdapter(messages);
+            lvChatMessages.removeAllViews();
+            lvChatMessages.setAdapter(messagesAdapter);
+            lvChatMessages.scrollToPosition(messages.size()-1);
         }
         //lvChatMessages.setAdapter(new MessagesAdapter());
-        MessagesAdapter messagesAdapter = new MessagesAdapter(messages);
-        lvChatMessages.setAdapter(messagesAdapter);
-        lvChatMessages.scrollToPosition(messages.size()-1);
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
