@@ -91,10 +91,10 @@ public class ChatActivity extends AppCompatActivity {
                     }
                     ExecuteGetMessages executeGetMessages = new ExecuteGetMessages(true, last_id);
                     executeGetMessages.execute();
-                    Toast.makeText(getApplicationContext(), "Getting messages", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Getting messages", Toast.LENGTH_SHORT).show();
                 }
 
-                handler.postDelayed(this, 20000);
+                handler.postDelayed(this, 3000);
             }
         };
 
@@ -175,7 +175,8 @@ public class ChatActivity extends AppCompatActivity {
 
         if(!newMessages.isEmpty()){
             for(int i = 0; i < messages.size(); i++){
-                if((!messages.get(i).isSent()) && (count_my_messages > jsonCount_my_messages)){
+                if((!messages.get(i).isSent()) && (count_my_messages > jsonCount_my_messages ||
+                        (count_my_messages == jsonCount_my_messages && count_my_messages == 1))){
                     messages.remove(i);
                 }
             }
