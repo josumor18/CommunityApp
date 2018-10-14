@@ -242,11 +242,16 @@ public class RequestsActivity extends AppCompatActivity {
 
                     LoginAcivity.actualizarAuth_Token(token, getApplicationContext());
                     //Cambio
+                    User user = users_requests.get(position);
                     users_requests.remove(position);
                     //Cambio
                     seens_requests.remove(position);
                     //Cambio
                     lvUsersRequests.setAdapter(new RequestsAdapter());
+
+                    if(metodo == 13){
+                        CommunityActivity.listUsers.add(user);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

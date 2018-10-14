@@ -70,6 +70,20 @@ public class SearchFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(!isVisibleToUser){
+            requests = new ArrayList<Boolean>();
+            communities = new ArrayList<Community>();
+            if(lvCommunitiesSearch != null){
+                lvCommunitiesSearch.setAdapter(new CommunitiesAdapter());
+                edtxtSearch.setText("");
+            }
+        }
+    }
+
     private void cargarCommunities(JSONObject jsonResult) {
 
         try {

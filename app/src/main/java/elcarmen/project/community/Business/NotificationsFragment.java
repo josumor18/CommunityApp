@@ -70,9 +70,8 @@ public class NotificationsFragment extends Fragment {
 
 
 
-        ExecuteGetNotifications executeGetNotifications = new
-                                                    ExecuteGetNotifications();
-        executeGetNotifications.execute();
+        //ExecuteGetNotifications executeGetNotifications = new ExecuteGetNotifications();
+        //executeGetNotifications.execute();
 
         return v;
     }
@@ -80,8 +79,19 @@ public class NotificationsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        lvNotifications.setAdapter(new NotificationsAdapter());
+        //lvNotifications.setAdapter(new NotificationsAdapter());
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(isVisibleToUser){
+            ExecuteGetNotifications executeGetNotifications = new ExecuteGetNotifications();
+            executeGetNotifications.execute();
+        }
+    }
+
     private void loadNotifications(JSONObject jsonResult) {
 
         try {

@@ -41,13 +41,6 @@ public class CommunityMembersFragment extends Fragment {
         txtCantSolicitudes = v.findViewById(R.id.txtCantSolicitudes);
         txtCantSolicitudes.setVisibility(View.INVISIBLE);
 
-        if(User_Singleton.getInstance().isAdmin(CommunityActivity.idCommunity)){
-            ExecuteGetRequestCount executeGetRequestCount = new ExecuteGetRequestCount();
-            executeGetRequestCount.execute();
-        }else{
-            rlVerSolicitudes.setVisibility(View.GONE);
-        }
-
         rlVerSolicitudes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,11 +51,33 @@ public class CommunityMembersFragment extends Fragment {
             }
         });
 
+        if(!User_Singleton.getInstance().isAdmin(CommunityActivity.idCommunity)){
+            rlVerSolicitudes.setVisibility(View.GONE);
+        }
 
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(isVisibleToUser){
+            if(User_Singleton.getInstance().isAdmin(CommunityActivity.idCommunity)){
+                ExecuteGetRequestCount executeGetRequestCount = new ExecuteGetRequestCount();
+                executeGetRequestCount.execute();
+            }else{
+                if(rlVerSolicitudes != null){
+                    rlVerSolicitudes.setVisibility(View.GONE);
+                }
+            }
+        }
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     public class ExecuteGetRequestCount extends AsyncTask<String, Void, String> {
