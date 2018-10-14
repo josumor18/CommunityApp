@@ -84,12 +84,18 @@ public class CommunitiesFragment extends Fragment {
         rlCommunities.setVisibility(View.INVISIBLE);
         rlCommunitiesPB.setVisibility(View.VISIBLE);
 
-        ExecuteGetCommunities executeGetCommunities = new ExecuteGetCommunities();
-        executeGetCommunities.execute();
-
         return v;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(isVisibleToUser){
+            ExecuteGetCommunities executeGetCommunities = new ExecuteGetCommunities();
+            executeGetCommunities.execute();
+        }
+    }
 
     private void cargarCommunities(JSONObject jsonResult) {
 
