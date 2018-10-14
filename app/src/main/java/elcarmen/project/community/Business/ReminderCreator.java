@@ -46,7 +46,7 @@ public class ReminderCreator extends Service {
 
             runnable = new Runnable() {
                 public void run() {
-                    Toast.makeText(context, "Mensaje",  Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Mensaje",  Toast.LENGTH_SHORT).show();
 
                     ArrayList<Event> events = DB_Access.getInstance().getNextEvents();
 
@@ -88,7 +88,7 @@ public class ReminderCreator extends Service {
                         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                         notificationManager.notify(e.getId(), builder.build());
                     }
-                    handler.postDelayed(this, 30000);
+                    handler.postDelayed(this, 300000);
                 }
             };
 
@@ -134,7 +134,7 @@ public class ReminderCreator extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(context, "service starting", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "service starting", Toast.LENGTH_SHORT).show();
 
         // For each start request, send a message to start a job and deliver the
         // start ID so we know which request we're stopping when we finish the job
@@ -154,6 +154,6 @@ public class ReminderCreator extends Service {
 
     @Override
     public void onDestroy() {
-        Toast.makeText(context, "service done", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "service done", Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,5 +1,6 @@
 package elcarmen.project.community.Business;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -106,6 +107,7 @@ public class ChatActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                CommunityChatListFragment.returned = true;
                 //shutdown = true;
                 handler.removeCallbacks(runnable);
                 return true;
