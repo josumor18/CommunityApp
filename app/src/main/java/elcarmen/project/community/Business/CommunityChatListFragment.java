@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,11 @@ import elcarmen.project.community.R;
  */
 public class CommunityChatListFragment extends Fragment {
 
+    Runnable runnable;
+    final Handler handler  = new Handler();
+
+    public static boolean returned = false;
+
     ListView lvChatsList;
 
     ArrayList<Chat> chats = new ArrayList<Chat>();
@@ -60,6 +66,8 @@ public class CommunityChatListFragment extends Fragment {
                 intent.putExtra("community_name", selected.getCommunity_name());
                 intent.putExtra("is_group", selected.isIs_group());
                 startActivity(intent);
+
+                handler.removeCallbacks(runnable);
             }
         });
 
@@ -69,10 +77,16 @@ public class CommunityChatListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        /*if(getUserVisibleHint()){
-            ExecuteGetChats executeGetChats = new ExecuteGetChats();
-            executeGetChats.execute();
-        }*/
+        if(returned){
+            returned = false;
+            executeRunnable();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        handler.removeCallbacks(runnable);
     }
 
     @Override
@@ -80,9 +94,24 @@ public class CommunityChatListFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
 
         if(isVisibleToUser){
-            ExecuteGetChats executeGetChats = new ExecuteGetChats();
-            executeGetChats.execute();
+            executeRunnable();
+        }else{
+            handler.removeCallbacks(runnable);
         }
+    }
+
+    private void executeRunnable(){
+        runnable = new Runnable() {
+            public void run() {
+                ExecuteGetChats executeGetChats = new ExecuteGetChats();
+                executeGetChats.execute();
+                //Toast.makeText(getActivity(), "Getting chats", Toast.LENGTH_SHORT).show();
+
+                handler.postDelayed(this, 5000);
+            }
+        };
+
+        handler.postDelayed(runnable, 1000);
     }
 
     private void cargarChats(JSONObject jsonResult) {

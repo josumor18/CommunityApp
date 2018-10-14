@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-         reminderIntent = new Intent(this, ReminderCreator.class);
+        reminderIntent = new Intent(this, ReminderCreator.class);
 
         tabLayout = findViewById(R.id.appbartabs);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
