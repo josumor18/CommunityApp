@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,7 +65,7 @@ public class LoginAcivity extends AppCompatActivity {
         if(getEstadoSesion()){
             String[] userData = getUsuarioSesion();
 
-            ExecuteLogin executeLogin = new ExecuteLogin(userData[0], userData[1], 1);
+            ExecuteLogin executeLogin = new ExecuteLogin(userData[0], userData[1], 1, FirebaseInstanceId.getInstance().getToken());
             executeLogin.execute();
 
             rlLogin.setVisibility(View.INVISIBLE);
@@ -79,7 +81,7 @@ public class LoginAcivity extends AppCompatActivity {
         password = edtxtPassword.getText().toString();
 
         if(!(email.isEmpty() && password.isEmpty())){
-            ExecuteLogin executeLogin = new ExecuteLogin(email, password, 0);
+            ExecuteLogin executeLogin = new ExecuteLogin(email, password, 0, FirebaseInstanceId.getInstance().getToken());
             executeLogin.execute();
 
             rlLogin.setVisibility(View.INVISIBLE);
@@ -208,13 +210,13 @@ public class LoginAcivity extends AppCompatActivity {
     // ========================================================================================== //
     public class ExecuteLogin extends AsyncTask<String,Void,String> {
         int tipoAutenticacion = 0;// 0-Formulario, 1-Authentication Token(sesion abierta)
-        private String[] keys = new String[2];
-        private String[] values = new String[2];
+        private String[] keys = new String[3];
+        private String[] values = new String[3];
         private boolean isLogged = false;
 
 
         //Login con los campos de email y contraseña o authentication token
-        public ExecuteLogin(String email, String pass_token, int tipo){
+        public ExecuteLogin(String email, String pass_token, int tipo, String deviceToken){
             tipoAutenticacion = tipo;
             keys[0] = "email";
             if(tipoAutenticacion == 0){
@@ -222,9 +224,11 @@ public class LoginAcivity extends AppCompatActivity {
             }else{
                 keys[1] = "auth_token";
             }
+            keys[2] = "device_token";
 
             values[0] = email;
             values[1] = pass_token;
+            values[2] = deviceToken;
         }
 
 

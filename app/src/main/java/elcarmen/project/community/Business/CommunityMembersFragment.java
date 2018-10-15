@@ -85,7 +85,7 @@ public class CommunityMembersFragment extends Fragment {
             }
         });
 
-        lvUsers.setAdapter(new UserAdapter());
+        //lvUsers.setAdapter(new UserAdapter());
 
         return v;
     }
@@ -107,6 +107,10 @@ public class CommunityMembersFragment extends Fragment {
                 if(rlVerSolicitudes != null){
                     rlVerSolicitudes.setVisibility(View.GONE);
                 }
+            }
+
+            if(lvUsers != null){
+                lvUsers.setAdapter(new UserAdapter());
             }
         }
     }

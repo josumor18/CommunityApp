@@ -118,9 +118,9 @@ public class CommunityChatListFragment extends Fragment {
 
         try {
             chats.clear();
-            String token = jsonResult.getString("auth_token");
-            User_Singleton.getInstance().setAuth_token(token);
-            LoginAcivity.actualizarAuth_Token(token, getActivity());
+            //String token = jsonResult.getString("auth_token");
+            //User_Singleton.getInstance().setAuth_token(token);
+            //LoginAcivity.actualizarAuth_Token(token, getActivity());
 
             JSONArray jsonChatsList = jsonResult.getJSONArray("chats");
             JSONArray jsonLastMessagesList = jsonResult.getJSONArray("last_msg");

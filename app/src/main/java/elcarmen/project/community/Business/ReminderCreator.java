@@ -83,7 +83,7 @@ public class ReminderCreator extends Service {
                                 .setContentText(notif_body)
                                 .setContentIntent(pendingIntent)
                                 .setAutoCancel(true)
-                                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+                                .setVibrate(new long[] { 1000, 100, 200, 100, 100, 200 });
 
                         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                         notificationManager.notify(e.getId(), builder.build());

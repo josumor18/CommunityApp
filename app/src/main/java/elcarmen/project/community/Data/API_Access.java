@@ -66,7 +66,8 @@ public class API_Access {
             "chats/get_messages", //37
             "events/getSingleEvent_by_id", //38
             "notifications/getReportAndComment", //39
-            "community_members/delete" //40
+            "community_members/delete", //40
+            "users/logout" //41
     };
 
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
