@@ -49,19 +49,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // message, here is where that should be initiated. See sendNotification method below.
     }
 
-    private void showNotification(Map<String, String> mensajitos){
-        int tipo = Integer.parseInt(mensajitos.get("tipo"));
+    private void showNotification(Map<String, String> messages){
+        int tipo = Integer.parseInt(messages.get("tipo"));
 
         if(tipo == 1){
             Event event = new Event();
-            event.setId(Integer.parseInt(mensajitos.get("id")));
-            event.setId_community(Integer.parseInt(mensajitos.get("id_community")));
-            event.setName_community(mensajitos.get("community_name"));
-            event.setTitle(mensajitos.get("title"));
-            event.setDescription(mensajitos.get("description"));
-            event.setDatesEvent(mensajitos.get("dateEvent"), mensajitos.get("startTime"), mensajitos.get("endTime"));
-            event.setPhoto(mensajitos.get("photo"));
-            event.setApproved(Boolean.parseBoolean(mensajitos.get("approved")));
+            event.setId(Integer.parseInt(messages.get("id")));
+            event.setId_community(Integer.parseInt(messages.get("id_community")));
+            event.setName_community(messages.get("community_name"));
+            event.setTitle(messages.get("title"));
+            event.setDescription(messages.get("description"));
+            event.setDatesEvent(messages.get("dateEvent"), messages.get("startTime"), messages.get("endTime"));
+            event.setPhoto(messages.get("photo"));
+            event.setApproved(Boolean.parseBoolean(messages.get("approved")));
 
             if(event.isApproved()){
                 DB_Access db_access = DB_Access.getInstance();
@@ -105,19 +105,48 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setVibrate(new long[] { 1000, 100, 200, 100, 100, 200 });
 
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.notify(event.getId(), builder.build());
-        }else{
-            String notif_body = "Message: " + mensajitos.get("message");
+            notificationManager.notify(1000 + event.getId(), builder.build());
+        }else{            
+            String url_photo = messages.get("photo");
+            HttpGetBitmap request = new HttpGetBitmap();
+            Bitmap newsImage = null;
+            try {
+                newsImage = request.execute(url_photo).get();
+            } catch (InterruptedException er) {
+                er.printStackTrace();
+            } catch (ExecutionException er) {
+                er.printStackTrace();
+            }
+            News news = new News(Integer.parseInt(messages.get("id")), messages.get("title"),
+                    messages.get("description"), messages.get("date"), messages.get("photo"),
+                    newsImage, Boolean.parseBoolean(messages.get("approved")));
+
+            Intent intent = new Intent(getApplicationContext(), NewsMoreActivity.class);
+            intent.putExtra("idActual", news.getId());
+            intent.putExtra("Title", news.getTitle());
+            intent.putExtra("DateN", messages.get("date"));
+            intent.putExtra("Description", news.getDescription());
+            intent.putExtra("isApproved", news.isApproved());
+            intent.putExtra("idCommunity", news.getIdCommunity());
+            intent.putExtra("Photo", news.getUrl_photo());
+            intent.setAction(Long.toString(System.currentTimeMillis()));
+            NewsMoreActivity.fromNotif = true;
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);//getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+            String notif_body = "Difusión: " + news.getTitle();
             NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
                     .setSmallIcon(R.drawable.logo_community)
-                    .setContentTitle(mensajitos.get("titulo"))
+                    .setLargeIcon(newsImage)
+                    .setContentTitle(messages.get("community_name") + ": Nueva difusión")
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(notif_body))
                     .setContentText(notif_body)
+                    .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
-                    .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+                    .setVibrate(new long[] { 1000, 100, 200, 100, 100, 200 });
 
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.notify(Integer.parseInt(mensajitos.get("tipo")), builder.build());
+            notificationManager.notify(2000 + news.getId(), builder.build());
         }
 
     }
