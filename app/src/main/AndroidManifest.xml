@@ -87,17 +87,16 @@
             android:name=".Business.EventInfoActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".Business.ProfileUserActivity" />
-
         <activity
             android:name=".Business.ChatActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <service
             android:name=".Business.ReminderCreator"
             android:enabled="true"
             android:exported="true" />
 
+        <activity android:name=".Business.RegisterActivity"></activity>
     </application>
 
 </manifest>
