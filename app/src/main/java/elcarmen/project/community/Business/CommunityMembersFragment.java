@@ -63,8 +63,11 @@ public class CommunityMembersFragment extends Fragment {
 
         //listMembers = new ArrayList<User>();
 
+        String idActual = Integer.toString(user.getId());
+
+
         for(User u:CommunityActivity.listUsers){
-            if(!u.isPrivateProfile() || isAdmin)
+            if(!u.isPrivateProfile() || isAdmin || idActual.equals(u.getId()))
                 listMembers.add(u);
         }
 
