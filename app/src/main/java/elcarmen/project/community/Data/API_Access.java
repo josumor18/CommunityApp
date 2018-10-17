@@ -67,7 +67,8 @@ public class API_Access {
             "events/getSingleEvent_by_id", //38
             "notifications/getReportAndComment", //39
             "community_members/delete", //40
-            "users/register" //41
+            "users/register", //41
+            "users/logout" //42
     };
 
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
