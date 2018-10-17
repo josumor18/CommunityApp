@@ -43,7 +43,8 @@ public class CommunitiesFragment extends Fragment {
     RelativeLayout rlCommunities, rlCommunitiesPB;
     FloatingActionButton ftbtnCreateCommunity;
 
-    private ArrayList<Community> communities = new ArrayList<Community>();
+    //public static ArrayList<Community> communities = new ArrayList<Community>();
+    public static ArrayList<Community> communities = new ArrayList<Community>();
 
     public CommunitiesFragment() {
         // Required empty public constructor

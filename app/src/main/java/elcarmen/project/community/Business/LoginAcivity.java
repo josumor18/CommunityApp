@@ -92,6 +92,10 @@ public class LoginAcivity extends AppCompatActivity {
 
 
     }
+    public void registerClicked(View view){
+        Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+        startActivity(intent);
+    }
 
     public void iniciarSesion(JSONObject response){
         User_Singleton user = User_Singleton.getInstance();

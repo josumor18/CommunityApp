@@ -88,11 +88,9 @@
             android:name=".Business.EventInfoActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".Business.ProfileUserActivity" />
-
         <activity
             android:name=".Business.ChatActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <service
             android:name=".Business.ReminderCreator"
@@ -111,6 +109,8 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+
+        <activity android:name=".Business.RegisterActivity"></activity>
 
     </application>
 

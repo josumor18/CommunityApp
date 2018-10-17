@@ -5,66 +5,148 @@
     android:layout_height="match_parent"
     tools:context=".Business.CommunityProfileFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#80EFEFEF">
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Perfil Comunidad"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="Datos Generales"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Nombre:"
+                android:textAlignment="center"
+                android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/edtxtSearchProfile"
+                android:id="@+id/edtxtCommNameProfile"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="false"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_edit_text"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
                 android:ems="10"
-                android:hint="Buscar miembros"
-                android:paddingLeft="15dp"
-                android:singleLine="true" />
+                android:hint="Nombre de comunidad"
+                android:inputType="textPersonName" />
 
-            <Button
-                android:id="@+id/btnSearchProfile"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginBottom="5dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginStart="5dp"
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/ic_search_selected" />
-        </RelativeLayout>
+                android:text="Descripción:"
+                android:textAlignment="center"
+                android:textSize="18sp" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            <EditText
+                android:id="@+id/edtxtCommDescriptionProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:ems="10"
+                android:hint="Descripción de la comunidad"
+                android:inputType="textMultiLine" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Imagen:"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imgComImageProfile"
+                    android:layout_width="150dp"
+                    android:layout_height="100dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/img_comm_default" />
+
+                <Button
+                    android:id="@+id/btnUploadComImageProfile"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/imgComImageProfile"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/ic_file_upload_black_24dp" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:paddingLeft="10dp"
+                android:text="Reglas de convivencia:"
+                android:textAlignment="textStart"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edtxtReglaConvivProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="55dp"
+                    android:ems="10"
+                    android:hint="Nueva regla"
+                    android:inputType="textMultiLine" />
+
+                <Button
+                    android:id="@+id/btnAddRuleProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginLeft="-55dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_toEndOf="@+id/edtxtReglaConvivProfile"
+                    android:background="@drawable/ic_add_box_black_24dp"
+                    android:onClick="addRule_Clicked" />
+            </RelativeLayout>
 
             <ListView
-                android:id="@+id/lvProfileSearch"
+                android:id="@+id/lvRulesListCreateProfile"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-            </ListView>
+                android:layout_height="181dp" />
 
-            <ProgressBar
-                android:id="@+id/pbSearchProfile"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="invisible" />
-
-
-        </RelativeLayout>
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>
