@@ -39,7 +39,7 @@ public class CommunityMembersFragment extends Fragment {
     TextView txtCantSolicitudes;
     ListView lvUsers;
 
-    private ArrayList<User> listMembers;
+    public static ArrayList<User> listMembers = new ArrayList<User>();
 
     User_Singleton user;
     boolean isAdmin;
@@ -59,10 +59,12 @@ public class CommunityMembersFragment extends Fragment {
 
         isAdmin = user.isAdmin(CommunityActivity.idCommunity);
 
-        listMembers = new ArrayList<User>();
+        listMembers.clear();
+
+        //listMembers = new ArrayList<User>();
 
         for(User u:CommunityActivity.listUsers){
-            if(!u.isPrivateProfile())
+            if(!u.isPrivateProfile() || isAdmin)
                 listMembers.add(u);
         }
 
@@ -108,6 +110,9 @@ public class CommunityMembersFragment extends Fragment {
 
     @Override
     public void onResume() {
+        if(getUserVisibleHint()){
+            lvUsers.setAdapter(new UserAdapter());
+        }
         super.onResume();
     }
 
