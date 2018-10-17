@@ -300,7 +300,7 @@ public class CommunityProfileFragment extends Fragment {
 
             String[] keys = {"id", "auth_token", "idCommunity","name", "description", "rules", "isSubcommunity", "photo", "photo_thumbnail"};
             String[] values = {Integer.toString(user.getId()), user.getAuth_token(), idCommunity, name, description, rules, isSubcommunity, photo, photo_thumbnail};
-            isOk = api.post_put_base(keys, values, 42, "PUT",1);
+            isOk = api.post_put_base(keys, values, 43, "PUT",1);
 
             return null;
         }
