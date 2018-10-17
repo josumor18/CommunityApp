@@ -29,6 +29,7 @@ public class ProfileUserActivity extends AppCompatActivity {
     Button btnEject;
     boolean isAdmin;
     User_Singleton user;
+    int typeUser=0; //1 El mismo //2 Admin
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +57,12 @@ public class ProfileUserActivity extends AppCompatActivity {
         isAdmin = user.isAdmin(CommunityActivity.idCommunity);
         if (!isAdmin && !(Integer.toString(user.getId()).equals(idUser)))
             btnEject.setVisibility(View.GONE);
-        else if(Integer.toString(user.getId()).equals(idUser))
+        else if(Integer.toString(user.getId()).equals(idUser)) {
+            typeUser = 1;  //Mismo usuario
             btnEject.setText("Abandonar comunidad");
+        }
+        else if(isAdmin)
+            typeUser = 2;
 
 
         HttpGetBitmap request = new HttpGetBitmap();
@@ -128,8 +133,21 @@ public class ProfileUserActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }*/
-
+                for(User u : CommunityMembersFragment.listMembers){
+                    if (u.getId().equals(id_user)){
+                        CommunityMembersFragment.listMembers.remove(u);
+                    }
+                }
                 Toast.makeText(getApplicationContext(), "Usuario expulsado", Toast.LENGTH_SHORT).show();
+                if(typeUser==1){
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+                else if(typeUser == 2){
+                    finish();
+                }
+
+
 
             }else{
                 String mensaje = "Error al expulsar";

@@ -102,6 +102,7 @@ public class CommunityActivity extends AppCompatActivity {
         tabLayoutCommunity.getTabAt(position).setIcon(tabSelectedIcons[position]);
     }
 
+    
     private void cambiarIconoDeseleccionado(int position){
         tabLayoutCommunity.getTabAt(position).setIcon(tabUnselectedIcons[position]);
     }
