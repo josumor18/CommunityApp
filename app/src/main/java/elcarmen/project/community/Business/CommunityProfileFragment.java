@@ -69,7 +69,7 @@ public class CommunityProfileFragment extends Fragment {
     int idCommu;
 
     ListView lvRulesList;
-    ArrayList<String> listaReglas = new ArrayList<String>();
+    ArrayList<String> listaReglas;
 
     User_Singleton user;
     boolean isAdmin;
@@ -98,6 +98,8 @@ public class CommunityProfileFragment extends Fragment {
         btnEditCom = v.findViewById(R.id.btn_EditCommunity);
 
         user = User_Singleton.getInstance();
+
+        listaReglas  = new ArrayList<String>();
 
         //String photo = "";
 
