@@ -1,6 +1,7 @@
 package elcarmen.project.community.Business;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import elcarmen.project.community.Data.API_Access;
 import elcarmen.project.community.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -99,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.logout_item:
+                ExecuteLogout executeLogout = new ExecuteLogout(Integer.toString(User_Singleton.getInstance().getId()), User_Singleton.getInstance().getAuth_token());
+                executeLogout.execute();
+
                 LoginAcivity.cerrarSesion(getApplicationContext());
 
                 stopService(reminderIntent);
@@ -198,6 +203,31 @@ public class MainActivity extends AppCompatActivity {
         public int getCount() {
             // Show 3 total pages.
             return 3;
+        }
+    }
+
+    // ========================================================================================== //
+    public class ExecuteLogout extends AsyncTask<String,Void,String> {
+        private String[] keys = new String[2];
+        private String[] values = new String[2];
+
+
+        //Login con los campos de email y contraseña o authentication token
+        public ExecuteLogout(String id_user, String auth_token){
+            keys[0] = "id";
+            keys[1] = "auth_token";
+
+            values[0] = id_user;
+            values[1] = auth_token;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            API_Access api = API_Access.getInstance();
+
+            api.post_put_base(keys, values, 42, "PUT", 1);
+
+            return null;
         }
     }
 }

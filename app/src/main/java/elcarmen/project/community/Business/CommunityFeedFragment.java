@@ -76,7 +76,7 @@ public class CommunityFeedFragment extends Fragment {
 
         lvNews = v.findViewById(R.id.lvNews);
 
-        isAdmin = user.isAdmin(CommunityActivity.idCommunity);
+        /*isAdmin = user.isAdmin(CommunityActivity.idCommunity);
         if(isAdmin) {
             ExecuteGetNews executeGetNews = new ExecuteGetNews();
             executeGetNews.execute();
@@ -84,7 +84,7 @@ public class CommunityFeedFragment extends Fragment {
         else{
             ExecuteGetNews executeGetNews = new ExecuteGetNews(true);
             executeGetNews.execute();
-        }
+        }*/
 
 
         return v;
@@ -94,6 +94,15 @@ public class CommunityFeedFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         CommunityActivity.isInFeedFragment = isVisibleToUser;
+        /*isAdmin = user.isAdmin(CommunityActivity.idCommunity);
+        if(isAdmin) {
+            ExecuteGetNews executeGetNews = new ExecuteGetNews();
+            executeGetNews.execute();
+        }
+        else{
+            ExecuteGetNews executeGetNews = new ExecuteGetNews(true);
+            executeGetNews.execute();
+        }*/
     }
 
     @Override

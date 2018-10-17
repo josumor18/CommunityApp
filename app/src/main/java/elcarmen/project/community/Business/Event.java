@@ -124,14 +124,27 @@ public class Event {
     public void setDatesEvent(String dateEvent, String timeStart, String timeEnd){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+        String[] tS = timeStart.split("T");//[1].split(":");
+        String[] tE = timeEnd.split("T");//[1].split(":");
+        boolean fromServer = true;
+        if(tS.length == 1){
+            fromServer = false;
+        }
 
         Date date = new Date();
         Date timeS = new Date();
         Date timeE = new Date();
         try{
             date = dateFormat.parse(dateEvent);
-            timeS = timeFormat.parse(timeStart);
-            timeE = timeFormat.parse(timeEnd);
+            if(fromServer){
+                tS = tS[1].split(":");
+                tE = tE[1].split(":");
+                timeS = timeFormat.parse(tS[0]+":"+tS[1]);
+                timeE = timeFormat.parse(tE[0]+":"+tE[1]);
+            }else{
+                timeS = timeFormat.parse(timeStart);
+                timeE = timeFormat.parse(timeEnd);
+            }
         }catch(Exception e){
             e.printStackTrace();
         }

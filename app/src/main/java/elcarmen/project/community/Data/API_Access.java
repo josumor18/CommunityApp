@@ -68,7 +68,8 @@ public class API_Access {
             "notifications/getReportAndComment", //39
             "community_members/delete", //40
             "users/register", //41
-            "communities/edit" //42
+            "users/logout", //42
+            "communities/edit" //43                          
     };
 
     private final int[] responses = {HttpsURLConnection.HTTP_CREATED, HttpsURLConnection.HTTP_OK};
