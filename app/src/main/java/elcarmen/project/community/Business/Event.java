@@ -127,7 +127,7 @@ public class Event {
         String[] tS = timeStart.split("T");//[1].split(":");
         String[] tE = timeEnd.split("T");//[1].split(":");
         boolean fromServer = true;
-        if(tS.length == 0){
+        if(tS.length == 1){
             fromServer = false;
         }
 
@@ -137,6 +137,8 @@ public class Event {
         try{
             date = dateFormat.parse(dateEvent);
             if(fromServer){
+                tS = tS[1].split(":");
+                tE = tE[1].split(":");
                 timeS = timeFormat.parse(tS[0]+":"+tS[1]);
                 timeE = timeFormat.parse(tE[0]+":"+tE[1]);
             }else{
