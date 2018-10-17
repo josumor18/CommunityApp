@@ -12,6 +12,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -86,7 +87,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent.putExtra("title", event.getTitle());
             intent.putExtra("description", event.getDescription());
             intent.putExtra("date", event.getDate());
-            intent.putExtra("terminado", false);
+            boolean terminado = false;
+            Date date = new Date();
+            if (date.after(event.getDateEventEnd())){
+                terminado = true;
+            }
+            intent.putExtra("terminado", terminado);
+            //intent.putExtra("terminado", false);
             intent.putExtra("hours", event.getHours());
             intent.setAction(Long.toString(System.currentTimeMillis()));
 
