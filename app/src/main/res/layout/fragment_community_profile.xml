@@ -144,7 +144,23 @@
             <ListView
                 android:id="@+id/lvRulesListCreateProfile"
                 android:layout_width="match_parent"
-                android:layout_height="181dp" />
+                android:layout_height="140dp">
+
+            </ListView>
+
+            <Button
+                android:id="@+id/btn_EditCommunity"
+                style="@android:style/Widget.Material.Light.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="17dp"
+                android:background="@drawable/rounded_borders_default_button"
+
+                android:onClick="edit_Clicked"
+                android:text="  Guardar cambios  "
+                android:textColor="@color/colorGrayTab" />
 
         </LinearLayout>
     </ScrollView>
