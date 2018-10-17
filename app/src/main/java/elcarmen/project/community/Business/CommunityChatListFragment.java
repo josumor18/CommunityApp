@@ -138,7 +138,7 @@ public class CommunityChatListFragment extends Fragment {
                 if(!is_group){
                     id_user = jsonChat.getInt("id_user");
 
-                    if(jsonChatsList.length() == 2){
+                    if(!(User_Singleton.getInstance().isAdmin(CommunityActivity.idCommunity))){//jsonChatsList.length() == 2){
                         userName = "Administración";
                     }else{
                         ArrayList<User> users = CommunityActivity.listUsers;
