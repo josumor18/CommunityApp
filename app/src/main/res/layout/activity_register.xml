@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="elcarmen.project.community.Business.ProfileUserActivity">
-
+    tools:context="elcarmen.project.community.Business.RegisterActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,49 +13,93 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imgView_userProfile"
-                android:layout_width="150dp"
-                android:layout_height="125dp"
-                android:layout_gravity="center_vertical|center_horizontal|center"
-                android:layout_marginTop="10dp"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/user_box_photo" />
-
             <TextView
-                android:id="@+id/txt_nameUserProfile"
+                android:id="@+id/textView12"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Registrar usuario"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_nameUserRegister"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:fontFamily="monospace"
+                android:hint="Nombre"
+                android:inputType="textPersonName"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_emailUserRegister"
+                android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
                 android:ems="10"
                 android:fontFamily="monospace"
-                android:text="Nombre"
+                android:hint="Correo electronico"
+                android:inputType="textEmailAddress"
                 android:textAlignment="center"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_passUserRegister"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:ems="10"
+                android:fontFamily="monospace"
+                android:hint="Contraseña"
+                android:inputType="textPassword"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_confpassUserRegister"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:ems="10"
+                android:fontFamily="monospace"
+                android:hint="Confirmar Contraseña"
+                android:inputType="textPassword"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="15dp">
 
-                <TextView
-                    android:id="@+id/txt_tel1UserProfile"
+                <EditText
+                    android:id="@+id/edt_tel1UserRegister"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-
                     android:layout_gravity="center_vertical|center_horizontal"
                     android:ems="10"
-
                     android:fontFamily="monospace"
-                    android:text="Cel"
+                    android:hint="Cel"
+                    android:inputType="number"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -64,7 +107,7 @@
                     android:layout_height="40dp"
 
                     android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/txt_tel1UserProfile"
+                    android:layout_toEndOf="@+id/edt_tel1UserRegister"
                     app:srcCompat="@drawable/ic_cell_phone" />
 
             </RelativeLayout>
@@ -75,8 +118,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp">
 
-                <TextView
-                    android:id="@+id/txt_tel2UserProfile"
+                <EditText
+                    android:id="@+id/edt_tel2UserRegister"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -85,16 +128,17 @@
                     android:ems="10"
                     android:fontFamily="monospace"
 
-                    android:text="Tel"
+                    android:hint="Tel"
+                    android:inputType="number"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/imageView4"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/txt_tel2UserProfile"
+                    android:layout_toEndOf="@+id/edt_tel2UserRegister"
                     app:srcCompat="@drawable/ic_phone" />
             </RelativeLayout>
 
@@ -104,24 +148,25 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp">
 
-                <TextView
-                    android:id="@+id/txt_addressUserProfile"
+                <EditText
+                    android:id="@+id/edt_addressUserRegister"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:ems="10"
                     android:fontFamily="monospace"
+                    android:hint="Direccion"
+                    android:inputType="textMultiLine"
                     android:singleLine="false"
-                    android:text="Direccion"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/imageView5"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/txt_addressUserProfile"
+                    android:layout_toEndOf="@+id/edt_addressUserRegister"
                     app:srcCompat="@drawable/ic_home_black_24dp" />
             </RelativeLayout>
 
@@ -133,13 +178,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/rounded_borders_default_button"
-                android:onClick="ejectUser"
-                android:text="Expulsar Usuario"
+                android:onClick="registerClicked"
+                android:text="    Registrar    "
                 android:textColor="@color/colorGrayTab" />
         </LinearLayout>
     </ScrollView>
-
 
 </android.support.constraint.ConstraintLayout>

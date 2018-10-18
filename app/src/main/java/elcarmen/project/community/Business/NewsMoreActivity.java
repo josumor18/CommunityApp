@@ -63,6 +63,7 @@ public class NewsMoreActivity extends AppCompatActivity {
     String userComment;
 
     public static Boolean fromFavorites = false;
+    public static Boolean fromNotif = false;
     boolean isAdmin;
 
     private ArrayList<Comment> listComments = new ArrayList<Comment>();
@@ -95,6 +96,19 @@ public class NewsMoreActivity extends AppCompatActivity {
                 if (FavoritesActivity.listNews.get(i).getId() == idActual)
                     photoNews = FavoritesActivity.listNews.get(i).getPhoto();
             }
+        }
+
+        if(fromNotif){
+            String url_photo = getIntent().getStringExtra("Photo");
+            HttpGetBitmap request = new HttpGetBitmap();
+            try {
+                photoNews = request.execute(url_photo).get();
+            } catch (InterruptedException er) {
+                er.printStackTrace();
+            } catch (ExecutionException er) {
+                er.printStackTrace();
+            }
+            fromNotif = false;
         }
 
         userComment = user.getName() + " dijo:";

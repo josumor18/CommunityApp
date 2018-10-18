@@ -24,6 +24,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import elcarmen.project.community.Data.API_Access;
@@ -38,6 +39,10 @@ public class CommunityMembersFragment extends Fragment {
     TextView txtCantSolicitudes;
     ListView lvUsers;
 
+    public static ArrayList<User> listMembers = new ArrayList<User>();
+
+    User_Singleton user;
+    boolean isAdmin;
 
     public CommunityMembersFragment() {
         // Required empty public constructor
@@ -49,6 +54,22 @@ public class CommunityMembersFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_community_members, container, false);
+
+        user = User_Singleton.getInstance();
+
+        isAdmin = user.isAdmin(CommunityActivity.idCommunity);
+
+        listMembers.clear();
+
+        //listMembers = new ArrayList<User>();
+
+        String idActual = Integer.toString(user.getId());
+
+
+        for(User u:CommunityActivity.listUsers){
+            if(!u.isPrivateProfile() || isAdmin || idActual.equals(u.getId()))
+                listMembers.add(u);
+        }
 
         lvUsers = v.findViewById(R.id.lvUsers);
         rlVerSolicitudes = v.findViewById(R.id.rlVerSolicitudes);
@@ -73,7 +94,7 @@ public class CommunityMembersFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), ProfileUserActivity.class);
-                User selected = CommunityActivity.listUsers.get(position);
+                User selected = listMembers.get(position);
 
                 intent.putExtra("idUser",selected.getId());
                 intent.putExtra("photo", selected.getUrl_photo());
@@ -92,6 +113,9 @@ public class CommunityMembersFragment extends Fragment {
 
     @Override
     public void onResume() {
+        if(getUserVisibleHint()){
+            lvUsers.setAdapter(new UserAdapter());
+        }
         super.onResume();
     }
 
@@ -108,6 +132,10 @@ public class CommunityMembersFragment extends Fragment {
                     rlVerSolicitudes.setVisibility(View.GONE);
                 }
             }
+
+            if(lvUsers != null){
+                lvUsers.setAdapter(new UserAdapter());
+            }
         }
     }
 
@@ -119,12 +147,12 @@ public class CommunityMembersFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return CommunityActivity.listUsers.size();
+            return listMembers.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return CommunityActivity.listUsers.get(i);
+            return listMembers.get(i);
         }
 
         @Override
@@ -144,11 +172,13 @@ public class CommunityMembersFragment extends Fragment {
 
             ImageView imgUserProfile = view.findViewById(R.id.img_userProfile);
 
-            final String idUser = CommunityActivity.listUsers.get(i).getId();
+            final String idUser = listMembers.get(i).getId();
 
-            String userName = CommunityActivity.listUsers.get(i).getName();
+            String userName = listMembers.get(i).getName();
 
-            Bitmap photoUser = CommunityActivity.listUsers.get(i).getPhoto_rounded();
+            Bitmap photoUser = listMembers.get(i).getPhoto_rounded();
+
+            Boolean isPrivate = listMembers.get(i).isPrivateProfile();
 
 
 
@@ -182,6 +212,8 @@ public class CommunityMembersFragment extends Fragment {
 
                 }
             });*/
+
+
 
             txtUserProfile.setText(userName);
 

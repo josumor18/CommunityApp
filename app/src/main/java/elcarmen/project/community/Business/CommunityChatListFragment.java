@@ -118,9 +118,9 @@ public class CommunityChatListFragment extends Fragment {
 
         try {
             chats.clear();
-            String token = jsonResult.getString("auth_token");
-            User_Singleton.getInstance().setAuth_token(token);
-            LoginAcivity.actualizarAuth_Token(token, getActivity());
+            //String token = jsonResult.getString("auth_token");
+            //User_Singleton.getInstance().setAuth_token(token);
+            //LoginAcivity.actualizarAuth_Token(token, getActivity());
 
             JSONArray jsonChatsList = jsonResult.getJSONArray("chats");
             JSONArray jsonLastMessagesList = jsonResult.getJSONArray("last_msg");
@@ -138,7 +138,7 @@ public class CommunityChatListFragment extends Fragment {
                 if(!is_group){
                     id_user = jsonChat.getInt("id_user");
 
-                    if(jsonChatsList.length() == 2){
+                    if(!(User_Singleton.getInstance().isAdmin(CommunityActivity.idCommunity))){//jsonChatsList.length() == 2){
                         userName = "Administración";
                     }else{
                         ArrayList<User> users = CommunityActivity.listUsers;
